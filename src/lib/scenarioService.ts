@@ -3,7 +3,7 @@ import { supabase, isSupabaseConfigured, getCurrentUserId } from './supabase';
 import { Scenario, Settings } from './types';
 
 // Load scenarios from Supabase or localStorage
-export const loadScenarios = async () => {
+export const loadScenarios = async (): Promise<Scenario[]> => {
   // Try to load from Supabase if configured and user is logged in
   if (isSupabaseConfigured()) {
     try {
