@@ -116,10 +116,11 @@ export const updateScenario = async (id: string, name: string, settings: Setting
             settings
           });
         
-        // Apply the filters if the method exists
+        // Use type guard to make TypeScript happy
         if (updateQuery && typeof updateQuery.eq === 'function') {
           const idFilter = updateQuery.eq('id', id);
           
+          // Another type guard for the chained query
           if (idFilter && typeof idFilter.eq === 'function') {
             const { error } = await idFilter.eq('user_id', userId);
             
@@ -128,9 +129,11 @@ export const updateScenario = async (id: string, name: string, settings: Setting
             } else {
               return;
             }
+          } else {
+            console.warn('Supabase idFilter.eq method not available');
           }
         } else {
-          console.warn('Supabase update query methods not available');
+          console.warn('Supabase updateQuery.eq method not available');
         }
       }
     } catch (error) {
@@ -173,10 +176,11 @@ export const deleteScenario = async (id: string): Promise<void> => {
           .from('scenarios')
           .delete();
         
-        // Apply the filters if the method exists
+        // Use type guard to make TypeScript happy
         if (deleteQuery && typeof deleteQuery.eq === 'function') {
           const idFilter = deleteQuery.eq('id', id);
           
+          // Another type guard for the chained query
           if (idFilter && typeof idFilter.eq === 'function') {
             const { error } = await idFilter.eq('user_id', userId);
             
@@ -185,9 +189,11 @@ export const deleteScenario = async (id: string): Promise<void> => {
             } else {
               return;
             }
+          } else {
+            console.warn('Supabase idFilter.eq method not available');
           }
         } else {
-          console.warn('Supabase delete query methods not available');
+          console.warn('Supabase deleteQuery.eq method not available');
         }
       }
     } catch (error) {

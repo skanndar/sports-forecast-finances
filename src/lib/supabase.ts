@@ -4,6 +4,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+// Create a mock response object with eq method
+const createMockQueryResponse = () => ({
+  data: null,
+  error: { message: 'Supabase not configured' },
+  eq: () => createMockQueryResponse()
+});
+
 // Create Supabase client with better error handling for missing config
 export const supabase = (() => {
   // Log warning if environment variables are missing
@@ -21,23 +28,11 @@ export const supabase = (() => {
         signInWithOtp: async () => ({ error: null }),
       },
       from: () => ({
-        select: () => ({
-          data: null, 
-          error: { message: 'Supabase not configured' },
-          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        }),
-        insert: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        update: () => ({ 
-          data: null, 
-          error: { message: 'Supabase not configured' },
-          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        }),
-        delete: () => ({ 
-          data: null, 
-          error: { message: 'Supabase not configured' },
-          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        }),
-        eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        select: () => createMockQueryResponse(),
+        insert: () => createMockQueryResponse(),
+        update: () => createMockQueryResponse(),
+        delete: () => createMockQueryResponse(),
+        eq: () => createMockQueryResponse(),
       }),
     };
   }
