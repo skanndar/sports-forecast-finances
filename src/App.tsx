@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAppStore } from "./lib/store";
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 import { loadScenarios } from './lib/scenarioService';
+import { toast } from "./components/ui/use-toast";
 
 // Import i18n
 import './lib/i18n';
@@ -50,6 +50,12 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         setIsSupabaseInit(true);
       } else {
         console.log('Supabase is not configured. Using local storage for scenarios.');
+        // Show a toast to inform the user
+        toast({
+          title: "Usando modo local",
+          description: "No se ha configurado Supabase. Los escenarios se guardarán localmente.",
+          duration: 5000,
+        });
         setIsLoading(false);
       }
     };
@@ -60,21 +66,33 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   // If Supabase is configured, check for existing session
   useEffect(() => {
     if (isSupabaseInit) {
-      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      try {
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          setIsLoading(false);
+        });
+        
+        // Initial session check
+        const checkSession = async () => {
+          try {
+            const { data } = await supabase.auth.getSession();
+            setIsLoading(false);
+          } catch (error) {
+            console.error("Error checking Supabase session:", error);
+            setIsLoading(false);
+          }
+        };
+        
+        checkSession();
+        
+        return () => {
+          if (authListener?.subscription) {
+            authListener.subscription.unsubscribe();
+          }
+        };
+      } catch (error) {
+        console.error("Error setting up auth listener:", error);
         setIsLoading(false);
-      });
-      
-      // Initial session check
-      const checkSession = async () => {
-        const { data } = await supabase.auth.getSession();
-        setIsLoading(false);
-      };
-      
-      checkSession();
-      
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
+      }
     }
   }, [isSupabaseInit]);
   
