@@ -38,7 +38,8 @@ import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters
 import { Copy, Save, Trash, Download, Plus, Edit } from "lucide-react";
 import { Scenario } from '@/lib/types';
 import { loadScenarios, saveScenario, updateScenario, deleteScenario } from '@/lib/scenarioService';
-import { supabase, isSupabaseConfigured, isLoggedIn } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured, isLoggedIn } from '@/lib/supabase';
 import InfoTooltip from '@/components/ui/info-tooltip';
 
 const ScenarioLabPage = () => {

@@ -6,7 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Outlet, useNavigate, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppStore } from "./lib/store";
-import { supabase, isSupabaseConfigured } from './integrations/supabase/client';
+import { supabase } from './integrations/supabase/client';
+import { isSupabaseConfigured } from './lib/supabase';
 import { loadScenarios } from './lib/scenarioService';
 import { toast } from "./components/ui/use-toast";
 

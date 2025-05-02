@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/lib/store';
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, LogIn, LogOut } from "lucide-react";
-import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
