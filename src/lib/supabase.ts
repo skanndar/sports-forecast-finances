@@ -17,12 +17,26 @@ export const supabase = (() => {
       auth: {
         getSession: async () => ({ data: { session: null } }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signOut: async () => ({ error: null }),
+        signInWithOtp: async () => ({ error: null }),
       },
       from: () => ({
-        select: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        select: () => ({
+          data: null, 
+          error: { message: 'Supabase not configured' },
+          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        }),
         insert: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        update: () => ({ data: null, error: { message: 'Supabase not configured' } }),
-        delete: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        update: () => ({ 
+          data: null, 
+          error: { message: 'Supabase not configured' },
+          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        }),
+        delete: () => ({ 
+          data: null, 
+          error: { message: 'Supabase not configured' },
+          eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
+        }),
         eq: () => ({ data: null, error: { message: 'Supabase not configured' } }),
       }),
     };

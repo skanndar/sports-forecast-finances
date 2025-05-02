@@ -1,3 +1,4 @@
+
 import { supabase, isSupabaseConfigured, getCurrentUserId } from './supabase';
 import { Scenario, Settings } from './types';
 
@@ -9,20 +10,25 @@ export const loadScenarios = async () => {
       const userId = await getCurrentUserId();
       
       if (userId) {
-        const { data, error } = await supabase
-          .from('scenarios')
-          .select('*')
-          .eq('user_id', userId);
+        // First get the query builder
+        const query = supabase.from('scenarios').select('*');
+        
+        // Then apply the filter if the method exists
+        if (query && typeof query.eq === 'function') {
+          const { data, error } = await query.eq('user_id', userId);
           
-        if (error) {
-          console.error('Error loading scenarios from Supabase:', error);
-        } else if (data) {
-          return data.map(item => ({
-            id: item.id,
-            name: item.name,
-            settings: item.settings,
-            results: undefined // We'll calculate this when needed
-          }));
+          if (error) {
+            console.error('Error loading scenarios from Supabase:', error);
+          } else if (data) {
+            return data.map(item => ({
+              id: item.id,
+              name: item.name,
+              settings: item.settings,
+              results: undefined // We'll calculate this when needed
+            }));
+          }
+        } else {
+          console.warn('Supabase query methods not available');
         }
       }
     } catch (error) {
@@ -102,19 +108,29 @@ export const updateScenario = async (id: string, name: string, settings: Setting
       const userId = await getCurrentUserId();
       
       if (userId) {
-        const { error } = await supabase
+        // Get the update query builder
+        const updateQuery = supabase
           .from('scenarios')
           .update({
             name,
             settings
-          })
-          .eq('id', id)
-          .eq('user_id', userId);
+          });
+        
+        // Apply the filters if the method exists
+        if (updateQuery && typeof updateQuery.eq === 'function') {
+          const idFilter = updateQuery.eq('id', id);
           
-        if (error) {
-          console.error('Error updating scenario in Supabase:', error);
+          if (idFilter && typeof idFilter.eq === 'function') {
+            const { error } = await idFilter.eq('user_id', userId);
+            
+            if (error) {
+              console.error('Error updating scenario in Supabase:', error);
+            } else {
+              return;
+            }
+          }
         } else {
-          return;
+          console.warn('Supabase update query methods not available');
         }
       }
     } catch (error) {
@@ -152,16 +168,26 @@ export const deleteScenario = async (id: string): Promise<void> => {
       const userId = await getCurrentUserId();
       
       if (userId) {
-        const { error } = await supabase
+        // Get the delete query builder
+        const deleteQuery = supabase
           .from('scenarios')
-          .delete()
-          .eq('id', id)
-          .eq('user_id', userId);
+          .delete();
+        
+        // Apply the filters if the method exists
+        if (deleteQuery && typeof deleteQuery.eq === 'function') {
+          const idFilter = deleteQuery.eq('id', id);
           
-        if (error) {
-          console.error('Error deleting scenario from Supabase:', error);
+          if (idFilter && typeof idFilter.eq === 'function') {
+            const { error } = await idFilter.eq('user_id', userId);
+            
+            if (error) {
+              console.error('Error deleting scenario from Supabase:', error);
+            } else {
+              return;
+            }
+          }
         } else {
-          return;
+          console.warn('Supabase delete query methods not available');
         }
       }
     } catch (error) {
