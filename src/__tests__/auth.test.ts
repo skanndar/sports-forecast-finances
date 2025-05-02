@@ -1,17 +1,17 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
 
-// Mock de supabase
-vi.mock('@/lib/supabase', () => ({
+// Mock the supabase client
+vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     auth: {
       signInWithOtp: vi.fn(),
       getSession: vi.fn(),
       signOut: vi.fn()
     }
-  },
-  isSupabaseConfigured: vi.fn(() => true)
+  }
 }));
 
 describe('Autenticación con Supabase', () => {
@@ -33,7 +33,10 @@ describe('Autenticación con Supabase', () => {
 
     // Mock para una respuesta exitosa
     vi.mocked(supabase.auth.signInWithOtp).mockResolvedValueOnce({ 
-      data: {}, 
+      data: { 
+        user: null,
+        session: null
+      }, 
       error: null 
     });
 
@@ -55,11 +58,29 @@ describe('Autenticación con Supabase', () => {
   });
 
   it('debería comprobar correctamente la sesión actual', async () => {
+    // Create a fully-typed mock User object
+    const mockUser: User = {
+      id: 'test-user-id',
+      email: 'test@example.com',
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+      // Add other required User properties
+      role: '',
+      updated_at: new Date().toISOString()
+    };
+    
     // Mock para una sesión activa
     vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
       data: {
         session: {
-          user: { id: 'test-user-id', email: 'test@example.com' }
+          user: mockUser,
+          access_token: 'mock-token',
+          refresh_token: 'mock-refresh-token',
+          expires_at: 9999999999,
+          expires_in: 3600,
+          token_type: 'bearer'
         }
       },
       error: null
@@ -71,7 +92,7 @@ describe('Autenticación con Supabase', () => {
     // Verificar que se llamó correctamente
     expect(supabase.auth.getSession).toHaveBeenCalled();
     expect(response.data.session).toBeTruthy();
-    expect(response.data.session.user.id).toBe('test-user-id');
+    expect(response.data.session?.user.id).toBe('test-user-id');
   });
 
   it('debería cerrar sesión correctamente', async () => {
