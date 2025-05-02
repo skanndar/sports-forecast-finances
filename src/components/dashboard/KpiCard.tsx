@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import InfoTooltip from "@/components/ui/info-tooltip";
 
 interface KpiCardProps {
   title: string;
   value: string | number;
   description?: string;
-  tooltip?: string;
+  tooltipId?: string;
   trend?: {
     value: number;
     isPositive: boolean;
@@ -22,7 +23,7 @@ const KpiCard = ({
   title,
   value,
   description,
-  tooltip,
+  tooltipId,
   trend,
   statusColor = "default",
   className,
@@ -47,16 +48,7 @@ const KpiCard = ({
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
             {title}
-            {tooltip && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info size={14} className="text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>{tooltip}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+            {tooltipId && <InfoTooltip id={tooltipId} />}
           </CardTitle>
           {trend && (
             <div className={`text-xs font-medium ${trend.isPositive ? "text-success" : "text-danger"}`}>

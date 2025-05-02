@@ -2,24 +2,43 @@
 import { TooltipContent } from './types';
 
 export const tooltips: TooltipContent = {
-  "product-units": "Number of machines available for rent.",
-  "product-pricing-mode": "Choose 'daily' to price per day or 'monthly' to price per month.",
-  "product-price-per-day": "Rental fee (VAT excl.). Example: €5 /day.",
-  "product-price-per-month": "Rental fee (VAT excl.). Example: €1 000 /month.",
-  "product-min-days": "Minimum rental length. Default 15 days. Adjust for larger equipment if needed.",
-  "product-variable-cost": "Direct cost per rental: consumables, shipping, cleaning, etc.",
-  "product-occupancy": "Average % of time the machine is rented (0-100 %).",
-  "prescriber-commission": "Share of revenue paid to the prescriber. Can be 0 %.",
-  "employees": "Full-time staff on payroll.",
-  "salary": "Total annual cost per employee (gross salary + taxes).",
-  "infra-cost": "Annual infrastructure costs: warehouse, office, insurance.",
-  "web-maint": "Yearly cost to run and maintain the web/app platform.",
-  "marketing-spend": "Annual marketing & sales budget (ads, events, etc.).",
-  "new-customers": "Estimated new customers acquired each year.",
-  "rentals-per-customer": "Total rentals one customer is expected to make during their lifetime.",
-  "churn": "% of customers that stop renting each year (lower = better retention).",
-  "growth": "Annual growth rate applied to demand (units rented).",
-  "inflation": "Annual increase applied to costs (salaries, variableCost, etc.).",
-  "forecast-years": "Projection horizon in years (3-5).",
-  "discount-rate": "Weighted Average Cost of Capital. Used to discount cash-flows in NPV/IRR calculations."
+  // KPI tooltips
+  "irr": "Tasa Interna de Retorno; compara con WACC para decidir si crea valor.",
+  "npv": "Valor Presente Neto descontando los flujos con la tasa WACC.",
+  "discountRate": "Coste Medio Ponderado de Capital (WACC); usado para VAN y como referencia de TIR.",
+  "ltvCac": "LTV/CAC > 3 indica un buen modelo de negocio.",
+  "cac": "Coste de Adquisición de Cliente = marketing / nuevos clientes.",
+  "ltv": "Valor del Ciclo de Vida del Cliente = ingresos por cliente a lo largo de su vida.",
+  "payback": "Tiempo para recuperar el CAC. Ideal < 12 meses.",
+  "breakeven": "Punto donde los ingresos igualan a los costes totales.",
+  
+  // Product tooltips
+  "product-units": "Número de máquinas disponibles para alquiler.",
+  "product-pricing-mode": "Elige 'diario' para precio por día o 'mensual' para precio por mes.",
+  "product-price-per-day": "Tarifa de alquiler (IVA excl.). Ejemplo: €5 /día.",
+  "product-price-per-month": "Tarifa de alquiler (IVA excl.). Ejemplo: €1.000 /mes.",
+  "product-min-days": "Duración mínima de alquiler. Por defecto 15 días. Ajustar para equipos más grandes si es necesario.",
+  "product-variable-cost": "Coste directo por alquiler: consumibles, envío, limpieza, etc.",
+  "product-occupancy": "Porcentaje medio de tiempo que la máquina está alquilada (0-100%).",
+  
+  // Prescriber tooltips
+  "prescriber-commission": "Porcentaje de ingresos pagados al prescriptor. Puede ser 0%.",
+  
+  // Structural tooltips
+  "employees": "Personal a tiempo completo en nómina.",
+  "salary": "Coste anual total por empleado (salario bruto + impuestos).",
+  "infra-cost": "Costes anuales de infraestructura: almacén, oficina, seguros.",
+  "web-maint": "Coste anual para mantener la plataforma web/app.",
+  
+  // Marketing tooltips
+  "marketing-spend": "Presupuesto anual de marketing y ventas (anuncios, eventos, etc.).",
+  "new-customers": "Nuevos clientes estimados cada año.",
+  "rentals-per-customer": "Total de alquileres que se espera que haga un cliente durante su vida útil.",
+  "churn": "Porcentaje de clientes que dejan de alquilar cada año (menor = mejor retención).",
+  
+  // Global tooltips
+  "growth": "Tasa de crecimiento anual aplicada a la demanda (unidades alquiladas).",
+  "inflation": "Aumento anual aplicado a los costes (salarios, costes variables, etc.).",
+  "forecast-years": "Horizonte de proyección en años (3-5).",
+  "discount-rate": "Coste Medio Ponderado de Capital. Usado para descontar flujos en cálculos de VAN/TIR."
 };

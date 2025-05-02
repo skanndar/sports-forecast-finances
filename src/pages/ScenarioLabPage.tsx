@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -17,77 +18,198 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { useAppStore } from '@/lib/store';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
-import { Copy, Save, Trash, Download, Plus } from "lucide-react";
+import { Copy, Save, Trash, Download, Plus, Edit } from "lucide-react";
 import { Scenario } from '@/lib/types';
+import { loadScenarios, saveScenario, updateScenario, deleteScenario } from '@/lib/scenarioService';
+import { supabase, isSupabaseConfigured, isLoggedIn } from '@/lib/supabase';
+import InfoTooltip from '@/components/ui/info-tooltip';
 
 const ScenarioLabPage = () => {
   const [scenarioName, setScenarioName] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [editingScenarioId, setEditingScenarioId] = useState<string | null>(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
   const { 
     activeScenario,
     savedScenarios,
     compareScenarios,
-    saveScenario,
-    loadScenario,
-    duplicateScenario,
-    deleteScenario,
+    updateSettings,
+    saveScenario: storeSaveScenario,
+    loadScenario: storeLoadScenario,
+    duplicateScenario: storeDuplicateScenario,
+    deleteScenario: storeDeleteScenario,
     addToCompare,
     removeFromCompare,
     clearCompare
   } = useAppStore();
   
-  const handleSaveScenario = () => {
+  // Load scenarios on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (isSupabaseConfigured()) {
+          const loggedIn = await isLoggedIn();
+          setUserIsLoggedIn(loggedIn);
+        }
+        
+        if (!dataLoaded) {
+          const scenarios = await loadScenarios();
+          // TODO: Update app state with loaded scenarios
+          console.log('Loaded scenarios:', scenarios);
+          setDataLoaded(true);
+        }
+      } catch (error) {
+        console.error('Error initializing scenarios:', error);
+      }
+    };
+    
+    fetchData();
+  }, [dataLoaded]);
+  
+  const handleSaveScenario = async () => {
     if (!scenarioName.trim()) {
       toast({
-        title: 'Name required',
-        description: 'Please provide a name for your scenario.',
+        title: t('common.error'),
+        description: t('scenarioLab.nameRequired'),
         variant: 'destructive'
       });
       return;
     }
     
-    saveScenario(scenarioName);
-    setScenarioName('');
-    setDialogOpen(false);
+    try {
+      // Save to backend/localStorage via service
+      const scenarioId = await saveScenario(scenarioName, activeScenario.settings);
+      
+      // Update local store
+      storeSaveScenario(scenarioName);
+      
+      setScenarioName('');
+      setDialogOpen(false);
+      
+      toast({
+        title: t('common.success'),
+        description: t('scenarioLab.scenarioSaved')
+      });
+      
+      // Refresh data
+      setDataLoaded(false);
+    } catch (error) {
+      toast({
+        title: t('common.error'),
+        description: (error as Error).message,
+        variant: 'destructive'
+      });
+    }
+  };
+  
+  const handleRenameScenario = async () => {
+    if (!scenarioName.trim() || !editingScenarioId) {
+      toast({
+        title: t('common.error'),
+        description: t('scenarioLab.nameRequired'),
+        variant: 'destructive'
+      });
+      return;
+    }
     
-    toast({
-      title: 'Scenario saved',
-      description: `${scenarioName} has been saved successfully.`
-    });
+    try {
+      const scenarioToUpdate = savedScenarios.find(s => s.id === editingScenarioId);
+      
+      if (scenarioToUpdate) {
+        // Update in backend/localStorage
+        await updateScenario(editingScenarioId, scenarioName, scenarioToUpdate.settings);
+        
+        // Update local store (by saving with same ID)
+        storeSaveScenario(scenarioName);
+      }
+      
+      setScenarioName('');
+      setEditingScenarioId(null);
+      setRenameDialogOpen(false);
+      
+      toast({
+        title: t('common.success'),
+        description: t('scenarioLab.scenarioRenamed')
+      });
+      
+      // Refresh data
+      setDataLoaded(false);
+    } catch (error) {
+      toast({
+        title: t('common.error'),
+        description: (error as Error).message,
+        variant: 'destructive'
+      });
+    }
   };
   
   const handleLoadScenario = (id: string) => {
-    loadScenario(id);
+    storeLoadScenario(id);
     
     toast({
-      title: 'Scenario loaded',
-      description: 'The scenario has been loaded successfully.'
+      title: t('common.success'),
+      description: t('scenarioLab.scenarioLoaded')
     });
   };
   
   const handleDuplicateScenario = (id: string) => {
-    duplicateScenario(id);
+    storeDuplicateScenario(id);
     
     toast({
-      title: 'Scenario duplicated',
-      description: 'A copy of the scenario has been created.'
+      title: t('common.success'),
+      description: t('scenarioLab.scenarioDuplicated')
     });
   };
   
-  const handleDeleteScenario = (id: string, name: string) => {
-    deleteScenario(id);
-    
-    toast({
-      title: 'Scenario deleted',
-      description: `${name} has been deleted.`
-    });
+  const handleDeleteScenario = async (id: string, name: string) => {
+    try {
+      // Delete from backend/localStorage
+      await deleteScenario(id);
+      
+      // Delete from local store
+      storeDeleteScenario(id);
+      
+      toast({
+        title: t('common.success'),
+        description: t(`${name} ${t('scenarioLab.hasBeenDeleted')}`)
+      });
+      
+      // Refresh data
+      setDataLoaded(false);
+    } catch (error) {
+      toast({
+        title: t('common.error'),
+        description: (error as Error).message,
+        variant: 'destructive'
+      });
+    }
+  };
+  
+  const openRenameDialog = (id: string, currentName: string) => {
+    setEditingScenarioId(id);
+    setScenarioName(currentName);
+    setRenameDialogOpen(true);
   };
   
   const handleToggleCompare = (id: string) => {
@@ -97,8 +219,8 @@ const ScenarioLabPage = () => {
       addToCompare(id);
     } else {
       toast({
-        title: 'Comparison limit reached',
-        description: 'You can compare up to 3 scenarios at once.',
+        title: t('scenarioLab.comparisonLimitReached'),
+        description: t('scenarioLab.comparisonLimitDesc'),
         variant: 'destructive'
       });
     }
@@ -121,14 +243,14 @@ const ScenarioLabPage = () => {
     navigator.clipboard.writeText(url)
       .then(() => {
         toast({
-          title: 'Share link copied',
-          description: 'The scenario share link has been copied to your clipboard.'
+          title: t('scenarioLab.shareLinkCopied'),
+          description: t('scenarioLab.shareLinkDesc')
         });
       })
       .catch(() => {
         toast({
-          title: 'Copy failed',
-          description: 'Failed to copy the share link to clipboard.',
+          title: t('scenarioLab.copyFailed'),
+          description: t('scenarioLab.copyFailedDesc'),
           variant: 'destructive'
         });
       });
@@ -136,55 +258,88 @@ const ScenarioLabPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Scenario Lab</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('scenarioLab.title')}</h1>
       
       <div className="flex flex-wrap gap-4 mb-6">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2">
-              <Save size={16} /> Save Current Scenario
+              <Save size={16} /> {t('scenarioLab.saveCurrentBtn')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Save Scenario</DialogTitle>
+              <DialogTitle>{t('scenarioLab.saveScenario')}</DialogTitle>
               <DialogDescription>
-                Give your scenario a name to save it for future reference.
+                {t('scenarioLab.saveScenarioDesc')}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="scenario-name">Name</Label>
+                <Label htmlFor="scenario-name">{t('inputs.name')}</Label>
                 <Input
                   id="scenario-name"
                   value={scenarioName}
                   onChange={(e) => setScenarioName(e.target.value)}
-                  placeholder={activeScenario.name || 'My Scenario'}
+                  placeholder={activeScenario.name || t('common.myScenario')}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSaveScenario}>Save</Button>
+              <Button onClick={handleSaveScenario}>{t('common.save')}</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        
+        <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t('common.rename')}</DialogTitle>
+              <DialogDescription>
+                {t('scenarioLab.enterNewName')}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="scenario-rename">{t('inputs.name')}</Label>
+                <Input
+                  id="scenario-rename"
+                  value={scenarioName}
+                  onChange={(e) => setScenarioName(e.target.value)}
+                  placeholder={t('common.newName')}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleRenameScenario}>{t('common.rename')}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
         
         <Button variant="outline" onClick={shareScenario} className="flex items-center gap-2">
-          <Copy size={16} /> Share Link
+          <Copy size={16} /> {t('scenarioLab.shareLink')}
         </Button>
+        
+        {!userIsLoggedIn && isSupabaseConfigured() && (
+          <div className="w-full mt-1">
+            <p className="text-sm text-amber-500">
+              {t('scenarioLab.loginForCloud')}
+            </p>
+          </div>
+        )}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>Saved Scenarios</CardTitle>
-            <CardDescription>Your collection of financial scenarios</CardDescription>
+            <CardTitle>{t('scenarioLab.savedScenarios')}</CardTitle>
+            <CardDescription>{t('scenarioLab.scenarioCollection')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             {savedScenarios.length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-muted-foreground">No saved scenarios yet.</p>
-                <p className="text-sm text-muted-foreground">Save your current scenario to start comparing.</p>
+                <p className="text-muted-foreground">{t('scenarioLab.noSavedScenarios')}</p>
+                <p className="text-sm text-muted-foreground">{t('scenarioLab.saveCurrentScenario')}</p>
               </div>
             ) : (
               savedScenarios.map((scenario) => (
@@ -194,14 +349,35 @@ const ScenarioLabPage = () => {
                       <CardTitle className="text-lg">{scenario.name}</CardTitle>
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" onClick={() => handleLoadScenario(scenario.id)}>
-                          Load
+                          {t('common.load')}
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => openRenameDialog(scenario.id, scenario.name)}>
+                          <Edit size={16} />
                         </Button>
                         <Button variant="ghost" size="sm" onClick={() => handleDuplicateScenario(scenario.id)}>
-                          Duplicate
+                          {t('common.duplicate')}
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleDeleteScenario(scenario.id, scenario.name)}>
-                          <Trash size={16} />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <Trash size={16} />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{t('common.confirmation')}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {t('scenarioLab.deleteConfirmation', { name: scenario.name })}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteScenario(scenario.id, scenario.name)}>
+                                {t('common.delete')}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
                   </CardHeader>
@@ -219,7 +395,7 @@ const ScenarioLabPage = () => {
                       size="sm"
                       onClick={() => handleToggleCompare(scenario.id)}
                     >
-                      {compareScenarios.includes(scenario.id) ? 'Selected' : 'Compare'}
+                      {compareScenarios.includes(scenario.id) ? t('common.selected') : t('common.compare')}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -231,27 +407,27 @@ const ScenarioLabPage = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Scenario Comparison</CardTitle>
+              <CardTitle>{t('scenarioLab.scenarioComparison')}</CardTitle>
               {compareScenarios.length > 0 && (
                 <Button variant="outline" size="sm" onClick={clearCompare}>
-                  Clear
+                  {t('scenarioLab.clear')}
                 </Button>
               )}
             </div>
-            <CardDescription>Compare up to 3 scenarios side by side</CardDescription>
+            <CardDescription>{t('scenarioLab.compareScenarios')}</CardDescription>
           </CardHeader>
           <CardContent>
             {comparisonScenarios.length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-muted-foreground">No scenarios selected for comparison.</p>
-                <p className="text-sm text-muted-foreground">Select 'Compare' on scenarios to include them here.</p>
+                <p className="text-muted-foreground">{t('scenarioLab.noScenariosSelected')}</p>
+                <p className="text-sm text-muted-foreground">{t('scenarioLab.selectScenarios')}</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-2">Metric</th>
+                      <th className="text-left p-2">{t('scenarioLab.metric')}</th>
                       {comparisonScenarios.map(scenario => (
                         <th key={scenario.id} className="text-right p-2">{scenario.name}</th>
                       ))}
@@ -259,7 +435,10 @@ const ScenarioLabPage = () => {
                   </thead>
                   <tbody>
                     <tr className="border-b">
-                      <td className="p-2">Revenue (Year 5)</td>
+                      <td className="p-2 flex items-center">
+                        {t('table.revenue')} ({t('common.year')} 5)
+                        <InfoTooltip id="revenue" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.yearlyResults && scenario.results.yearlyResults.length > 0
@@ -269,7 +448,10 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">EBITDA (Year 5)</td>
+                      <td className="p-2 flex items-center">
+                        EBITDA ({t('common.year')} 5)
+                        <InfoTooltip id="ebitda" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.yearlyResults && scenario.results.yearlyResults.length > 0
@@ -279,7 +461,10 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">IRR</td>
+                      <td className="p-2 flex items-center">
+                        IRR
+                        <InfoTooltip id="irr" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.irr ? formatPercentage(scenario.results.irr) : '-'}
@@ -287,7 +472,10 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">NPV</td>
+                      <td className="p-2 flex items-center">
+                        NPV
+                        <InfoTooltip id="npv" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.npv ? formatCurrency(scenario.results.npv) : '-'}
@@ -295,7 +483,10 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">LTV/CAC</td>
+                      <td className="p-2 flex items-center">
+                        LTV/CAC
+                        <InfoTooltip id="ltvCac" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.unitEconomics
@@ -305,7 +496,10 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">Payback (months)</td>
+                      <td className="p-2 flex items-center">
+                        {t('kpis.cacPayback')}
+                        <InfoTooltip id="payback" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.unitEconomics
@@ -315,12 +509,15 @@ const ScenarioLabPage = () => {
                       ))}
                     </tr>
                     <tr className="border-b">
-                      <td className="p-2">Break-even</td>
+                      <td className="p-2 flex items-center">
+                        {t('kpis.breakeven')}
+                        <InfoTooltip id="breakeven" />
+                      </td>
                       {comparisonScenarios.map(scenario => (
                         <td key={scenario.id} className="text-right p-2">
                           {scenario.results?.unitEconomics?.breakEvenYear !== undefined
-                            ? `Year ${scenario.results.unitEconomics.breakEvenYear + 1}`
-                            : 'Not in forecast'}
+                            ? `${t('common.year')} ${scenario.results.unitEconomics.breakEvenYear + 1}`
+                            : t('scenarioLab.notInForecast')}
                         </td>
                       ))}
                     </tr>

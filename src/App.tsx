@@ -3,9 +3,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Outlet, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation, Outlet, useNavigate, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAppStore } from "./lib/store";
+import { supabase, isSupabaseConfigured } from './lib/supabase';
+import { loadScenarios } from './lib/scenarioService';
+
+// Import i18n
+import './lib/i18n';
 
 // Import pages
 import DashboardPage from "./pages/DashboardPage";
@@ -13,6 +18,7 @@ import InputsPage from "./pages/InputsPage";
 import ScenarioLabPage from "./pages/ScenarioLabPage";
 import SensitivityPage from "./pages/SensitivityPage";
 import InvestorPacketPage from "./pages/InvestorPacketPage";
+import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 
 // Import components
@@ -30,6 +36,57 @@ const Layout = () => {
       </main>
     </div>
   );
+};
+
+// Auth wrapper to check if user is logged in
+const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSupabaseInit, setIsSupabaseInit] = useState(false);
+  
+  useEffect(() => {
+    const initSupabase = async () => {
+      // Check if Supabase is configured
+      if (isSupabaseConfigured()) {
+        setIsSupabaseInit(true);
+      } else {
+        console.log('Supabase is not configured. Using local storage for scenarios.');
+        setIsLoading(false);
+      }
+    };
+    
+    initSupabase();
+  }, []);
+  
+  // If Supabase is configured, check for existing session
+  useEffect(() => {
+    if (isSupabaseInit) {
+      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        setIsLoading(false);
+      });
+      
+      // Initial session check
+      const checkSession = async () => {
+        const { data } = await supabase.auth.getSession();
+        setIsLoading(false);
+      };
+      
+      checkSession();
+      
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    }
+  }, [isSupabaseInit]);
+  
+  if (isLoading && isSupabaseInit) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+  
+  return <>{children}</>;
 };
 
 // Check for theme preference
@@ -84,25 +141,52 @@ const ShareLinkHandler = () => {
   return null;
 };
 
+// Load saved scenarios on app init
+const ScenarioLoader = () => {
+  const { savedScenarios } = useAppStore();
+  
+  useEffect(() => {
+    const initScenarios = async () => {
+      try {
+        const scenarios = await loadScenarios();
+        // TODO: Update app state with loaded scenarios
+        console.log('Loaded scenarios:', scenarios);
+      } catch (error) {
+        console.error('Error loading scenarios:', error);
+      }
+    };
+    
+    if (savedScenarios.length === 0) {
+      initScenarios();
+    }
+  }, [savedScenarios]);
+  
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <ShareLinkHandler />
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<DashboardPage />} />
-              <Route path="inputs" element={<InputsPage />} />
-              <Route path="scenario-lab" element={<ScenarioLabPage />} />
-              <Route path="sensitivity" element={<SensitivityPage />} />
-              <Route path="investor-packet" element={<InvestorPacketPage />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthWrapper>
+          <BrowserRouter>
+            <ShareLinkHandler />
+            <ScenarioLoader />
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<Layout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="inputs" element={<InputsPage />} />
+                <Route path="scenario-lab" element={<ScenarioLabPage />} />
+                <Route path="sensitivity" element={<SensitivityPage />} />
+                <Route path="investor-packet" element={<InvestorPacketPage />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthWrapper>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

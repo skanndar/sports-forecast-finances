@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -41,10 +42,12 @@ interface CustomTooltipProps extends TooltipProps<any, any> {
 }
 
 const CustomTooltip = ({ active, payload, formatter = formatCurrency }: CustomTooltipProps) => {
+  const { t } = useTranslation();
+  
   if (active && payload && payload.length) {
     return (
       <div className="bg-background border border-border shadow-lg rounded-md p-2">
-        <p className="text-sm font-medium">{`Year ${payload[0].payload.year + 1}`}</p>
+        <p className="text-sm font-medium">{`${t('common.year')} ${payload[0].payload.year}`}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} className="text-sm" style={{ color: entry.color }}>
             {`${entry.name}: ${formatter(entry.value)}`}
@@ -80,14 +83,15 @@ const DashboardPage = () => {
   const [chartView, setChartView] = useState<'cashflow' | 'revenue'| 'margins'>('cashflow');
   const { activeScenario } = useAppStore();
   const { settings, results } = activeScenario;
+  const { t } = useTranslation();
   
   if (!results || !results.yearlyResults.length) {
     return (
       <div className="container mx-auto px-4 py-10 flex items-center justify-center">
         <Card className="w-full max-w-lg">
           <CardHeader>
-            <CardTitle>No Data Available</CardTitle>
-            <CardDescription>Please configure your financial inputs first.</CardDescription>
+            <CardTitle>{t('dashboard.noData')}</CardTitle>
+            <CardDescription>{t('dashboard.configureInputs')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -124,11 +128,11 @@ const DashboardPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Financial Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('dashboard.title')}</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <KpiCard 
-          title="Revenue (Year 5)"
+          title={t('kpis.revenue')}
           value={lastYearResult.revenue}
           formatter={formatCurrency}
           trend={{
@@ -138,15 +142,16 @@ const DashboardPage = () => {
         />
         
         <KpiCard 
-          title="Gross Margin"
+          title={t('kpis.grossMargin')}
           value={grossMargin}
           formatter={formatPercentage}
         />
         
         <KpiCard 
-          title="EBITDA (Year 5)"
+          title={t('kpis.ebitda')}
           value={lastYearResult.ebitda}
           formatter={formatCurrency}
+          tooltipId="ebitda"
           trend={{
             value: ebitdaGrowth,
             isPositive: ebitdaGrowth >= 0
@@ -154,42 +159,44 @@ const DashboardPage = () => {
         />
         
         <KpiCard 
-          title="IRR"
+          title={t('kpis.irr')}
           value={results.irr}
           formatter={formatPercentage}
+          tooltipId="irr"
         />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <KpiCard 
-          title="NPV"
+          title={t('kpis.npv')}
           value={results.npv}
           formatter={formatCurrency}
+          tooltipId="npv"
         />
         
         <KpiCard 
-          title="LTV/CAC Ratio"
+          title={t('kpis.ltvCacRatio')}
           value={results.unitEconomics.ltv / results.unitEconomics.cac}
           statusColor={getLTVCACStatusColor(results.unitEconomics.ltv / results.unitEconomics.cac)}
           formatter={(val) => Number(val).toFixed(1) + 'x'}
-          tooltip="LTV/CAC ratio should be > 3 for a healthy business"
+          tooltipId="ltvCac"
         />
         
         <KpiCard 
-          title="CAC Payback"
+          title={t('kpis.cacPayback')}
           value={results.unitEconomics.paybackMonths}
           statusColor={getPaybackStatusColor(results.unitEconomics.paybackMonths)}
-          formatter={(val) => `${formatNumber(val)} months`}
-          tooltip="CAC Payback should be < 12 months for a healthy business"
+          formatter={(val) => `${formatNumber(val)} ${t('scenarioLab.months')}`}
+          tooltipId="payback"
         />
         
         <KpiCard 
-          title="Break-even"
+          title={t('kpis.breakeven')}
           value={results.unitEconomics.breakEvenYear !== undefined 
-            ? `Year ${results.unitEconomics.breakEvenYear + 1}` 
-            : 'Not in forecast period'}
+            ? `${t('common.year')} ${results.unitEconomics.breakEvenYear + 1}` 
+            : t('scenarioLab.notInForecast')}
           formatter={(val) => String(val)}
-          tooltip="Year when EBITDA becomes positive"
+          tooltipId="breakeven"
         />
       </div>
 
@@ -197,12 +204,12 @@ const DashboardPage = () => {
         <Card className="col-span-1 lg:col-span-2">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Financial Projections</CardTitle>
+              <CardTitle>{t('dashboard.financialProjections')}</CardTitle>
               <Tabs defaultValue="cashflow" value={chartView} onValueChange={(v) => setChartView(v as any)}>
                 <TabsList className="grid grid-cols-3 w-[300px]">
-                  <TabsTrigger value="cashflow">Cash Flow</TabsTrigger>
-                  <TabsTrigger value="revenue">Revenue vs Costs</TabsTrigger>
-                  <TabsTrigger value="margins">Margins</TabsTrigger>
+                  <TabsTrigger value="cashflow">{t('dashboard.cashFlow')}</TabsTrigger>
+                  <TabsTrigger value="revenue">{t('dashboard.revenueVsCosts')}</TabsTrigger>
+                  <TabsTrigger value="margins">{t('dashboard.margins')}</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -223,20 +230,20 @@ const DashboardPage = () => {
                     <Line
                       type="monotone"
                       dataKey="revenue"
-                      name="Revenue"
+                      name={t('charts.revenue')}
                       stroke="#0088FE"
                       activeDot={{ r: 8 }}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="ebitda" 
-                      name="EBITDA" 
+                      name={t('charts.ebitda')} 
                       stroke="#00C49F" 
                     />
                     <Line 
                       type="monotone" 
                       dataKey="cash" 
-                      name="Cash Flow" 
+                      name={t('charts.cashFlow')} 
                       stroke="#FFBB28" 
                     />
                   </LineChart>
@@ -254,8 +261,8 @@ const DashboardPage = () => {
                     <YAxis />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="revenue" name="Revenue" stackId="a" fill="#0088FE" />
-                    <Bar dataKey="totalCosts" name="Total Costs" stackId="b" fill="#FF8042" />
+                    <Bar dataKey="revenue" name={t('charts.revenue')} stackId="a" fill="#0088FE" />
+                    <Bar dataKey="totalCosts" name={t('charts.totalCosts')} stackId="b" fill="#FF8042" />
                   </BarChart>
                 ) : (
                   <LineChart
@@ -275,14 +282,14 @@ const DashboardPage = () => {
                     <Line
                       type="monotone"
                       dataKey="grossMargin"
-                      name="Gross Margin %"
+                      name={t('charts.grossMarginPct')}
                       stroke="#0088FE"
                       activeDot={{ r: 8 }}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="ebitdaMargin" 
-                      name="EBITDA Margin %" 
+                      name={t('charts.ebitdaMarginPct')} 
                       stroke="#00C49F" 
                     />
                   </LineChart>
@@ -294,8 +301,8 @@ const DashboardPage = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Revenue by Product</CardTitle>
-            <CardDescription>Final year revenue distribution</CardDescription>
+            <CardTitle>{t('dashboard.revenueByProduct')}</CardTitle>
+            <CardDescription>{t('dashboard.finalYearRevenue')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">
@@ -325,20 +332,20 @@ const DashboardPage = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Yearly Financial Results</CardTitle>
+          <CardTitle>{t('dashboard.yearlyResults')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-2">Year</th>
-                  <th className="text-right p-2">Revenue</th>
-                  <th className="text-right p-2">Variable Costs</th>
-                  <th className="text-right p-2">Gross Margin</th>
-                  <th className="text-right p-2">Structural Costs</th>
-                  <th className="text-right p-2">EBITDA</th>
-                  <th className="text-right p-2">Cash Flow</th>
+                  <th className="text-left p-2">{t('table.year')}</th>
+                  <th className="text-right p-2">{t('table.revenue')}</th>
+                  <th className="text-right p-2">{t('table.variableCosts')}</th>
+                  <th className="text-right p-2">{t('table.grossMargin')}</th>
+                  <th className="text-right p-2">{t('table.structuralCosts')}</th>
+                  <th className="text-right p-2">{t('table.ebitda')}</th>
+                  <th className="text-right p-2">{t('table.cashFlow')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -348,7 +355,7 @@ const DashboardPage = () => {
                   
                   return (
                     <tr key={index} className="border-b">
-                      <td className="p-2">Year {yearResult.year + 1}</td>
+                      <td className="p-2">{t('common.year')} {yearResult.year + 1}</td>
                       <td className="text-right p-2">{formatCurrency(yearResult.revenue)}</td>
                       <td className="text-right p-2">{formatCurrency(yearResult.variableCosts)}</td>
                       <td className="text-right p-2">{formatPercentage(grossMarginPct / 100)}</td>

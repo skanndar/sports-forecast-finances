@@ -80,8 +80,12 @@ export type Scenario = {
   name: string;
   settings: Settings;
   results?: ProjectResult;
+  user_id?: string;
+  created_at?: string;
 };
 
 export type TooltipContent = {
   [key: string]: string;
 };
+
+export type LanguageOption = 'es' | 'en';
