@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { 
   Accordion, 
@@ -36,7 +35,6 @@ import { useAppStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 import { tooltips } from '@/lib/tooltips';
 import { formatCurrency, formatPercentage } from '@/lib/formatters';
-import { Product } from '@/lib/types';
 
 const InputsPage = () => {
   const [expandedSections, setExpandedSections] = useState<string[]>(['products']);

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/lib/store';
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, LogIn, LogOut } from "lucide-react";
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
@@ -55,6 +55,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     if (isSupabaseConfigured()) {
       await supabase.auth.signOut();
+      // Mostrar un toast o mensaje de confirmación podría ser útil aquí
     }
   };
 

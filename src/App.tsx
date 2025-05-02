@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation, Outlet, useNavigate, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppStore } from "./lib/store";
-import { supabase, isSupabaseConfigured } from './lib/supabase';
+import { supabase, isSupabaseConfigured } from './integrations/supabase/client';
 import { loadScenarios } from './lib/scenarioService';
 import { toast } from "./components/ui/use-toast";
 
@@ -59,6 +59,21 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     };
     
     checkAuth();
+    
+    // Añadir listener para cambios de autenticación
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        const isAuthed = !!session;
+        setIsAuthenticated(isAuthed);
+        if (!isAuthed && isSupabaseConfigured()) {
+          navigate('/login');
+        }
+      }
+    );
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, [navigate]);
   
   // Mostrar un cargador mientras verificamos la autenticación
@@ -228,11 +243,11 @@ const App = () => (
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={<Layout />}>
-                <Route index element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-                <Route path="inputs" element={<ProtectedRoute><InputsPage /></ProtectedRoute>} />
-                <Route path="scenario-lab" element={<ProtectedRoute><ScenarioLabPage /></ProtectedRoute>} />
-                <Route path="sensitivity" element={<ProtectedRoute><SensitivityPage /></ProtectedRoute>} />
-                <Route path="investor-packet" element={<ProtectedRoute><InvestorPacketPage /></ProtectedRoute>} />
+                <Route index element={<DashboardPage />} />
+                <Route path="inputs" element={<InputsPage />} />
+                <Route path="scenario-lab" element={<ScenarioLabPage />} />
+                <Route path="sensitivity" element={<SensitivityPage />} />
+                <Route path="investor-packet" element={<InvestorPacketPage />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

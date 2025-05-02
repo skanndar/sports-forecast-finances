@@ -1,23 +1,57 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
 const LoginPage = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          setIsAuthenticated(true);
+          navigate('/');
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        console.error('Error checking authentication:', error);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        const isAuthed = !!session;
+        setIsAuthenticated(isAuthed);
+        if (isAuthed) {
+          navigate('/');
+        }
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +71,6 @@ const LoginPage = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          // Asegurarse de que la URL de redirección incluya el protocolo y el dominio completo
           emailRedirectTo: window.location.origin,
         }
       });
@@ -68,8 +101,16 @@ const LoginPage = () => {
     navigate('/');
   };
 
-  // Añadimos un efecto para verificar la sesión actual
-  // Este componente solo se renderizará si no hay sesión activa (manejado en App.tsx)
+  // If still checking authentication status, show loading
+  if (isAuthenticated === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <p>{t('common.loading')}</p>
+      </div>
+    );
+  }
+
+  // If authenticated, redirect to home (handled in useEffect)
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
