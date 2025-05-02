@@ -1,73 +1,44 @@
-# Welcome to your Lovable project
 
-## Project info
+# Sports-Med Financials
 
-**URL**: https://lovable.dev/projects/1262c9f7-a689-49d7-8f3e-1ae2dd8ad808
+## Configuración de Autenticación con Supabase
 
-## How can I edit this code?
+### Configuración del Entorno
 
-There are several ways of editing your application.
+Para que la autenticación funcione correctamente, asegúrate de que las variables de entorno estén configuradas en el archivo `.env`:
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/1262c9f7-a689-49d7-8f3e-1ae2dd8ad808) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+VITE_SUPABASE_URL=https://myhccubuqtpedzfkzyhf.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15aGNjdWJ1cXRwZWR6Zmt6eWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyMTQxNTYsImV4cCI6MjA2MTc5MDE1Nn0.YvbizjuA6jc1tqFOSIrP-caOHJVcnH2fpzlx3GXthjM
 ```
 
-**Edit a file directly in GitHub**
+### Flujo de Autenticación
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Esta aplicación utiliza el método de autenticación sin contraseña (passwordless) de Supabase mediante Magic Links:
 
-**Use GitHub Codespaces**
+1. El usuario introduce su dirección de correo electrónico en la página de login
+2. Se le envía un enlace mágico (magic link) a su correo electrónico
+3. Al hacer clic en el enlace, el usuario es redirigido a la aplicación y automáticamente autenticado
+4. La sesión se mantiene en localStorage para futuras visitas
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Configuración de Supabase
 
-## What technologies are used for this project?
+Para que el sistema de autenticación funcione correctamente, es necesario configurar lo siguiente en el panel de Supabase:
 
-This project is built with:
+1. Activar el proveedor de Email en Authentication > Providers
+2. Configurar la URL del sitio en Authentication > URL Configuration:
+   - Site URL: URL donde se aloja la aplicación (ej. https://myhccubuqtpedzfkzyhf.lovableproject.com)
+   - Redirect URLs: Debe incluir al menos la URL completa de la aplicación (ej. https://myhccubuqtpedzfkzyhf.lovableproject.com/*)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Solución de problemas comunes
 
-## How can I deploy this project?
+- **No se recibe el correo con el magic link**: Verifica que las variables de entorno estén correctamente configuradas y que la dirección de correo esté en el formato correcto.
+- **Error al redirigir después del login**: Asegúrate de que la URL de redirección (emailRedirectTo) incluya el protocolo y el dominio completo, y que esta URL esté incluida en las Redirect URLs en la configuración de Supabase.
+- **Sesión no persiste**: Verifica que la configuración del cliente de Supabase tenga habilitadas las opciones autoRefreshToken y persistSession.
 
-Simply open [Lovable](https://lovable.dev/projects/1262c9f7-a689-49d7-8f3e-1ae2dd8ad808) and click on Share -> Publish.
+### Estructura del código de autenticación
 
-## Can I connect a custom domain to my Lovable project?
+- `src/lib/supabase.ts`: Configuración principal del cliente de Supabase y funciones auxiliares para la autenticación.
+- `src/pages/LoginPage.tsx`: Componente de interfaz para el inicio de sesión.
+- `src/App.tsx`: Gestión de estado de autenticación y redirecciones basadas en el estado de la sesión.
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

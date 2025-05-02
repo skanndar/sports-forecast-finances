@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +39,36 @@ const Layout = () => {
   );
 };
 
+// Protected route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (isSupabaseConfigured()) {
+        const { data } = await supabase.auth.getSession();
+        setIsAuthenticated(!!data.session);
+        if (!data.session) {
+          navigate('/login');
+        }
+      } else {
+        // Si Supabase no está configurado, permitimos el acceso sin autenticación
+        setIsAuthenticated(true);
+      }
+    };
+    
+    checkAuth();
+  }, [navigate]);
+  
+  // Mostrar un cargador mientras verificamos la autenticación
+  if (isAuthenticated === null) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+  
+  return <>{children}</>;
+};
+
 // Auth wrapper to check if user is logged in
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -68,6 +99,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     if (isSupabaseInit) {
       try {
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          console.log('Auth state change:', event, session);
           setIsLoading(false);
         });
         
@@ -75,6 +107,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         const checkSession = async () => {
           try {
             const { data } = await supabase.auth.getSession();
+            console.log('Current session:', data.session);
             setIsLoading(false);
           } catch (error) {
             console.error("Error checking Supabase session:", error);
@@ -99,7 +132,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   if (isLoading && isSupabaseInit) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Loading...</p>
+        <p>Cargando...</p>
       </div>
     );
   }
@@ -195,11 +228,11 @@ const App = () => (
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={<Layout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="inputs" element={<InputsPage />} />
-                <Route path="scenario-lab" element={<ScenarioLabPage />} />
-                <Route path="sensitivity" element={<SensitivityPage />} />
-                <Route path="investor-packet" element={<InvestorPacketPage />} />
+                <Route index element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                <Route path="inputs" element={<ProtectedRoute><InputsPage /></ProtectedRoute>} />
+                <Route path="scenario-lab" element={<ProtectedRoute><ScenarioLabPage /></ProtectedRoute>} />
+                <Route path="sensitivity" element={<ProtectedRoute><SensitivityPage /></ProtectedRoute>} />
+                <Route path="investor-packet" element={<ProtectedRoute><InvestorPacketPage /></ProtectedRoute>} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

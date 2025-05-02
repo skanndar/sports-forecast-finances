@@ -1,15 +1,47 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+// Utilizamos las variables de entorno para la configuración
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 // Create a mock response object with eq method
-const createMockQueryResponse = () => ({
-  data: null,
-  error: { message: 'Supabase not configured' },
-  eq: () => createMockQueryResponse()
-});
+const createMockQueryResponse = () => {
+  const mockResponse = {
+    data: null,
+    error: { message: 'Supabase not configured' },
+    eq: () => mockResponse, // Hace que el método eq() retorne el mismo objeto para permitir encadenamiento
+    neq: () => mockResponse,
+    gt: () => mockResponse,
+    gte: () => mockResponse,
+    lt: () => mockResponse,
+    lte: () => mockResponse,
+    like: () => mockResponse,
+    ilike: () => mockResponse,
+    is: () => mockResponse,
+    in: () => mockResponse,
+    contains: () => mockResponse,
+    containedBy: () => mockResponse,
+    rangeGt: () => mockResponse,
+    rangeGte: () => mockResponse,
+    rangeLt: () => mockResponse,
+    rangeLte: () => mockResponse,
+    rangeAdjacent: () => mockResponse,
+    overlaps: () => mockResponse,
+    textSearch: () => mockResponse,
+    match: () => mockResponse,
+    not: () => mockResponse,
+    or: () => mockResponse,
+    filter: () => mockResponse,
+    order: () => mockResponse,
+    limit: () => mockResponse,
+    offset: () => mockResponse,
+    range: () => mockResponse,
+    single: () => mockResponse,
+    maybeSingle: () => mockResponse
+  };
+  return mockResponse;
+};
 
 // Create Supabase client with better error handling for missing config
 export const supabase = (() => {
@@ -32,13 +64,20 @@ export const supabase = (() => {
         insert: () => createMockQueryResponse(),
         update: () => createMockQueryResponse(),
         delete: () => createMockQueryResponse(),
+        upsert: () => createMockQueryResponse(),
         eq: () => createMockQueryResponse(),
       }),
     };
   }
   
-  // If we have valid credentials, create a real client
-  return createClient(supabaseUrl, supabaseAnonKey);
+  // If we have valid credentials, create a real client with proper configuration
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      storage: localStorage
+    }
+  });
 })();
 
 // Helper to check if we're connected to Supabase
