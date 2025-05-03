@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from 'react';   // 👈 NUEVO
 
-import { useState } from 'react';
 import {
   Card,
   CardContent,
