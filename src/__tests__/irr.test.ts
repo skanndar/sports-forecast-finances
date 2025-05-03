@@ -1,4 +1,5 @@
 
+import { describe, test, expect } from 'vitest';
 import { calculateIRR } from '@/lib/finance';
 
 describe('IRR Calculation', () => {

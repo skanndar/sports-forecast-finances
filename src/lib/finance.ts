@@ -1,4 +1,3 @@
-
 import { Settings, Product, YearResult, UnitEconomics, ProjectResult, TornadoItem, MonteCarloResult } from './types';
 
 /**
@@ -145,57 +144,56 @@ export function calculateNPV(cashFlows: number[], discountRate: number): number 
  * Calculate Internal Rate of Return (IRR)
  * Using improved algorithm to avoid -∞ results
  */
-export function calculateIRR(cashFlows: number[]): number | null {
-  // Check if we have at least one positive and one negative value
+export function calculateIRR(cashFlows: number[], guess = 0.1): number | null {
+  // Check if we have necessary condition for IRR calculation:
+  // at least one negative and one positive value
   let hasPositive = false;
   let hasNegative = false;
   
-  for (const cf of cashFlows) {
-    if (cf > 0) hasPositive = true;
-    if (cf < 0) hasNegative = true;
+  for (const flow of cashFlows) {
+    if (flow > 0) hasPositive = true;
+    if (flow < 0) hasNegative = true;
     if (hasPositive && hasNegative) break;
   }
   
-  // If we don't have both positive and negative values, IRR is undefined
-  if (!hasPositive || !hasNegative) return null;
-  
-  // Start with guess of 10%
-  let guess = 0.1;
-  const maxIterations = 100;
-  const tolerance = 0.0001;
-  
-  // Implementation of Newton-Raphson method with safeguards
-  for (let i = 0; i < maxIterations; i++) {
-    const npv = cashFlows.reduce((acc, cf, j) => acc + cf / Math.pow(1 + guess, j), 0);
-    
-    // If we're close enough to zero, we've found the IRR
-    if (Math.abs(npv) < tolerance) {
-      return guess;
-    }
-    
-    // Calculate derivative with a floor to avoid division by zero
-    let derivative = cashFlows.reduce((acc, cf, j) => acc - j * cf / Math.pow(1 + guess, j + 1), 0);
-    
-    // Apply a floor to derivative to avoid division by near-zero
-    if (Math.abs(derivative) < 1e-10) {
-      derivative = 1e-10 * (derivative < 0 ? -1 : 1); // Keep the sign but ensure minimum magnitude
-    }
-    
-    const newGuess = guess - npv / derivative;
-    
-    // Protect against non-convergent solutions
-    if (!isFinite(newGuess) || isNaN(newGuess)) {
-      return null;
-    }
-    
-    if (Math.abs(newGuess - guess) < tolerance) {
-      return newGuess;
-    }
-    
-    guess = newGuess;
+  // If we don't have both signs, IRR is not defined
+  if (!hasPositive || !hasNegative) {
+    return null;
   }
   
-  // If we've reached maximum iterations without convergence, IRR is undefined
+  const maxIterations = 100;
+  let rate = guess;
+  
+  // Newton-Raphson method
+  for (let i = 0; i < maxIterations; i++) {
+    const npv = cashFlows.reduce((sum, flow, t) => sum + flow / Math.pow(1 + rate, t), 0);
+    
+    // If NPV is close to zero, we found our IRR
+    if (Math.abs(npv) < 1e-6) {
+      return rate;
+    }
+    
+    // Calculate derivative
+    let derivative = cashFlows.reduce(
+      (sum, flow, t) => sum - (t * flow) / Math.pow(1 + rate, t + 1),
+      0
+    );
+    
+    // Protect against division by zero
+    if (Math.abs(derivative) < 1e-10) {
+      derivative = 1e-10;
+    }
+    
+    // Update rate estimate
+    rate -= npv / derivative;
+    
+    // Guard against irr heading towards -∞
+    if (rate <= -1) {
+      return null;
+    }
+  }
+  
+  // If we didn't converge, return null
   return null;
 }
 

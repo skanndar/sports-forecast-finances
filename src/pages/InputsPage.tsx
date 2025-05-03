@@ -340,14 +340,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="employees">Employees</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["employees"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="employees" />
                 </div>
                 <Input 
                   id="employees"
@@ -361,14 +354,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="salary">Salary (per employee)</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["salary"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="salary" />
                 </div>
                 <Input 
                   id="salary"
@@ -383,14 +369,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="infra-cost">Infrastructure Cost (yearly)</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["infra-cost"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="infra-cost" />
                 </div>
                 <Input 
                   id="infra-cost"
@@ -405,14 +384,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="web-maint">Web/App Maintenance (yearly)</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["web-maint"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="web-maint" />
                 </div>
                 <Input 
                   id="web-maint"
@@ -434,14 +406,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="marketing-spend">Marketing Spend (yearly)</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["marketing-spend"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="marketing-spend" />
                 </div>
                 <Input 
                   id="marketing-spend"
@@ -456,14 +421,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="new-customers">New Customers (yearly)</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["new-customers"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="new-customers" />
                 </div>
                 <Input 
                   id="new-customers"
@@ -477,14 +435,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="rentals-per-customer">Rentals Per Customer</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["rentals-per-customer"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="rentals-per-customer" />
                 </div>
                 <Input 
                   id="rentals-per-customer"
@@ -500,14 +451,7 @@ const InputsPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="churn">Churn Rate</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={14} className="text-muted-foreground cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>{tooltips["churn"]}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <InfoTooltip id="churn" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.churn)}</span>
                 </div>
@@ -532,14 +476,7 @@ const InputsPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="growth">Growth Rate</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={14} className="text-muted-foreground cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>{tooltips["growth"]}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <InfoTooltip id="growth" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.growth)}</span>
                 </div>
@@ -557,14 +494,7 @@ const InputsPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="inflation">Inflation Rate</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={14} className="text-muted-foreground cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>{tooltips["inflation"]}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <InfoTooltip id="inflation" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.inflation)}</span>
                 </div>
@@ -581,14 +511,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="forecast-years">Forecast Years</Label>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info size={14} className="text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>{tooltips["forecast-years"]}</TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <InfoTooltip id="forecast-years" />
                 </div>
                 <Select 
                   value={String(settings.forecastYears)} 
@@ -609,14 +532,7 @@ const InputsPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Label htmlFor="discount-rate">Discount Rate (WACC)</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={14} className="text-muted-foreground cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>{tooltips["discount-rate"]}</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <InfoTooltip id="discount-rate" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.discountRate)}</span>
                 </div>

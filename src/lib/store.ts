@@ -186,6 +186,7 @@ export const useAppStore = create<AppState>()(
           const newPrescriber = {
             id: crypto.randomUUID(),
             name: `Prescriber ${state.activeScenario.settings.prescribers.length + 1}`,
+            share: 0.1, // Default share value
             commission: 0.1
           };
           

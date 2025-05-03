@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -164,7 +163,6 @@ const DashboardPage = () => {
           value={results.irr !== null ? results.irr : undefined}
           formatter={formatPercentage}
           tooltipId="irr"
-          notAvailableText={t('common.notAvailable')}
         />
       </div>
       
