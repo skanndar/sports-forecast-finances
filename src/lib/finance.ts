@@ -59,9 +59,8 @@ export function structuralCosts(year: number, s: Settings): number {
 export function calculateCommissions(revenue: number, s: Settings): number {
   if (!s.prescribers.length) return 0;
   
-  // Assume revenue is equally distributed among prescribers
-  // or use a more complex model if needed
-  return s.prescribers.reduce((total, p) => total + (revenue * p.commission / s.prescribers.length), 0);
+  // Calculate commissions based on share and commission rate for each prescriber
+  return s.prescribers.reduce((total, p) => total + (revenue * p.share * p.commission), 0);
 }
 
 /**
@@ -144,20 +143,50 @@ export function calculateNPV(cashFlows: number[], discountRate: number): number 
 
 /**
  * Calculate Internal Rate of Return (IRR)
- * Using Newton-Raphson method for numerical approximation
+ * Using improved algorithm to avoid -∞ results
  */
-export function calculateIRR(cashFlows: number[]): number {
+export function calculateIRR(cashFlows: number[]): number | null {
+  // Check if we have at least one positive and one negative value
+  let hasPositive = false;
+  let hasNegative = false;
+  
+  for (const cf of cashFlows) {
+    if (cf > 0) hasPositive = true;
+    if (cf < 0) hasNegative = true;
+    if (hasPositive && hasNegative) break;
+  }
+  
+  // If we don't have both positive and negative values, IRR is undefined
+  if (!hasPositive || !hasNegative) return null;
+  
   // Start with guess of 10%
   let guess = 0.1;
   const maxIterations = 100;
   const tolerance = 0.0001;
   
-  // Implementation of Newton-Raphson method
+  // Implementation of Newton-Raphson method with safeguards
   for (let i = 0; i < maxIterations; i++) {
     const npv = cashFlows.reduce((acc, cf, j) => acc + cf / Math.pow(1 + guess, j), 0);
-    const derivative = cashFlows.reduce((acc, cf, j) => acc - j * cf / Math.pow(1 + guess, j + 1), 0);
+    
+    // If we're close enough to zero, we've found the IRR
+    if (Math.abs(npv) < tolerance) {
+      return guess;
+    }
+    
+    // Calculate derivative with a floor to avoid division by zero
+    let derivative = cashFlows.reduce((acc, cf, j) => acc - j * cf / Math.pow(1 + guess, j + 1), 0);
+    
+    // Apply a floor to derivative to avoid division by near-zero
+    if (Math.abs(derivative) < 1e-10) {
+      derivative = 1e-10 * (derivative < 0 ? -1 : 1); // Keep the sign but ensure minimum magnitude
+    }
     
     const newGuess = guess - npv / derivative;
+    
+    // Protect against non-convergent solutions
+    if (!isFinite(newGuess) || isNaN(newGuess)) {
+      return null;
+    }
     
     if (Math.abs(newGuess - guess) < tolerance) {
       return newGuess;
@@ -166,7 +195,8 @@ export function calculateIRR(cashFlows: number[]): number {
     guess = newGuess;
   }
   
-  return guess; // Return best guess if max iterations reached
+  // If we've reached maximum iterations without convergence, IRR is undefined
+  return null;
 }
 
 /**
@@ -406,6 +436,7 @@ export function getDefaultSettings(): Settings {
       {
         id: crypto.randomUUID(),
         name: 'Clinician',
+        share: 0.2,
         commission: 0.1
       }
     ],

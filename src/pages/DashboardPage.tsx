@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KpiCard from '@/components/dashboard/KpiCard';
+import ProductInputSummary from '@/components/dashboard/ProductInputSummary';
 import { useAppStore } from '@/lib/store';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart, TooltipProps, Cell } from 'recharts';
@@ -160,9 +161,10 @@ const DashboardPage = () => {
         
         <KpiCard 
           title={t('kpis.irr')}
-          value={results.irr}
+          value={results.irr !== null ? results.irr : undefined}
           formatter={formatPercentage}
           tooltipId="irr"
+          notAvailableText={t('common.notAvailable')}
         />
       </div>
       
@@ -186,7 +188,7 @@ const DashboardPage = () => {
           title={t('kpis.cacPayback')}
           value={results.unitEconomics.paybackMonths}
           statusColor={getPaybackStatusColor(results.unitEconomics.paybackMonths)}
-          formatter={(val) => `${formatNumber(val)} ${t('scenarioLab.months')}`}
+          formatter={(val) => `${formatNumber(val)} ${t('common.months')}`}
           tooltipId="payback"
         />
         
@@ -194,7 +196,7 @@ const DashboardPage = () => {
           title={t('kpis.breakeven')}
           value={results.unitEconomics.breakEvenYear !== undefined 
             ? `${t('common.year')} ${results.unitEconomics.breakEvenYear + 1}` 
-            : t('scenarioLab.notInForecast')}
+            : t('common.notInForecast')}
           formatter={(val) => String(val)}
           tooltipId="breakeven"
         />
@@ -370,6 +372,9 @@ const DashboardPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Product Input Summary */}
+      <ProductInputSummary products={settings.products} prescribers={settings.prescribers} />
     </div>
   );
 };

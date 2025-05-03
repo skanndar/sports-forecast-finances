@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   Accordion, 
   AccordionContent, 
@@ -24,59 +25,66 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider
-} from "@/components/ui/tooltip";
-import { Info, Plus, Trash } from "lucide-react";
+import InfoTooltip from "@/components/ui/info-tooltip";
+import { Plus, Trash } from "lucide-react";
 import { useAppStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
-import { tooltips } from '@/lib/tooltips';
 import { formatCurrency, formatPercentage } from '@/lib/formatters';
 
 const InputsPage = () => {
   const [expandedSections, setExpandedSections] = useState<string[]>(['products']);
   const { activeScenario, updateProductField, updatePrescriberField, updateSettings, addProduct, removeProduct, addPrescriber, removePrescriber } = useAppStore();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const { settings } = activeScenario;
+  
+  // Calculate total prescriber share to check if it exceeds 100%
+  const totalShare = settings.prescribers.reduce((sum, p) => sum + p.share, 0);
+  const shareExceeds = totalShare > 1;
   
   const handleAddProduct = () => {
     if (settings.products.length >= 5) {
       toast({
-        title: 'Maximum limit reached',
-        description: 'You can add up to 5 products.',
+        title: t('common.maximumLimitReached'),
+        description: t('inputs.maxProductsReached'),
         variant: 'destructive'
       });
       return;
     }
     addProduct();
     toast({
-      title: 'Product added',
-      description: 'A new product has been added to your scenario.'
+      title: t('inputs.productAdded'),
+      description: t('inputs.productAddedDesc')
     });
   };
   
   const handleAddPrescriber = () => {
     if (settings.prescribers.length >= 5) {
       toast({
-        title: 'Maximum limit reached',
-        description: 'You can add up to 5 prescribers.',
+        title: t('common.maximumLimitReached'),
+        description: t('inputs.maxPrescribersReached'),
         variant: 'destructive'
       });
       return;
     }
     addPrescriber();
     toast({
-      title: 'Prescriber added',
-      description: 'A new prescriber has been added to your scenario.'
+      title: t('inputs.prescriberAdded'),
+      description: t('inputs.prescriberAddedDesc')
     });
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Financial Inputs</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('inputs.title')}</h1>
+      
+      {shareExceeds && (
+        <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-md p-3 mb-4">
+          <p className="text-yellow-800 dark:text-yellow-200">
+            {t('inputs.shareExceedsWarning')}
+          </p>
+        </div>
+      )}
       
       <Accordion
         type="multiple"
@@ -86,7 +94,7 @@ const InputsPage = () => {
         className="space-y-4"
       >
         <AccordionItem value="products" className="border rounded-lg">
-          <AccordionTrigger className="px-4">Products</AccordionTrigger>
+          <AccordionTrigger className="px-4">{t('inputs.products')}</AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="grid gap-4">
               {settings.products.map((product, index) => (
@@ -98,7 +106,7 @@ const InputsPage = () => {
                           value={product.name} 
                           onChange={(e) => updateProductField(index, 'name', e.target.value)}
                           className="font-bold text-lg border-none h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                          placeholder="Product Name"
+                          placeholder={t('inputs.productName')}
                         />
                       </CardTitle>
                       
@@ -118,15 +126,8 @@ const InputsPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`product-units-${index}`}>Units</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info size={14} className="text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>{tooltips["product-units"]}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Label htmlFor={`product-units-${index}`}>{t('inputs.units')}</Label>
+                          <InfoTooltip id="product-units" />
                         </div>
                         <Input 
                           id={`product-units-${index}`}
@@ -139,26 +140,19 @@ const InputsPage = () => {
                       
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`product-pricing-mode-${index}`}>Pricing Mode</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info size={14} className="text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>{tooltips["product-pricing-mode"]}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Label htmlFor={`product-pricing-mode-${index}`}>{t('inputs.pricingMode')}</Label>
+                          <InfoTooltip id="product-pricing-mode" />
                         </div>
                         <Select 
                           value={product.pricingMode} 
                           onValueChange={(value) => updateProductField(index, 'pricingMode', value)}
                         >
                           <SelectTrigger id={`product-pricing-mode-${index}`}>
-                            <SelectValue placeholder="Select pricing mode" />
+                            <SelectValue placeholder={t('inputs.selectPricingMode')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="daily">Daily</SelectItem>
-                            <SelectItem value="monthly">Monthly</SelectItem>
+                            <SelectItem value="daily">{t('inputs.daily')}</SelectItem>
+                            <SelectItem value="monthly">{t('inputs.monthly')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -166,15 +160,8 @@ const InputsPage = () => {
                       {product.pricingMode === 'daily' && (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <Label htmlFor={`product-price-per-day-${index}`}>Price Per Day</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info size={14} className="text-muted-foreground cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>{tooltips["product-price-per-day"]}</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                            <Label htmlFor={`product-price-per-day-${index}`}>{t('inputs.pricePerDay')}</Label>
+                            <InfoTooltip id="product-price-per-day" />
                           </div>
                           <Input 
                             id={`product-price-per-day-${index}`}
@@ -190,15 +177,8 @@ const InputsPage = () => {
                       {product.pricingMode === 'monthly' && (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
-                            <Label htmlFor={`product-price-per-month-${index}`}>Price Per Month</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info size={14} className="text-muted-foreground cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>{tooltips["product-price-per-month"]}</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                            <Label htmlFor={`product-price-per-month-${index}`}>{t('inputs.pricePerMonth')}</Label>
+                            <InfoTooltip id="product-price-per-month" />
                           </div>
                           <Input 
                             id={`product-price-per-month-${index}`}
@@ -213,15 +193,8 @@ const InputsPage = () => {
                       
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`product-min-days-${index}`}>Minimum Days</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info size={14} className="text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>{tooltips["product-min-days"]}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Label htmlFor={`product-min-days-${index}`}>{t('inputs.minDays')}</Label>
+                          <InfoTooltip id="product-min-days" />
                         </div>
                         <Input 
                           id={`product-min-days-${index}`}
@@ -234,15 +207,8 @@ const InputsPage = () => {
                       
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`product-variable-cost-${index}`}>Variable Cost</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info size={14} className="text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>{tooltips["product-variable-cost"]}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Label htmlFor={`product-variable-cost-${index}`}>{t('inputs.variableCost')}</Label>
+                          <InfoTooltip id="product-variable-cost" />
                         </div>
                         <Input 
                           id={`product-variable-cost-${index}`}
@@ -257,15 +223,8 @@ const InputsPage = () => {
                       <div className="space-y-2 md:col-span-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Label htmlFor={`product-occupancy-${index}`}>Occupancy</Label>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info size={14} className="text-muted-foreground cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>{tooltips["product-occupancy"]}</TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
+                            <Label htmlFor={`product-occupancy-${index}`}>{t('inputs.occupancy')}</Label>
+                            <InfoTooltip id="product-occupancy" />
                           </div>
                           <span className="text-sm">{formatPercentage(product.occupancy)}</span>
                         </div>
@@ -289,14 +248,14 @@ const InputsPage = () => {
                 className="flex items-center gap-2"
                 disabled={settings.products.length >= 5}
               >
-                <Plus size={16} /> Add Product
+                <Plus size={16} /> {t('inputs.addProduct')}
               </Button>
             </div>
           </AccordionContent>
         </AccordionItem>
         
         <AccordionItem value="prescribers" className="border rounded-lg">
-          <AccordionTrigger className="px-4">Prescribers</AccordionTrigger>
+          <AccordionTrigger className="px-4">{t('inputs.prescribers')}</AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="grid gap-4">
               {settings.prescribers.map((prescriber, index) => (
@@ -308,7 +267,7 @@ const InputsPage = () => {
                           value={prescriber.name} 
                           onChange={(e) => updatePrescriberField(index, 'name', e.target.value)}
                           className="font-bold text-lg border-none h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                          placeholder="Prescriber Name"
+                          placeholder={t('inputs.prescriberName')}
                         />
                       </CardTitle>
                       
@@ -326,15 +285,26 @@ const InputsPage = () => {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`prescriber-commission-${index}`}>Commission</Label>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info size={14} className="text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>{tooltips["prescriber-commission"]}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Label htmlFor={`prescriber-share-${index}`}>{t('inputs.share')}</Label>
+                          <InfoTooltip id="prescriber-share" />
+                        </div>
+                        <span className="text-sm">{formatPercentage(prescriber.share)}</span>
+                      </div>
+                      <Slider
+                        id={`prescriber-share-${index}`}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={[prescriber.share]}
+                        onValueChange={([value]) => updatePrescriberField(index, 'share', value)}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor={`prescriber-commission-${index}`}>{t('inputs.commission')}</Label>
+                          <InfoTooltip id="prescriber-commission" />
                         </div>
                         <span className="text-sm">{formatPercentage(prescriber.commission)}</span>
                       </div>
@@ -357,7 +327,7 @@ const InputsPage = () => {
                 className="flex items-center gap-2"
                 disabled={settings.prescribers.length >= 5}
               >
-                <Plus size={16} /> Add Prescriber
+                <Plus size={16} /> {t('inputs.addPrescriber')}
               </Button>
             </div>
           </AccordionContent>

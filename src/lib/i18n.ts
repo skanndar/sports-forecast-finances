@@ -19,10 +19,13 @@ i18n
         translation: esTranslation
       }
     },
-    lng: 'es',
     fallbackLng: 'es',
     interpolation: {
       escapeValue: false // React already escapes by default
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
     }
   });
 

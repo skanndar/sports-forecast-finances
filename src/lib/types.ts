@@ -15,8 +15,9 @@ export type Product = {
 
 export type Prescriber = { 
   id?: string;
-  name: string; 
-  commission: number; // 0-1
+  name: string;
+  share: number;         // 0-1: portion of revenue attributed to this prescriber  
+  commission: number;    // 0-1: commission rate on their portion of revenue
 };
 
 export type Settings = {
@@ -70,7 +71,7 @@ export type TornadoItem = {
 
 export type ProjectResult = {
   yearlyResults: YearResult[];
-  irr: number;
+  irr: number | null;
   npv: number;
   unitEconomics: UnitEconomics;
 };

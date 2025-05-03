@@ -16,7 +16,11 @@
     "no": "No",
     "confirmation": "Confirmación",
     "error": "Error",
-    "success": "Éxito"
+    "success": "Éxito",
+    "months": "meses",
+    "notAvailable": "N/D",
+    "notInForecast": "Fuera del período de previsión",
+    "maximumLimitReached": "Límite máximo alcanzado"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -49,7 +53,11 @@
     "finalYearRevenue": "Distribución de ingresos del último año",
     "yearlyResults": "Resultados Anuales",
     "noData": "No hay datos disponibles",
-    "configureInputs": "Por favor, configura tus inputs financieros primero"
+    "configureInputs": "Por favor, configura tus inputs financieros primero",
+    "inputSummary": "Resumen de Inputs",
+    "inputSummaryCaption": "Resumen de configuración de productos y prescriptores",
+    "shareExceeds": "Advertencia: La cuota de los prescriptores excede el 100% de los ingresos totales",
+    "financialProjections": "Proyecciones Financieras"
   },
   "kpis": {
     "revenue": "Ingresos (Año 5)",
@@ -77,19 +85,8 @@
     "product-min-days": "Duración mínima de alquiler. Por defecto 15 días. Ajustar para equipos más grandes si es necesario.",
     "product-variable-cost": "Coste directo por alquiler: consumibles, envío, limpieza, etc.",
     "product-occupancy": "Porcentaje medio de tiempo que la máquina está alquilada (0-100%).",
-    "prescriber-commission": "Porcentaje de ingresos pagados al prescriptor. Puede ser 0%.",
-    "employees": "Personal a tiempo completo en nómina.",
-    "salary": "Coste anual total por empleado (salario bruto + impuestos).",
-    "infra-cost": "Costes anuales de infraestructura: almacén, oficina, seguros.",
-    "web-maint": "Coste anual para mantener la plataforma web/app.",
-    "marketing-spend": "Presupuesto anual de marketing y ventas (anuncios, eventos, etc.).",
-    "new-customers": "Nuevos clientes estimados cada año.",
-    "rentals-per-customer": "Total de alquileres que se espera que haga un cliente durante su vida útil.",
-    "churn": "Porcentaje de clientes que dejan de alquilar cada año (menor = mejor retención).",
-    "growth": "Tasa de crecimiento anual aplicada a la demanda (unidades alquiladas).",
-    "inflation": "Aumento anual aplicado a los costes (salarios, costes variables, etc.).",
-    "forecast-years": "Horizonte de proyección en años (3-5).",
-    "discount-rate": "Coste Medio Ponderado de Capital. Usado para descontar flujos en cálculos de VAN/TIR."
+    "prescriber-share": "Porcentaje de ingresos totales atribuidos a este prescriptor.",
+    "prescriber-commission": "Porcentaje de comisión aplicado sobre los ingresos atribuidos al prescriptor."
   },
   "scenarioLab": {
     "title": "Laboratorio de Escenarios",
@@ -112,9 +109,12 @@
     "comparisonLimitReached": "Límite de comparación alcanzado",
     "comparisonLimitDesc": "Puedes comparar hasta 3 escenarios a la vez.",
     "metric": "Métrica",
-    "clear": "Limpiar"
+    "clear": "Limpiar",
+    "months": "meses",
+    "notInForecast": "Fuera del período de previsión"
   },
   "inputs": {
+    "title": "Inputs Financieros",
     "products": "Productos",
     "prescribers": "Prescriptores",
     "structural": "Estructurales",
@@ -123,8 +123,11 @@
     "addProduct": "Añadir Producto",
     "addPrescriber": "Añadir Prescriptor",
     "name": "Nombre",
+    "productName": "Nombre del Producto",
+    "prescriberName": "Nombre del Prescriptor",
     "units": "Unidades",
     "pricingMode": "Modo de Precio",
+    "selectPricingMode": "Seleccionar modo de precio",
     "daily": "Diario",
     "monthly": "Mensual",
     "pricePerDay": "Precio por Día",
@@ -132,6 +135,7 @@
     "minDays": "Días Mínimos",
     "variableCost": "Coste Variable",
     "occupancy": "Ocupación",
+    "share": "Cuota de Ingresos",
     "commission": "Comisión",
     "employees": "Empleados",
     "salary": "Salario",
@@ -144,7 +148,15 @@
     "growth": "Crecimiento",
     "inflation": "Inflación",
     "forecastYears": "Años de Previsión",
-    "discountRate": "Tasa de Descuento (WACC)"
+    "discountRate": "Tasa de Descuento (WACC)",
+    "productAdded": "Producto añadido",
+    "productAddedDesc": "Se ha añadido un nuevo producto a tu escenario.",
+    "prescriberAdded": "Prescriptor añadido",
+    "prescriberAddedDesc": "Se ha añadido un nuevo prescriptor a tu escenario.",
+    "maxProductsReached": "Puedes añadir hasta 5 productos.",
+    "maxPrescribersReached": "Puedes añadir hasta 5 prescriptores.",
+    "shareExceedsWarning": "Advertencia: La cuota total de prescriptores excede el 100%. Esto puede llevar a cálculos de comisión incorrectos.",
+    "price": "Precio"
   },
   "sensitivity": {
     "title": "Análisis de Sensibilidad",

@@ -16,7 +16,11 @@
     "no": "No",
     "confirmation": "Confirmation",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "months": "months",
+    "notAvailable": "N/A",
+    "notInForecast": "Not in forecast period",
+    "maximumLimitReached": "Maximum limit reached"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -49,7 +53,11 @@
     "finalYearRevenue": "Final year revenue distribution",
     "yearlyResults": "Yearly Financial Results",
     "noData": "No Data Available",
-    "configureInputs": "Please configure your financial inputs first"
+    "configureInputs": "Please configure your financial inputs first",
+    "inputSummary": "Input Summary",
+    "inputSummaryCaption": "Summary of products and prescribers configuration",
+    "shareExceeds": "Warning: Prescribers' share exceeds 100% of total revenue",
+    "financialProjections": "Financial Projections"
   },
   "kpis": {
     "revenue": "Revenue (Year 5)",
@@ -77,19 +85,8 @@
     "product-min-days": "Minimum rental length. Default 15 days. Adjust for larger equipment if needed.",
     "product-variable-cost": "Direct cost per rental: consumables, shipping, cleaning, etc.",
     "product-occupancy": "Average % of time the machine is rented (0-100%).",
-    "prescriber-commission": "Share of revenue paid to the prescriber. Can be 0%.",
-    "employees": "Full-time staff on payroll.",
-    "salary": "Total annual cost per employee (gross salary + taxes).",
-    "infra-cost": "Annual infrastructure costs: warehouse, office, insurance.",
-    "web-maint": "Yearly cost to run and maintain the web/app platform.",
-    "marketing-spend": "Annual marketing & sales budget (ads, events, etc.).",
-    "new-customers": "Estimated new customers acquired each year.",
-    "rentals-per-customer": "Total rentals one customer is expected to make during their lifetime.",
-    "churn": "% of customers that stop renting each year (lower = better retention).",
-    "growth": "Annual growth rate applied to demand (units rented).",
-    "inflation": "Annual increase applied to costs (salaries, variableCost, etc.).",
-    "forecast-years": "Projection horizon in years (3-5).",
-    "discount-rate": "Weighted Average Cost of Capital. Used to discount cash-flows in NPV/IRR calculations."
+    "prescriber-share": "Percentage of total revenue attributed to this prescriber.",
+    "prescriber-commission": "Commission rate applied to the prescriber's attributed revenue."
   },
   "scenarioLab": {
     "title": "Scenario Lab",
@@ -112,9 +109,12 @@
     "comparisonLimitReached": "Comparison limit reached",
     "comparisonLimitDesc": "You can compare up to 3 scenarios at once.",
     "metric": "Metric",
-    "clear": "Clear"
+    "clear": "Clear",
+    "months": "months",
+    "notInForecast": "Not in forecast period"
   },
   "inputs": {
+    "title": "Financial Inputs",
     "products": "Products",
     "prescribers": "Prescribers",
     "structural": "Structural",
@@ -123,8 +123,11 @@
     "addProduct": "Add Product",
     "addPrescriber": "Add Prescriber",
     "name": "Name",
+    "productName": "Product Name",
+    "prescriberName": "Prescriber Name",
     "units": "Units",
     "pricingMode": "Pricing Mode",
+    "selectPricingMode": "Select pricing mode",
     "daily": "Daily",
     "monthly": "Monthly",
     "pricePerDay": "Price per Day",
@@ -132,6 +135,7 @@
     "minDays": "Min Days",
     "variableCost": "Variable Cost",
     "occupancy": "Occupancy",
+    "share": "Revenue Share",
     "commission": "Commission",
     "employees": "Employees",
     "salary": "Salary",
@@ -144,7 +148,15 @@
     "growth": "Growth",
     "inflation": "Inflation",
     "forecastYears": "Forecast Years",
-    "discountRate": "Discount Rate (WACC)"
+    "discountRate": "Discount Rate (WACC)",
+    "productAdded": "Product added",
+    "productAddedDesc": "A new product has been added to your scenario.",
+    "prescriberAdded": "Prescriber added",
+    "prescriberAddedDesc": "A new prescriber has been added to your scenario.",
+    "maxProductsReached": "You can add up to 5 products.",
+    "maxPrescribersReached": "You can add up to 5 prescribers.",
+    "shareExceedsWarning": "Warning: Total prescriber share exceeds 100%. This may lead to incorrect commission calculations.",
+    "price": "Price"
   },
   "sensitivity": {
     "title": "Sensitivity Analysis",
