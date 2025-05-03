@@ -167,7 +167,8 @@
     "maxProductsReached": "You can add up to 5 products.",
     "maxPrescribersReached": "You can add up to 5 prescribers.",
     "shareExceedsWarning": "Warning: Total prescriber share exceeds 100%. This may lead to incorrect commission calculations.",
-    "price": "Price"
+    "price": "Price",
+    "capexPlan": "CAPEX Plan"
   },
   "sensitivity": {
     "title": "Sensitivity Analysis",
@@ -208,7 +209,9 @@
     "ltv": "Customer Lifetime Value (LTV)",
     "ltvCacRatio": "LTV/CAC Ratio",
     "paybackPeriod": "Payback Period",
-    "differentProductOfferings": "different product offerings"
+    "differentProductOfferings": "different product offerings",
+    "financial_detail": "Detailed Financial Projections",
+    "sensitivity": "Sensitivity Analysis"
   },
   "charts": {
     "revenue": "Revenue",

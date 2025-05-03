@@ -30,11 +30,11 @@
     "showDetail": "Ver Detalle"
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "inputs": "Inputs",
-    "scenarioLab": "Lab de Escenarios",
+    "dashboard": "Panel de Control",
+    "inputs": "Entradas",
+    "scenarioLab": "Laboratorio de Escenarios",
     "sensitivity": "Análisis de Sensibilidad",
-    "investorPacket": "Paquete para Inversores",
+    "investorPacket": "Documentación para Inversores",
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión"
   },
@@ -52,7 +52,7 @@
     "enterValidEmail": "Por favor, introduce un correo electrónico válido"
   },
   "dashboard": {
-    "title": "Dashboard Financiero",
+    "title": "Panel Financiero",
     "cashFlow": "Flujo de Caja",
     "revenueVsCosts": "Ingresos vs Costes",
     "margins": "Márgenes",
@@ -60,8 +60,8 @@
     "finalYearRevenue": "Distribución de ingresos del último año",
     "yearlyResults": "Resultados Anuales",
     "noData": "No hay datos disponibles",
-    "configureInputs": "Por favor, configura tus inputs financieros primero",
-    "inputSummary": "Resumen de Inputs",
+    "configureInputs": "Por favor, configura tus entradas financieras primero",
+    "inputSummary": "Resumen de Entradas",
     "inputSummaryCaption": "Resumen de configuración de productos y prescriptores",
     "shareExceeds": "Advertencia: La cuota de los prescriptores excede el 100% de los ingresos totales",
     "financialProjections": "Proyecciones Financieras"
@@ -123,10 +123,10 @@
     "notInForecast": "Fuera del período de previsión"
   },
   "inputs": {
-    "title": "Inputs Financieros",
+    "title": "Entradas Financieras",
     "products": "Productos",
     "prescribers": "Prescriptores",
-    "structural": "Estructurales",
+    "structural": "Estructura",
     "marketing": "Marketing y Retención",
     "globals": "Globales",
     "addProduct": "Añadir Producto",
@@ -155,7 +155,7 @@
     "marketingSpend": "Gasto en Marketing",
     "newCustomers": "Nuevos Clientes",
     "rentalsPerCustomer": "Alquileres por Cliente",
-    "churn": "Churning",
+    "churn": "Tasa de Abandono",
     "growth": "Crecimiento",
     "inflation": "Inflación",
     "forecastYears": "Años de Previsión",
@@ -167,7 +167,8 @@
     "maxProductsReached": "Puedes añadir hasta 5 productos.",
     "maxPrescribersReached": "Puedes añadir hasta 5 prescriptores.",
     "shareExceedsWarning": "Advertencia: La cuota total de prescriptores excede el 100%. Esto puede llevar a cálculos de comisión incorrectos.",
-    "price": "Precio"
+    "price": "Precio",
+    "capexPlan": "Plan de CAPEX"
   },
   "sensitivity": {
     "title": "Análisis de Sensibilidad",
@@ -184,10 +185,10 @@
     "confidenceInterval": "Intervalo de Confianza del 90%"
   },
   "investorPacket": {
-    "title": "Paquete para Inversores",
+    "title": "Documentación para Inversores",
     "generatePdf": "Generar PDF",
     "downloadCsv": "Descargar CSV",
-    "downloadInvestorPacket": "Descargar Paquete Inversor (PDF)",
+    "downloadInvestorPacket": "Descargar Documentación para Inversores (PDF)",
     "summaryReport": "Informe Resumido",
     "detailedForecast": "Previsión Detallada",
     "lineItemDetail": "Desglose línea por línea de ingresos y costes",
@@ -208,7 +209,9 @@
     "ltv": "Valor del Ciclo de Vida del Cliente (LTV)",
     "ltvCacRatio": "Ratio LTV/CAC",
     "paybackPeriod": "Período de Recuperación",
-    "differentProductOfferings": "diferentes ofertas de productos"
+    "differentProductOfferings": "diferentes ofertas de productos",
+    "financial_detail": "Proyecciones Financieras Detalladas",
+    "sensitivity": "Análisis de Sensibilidad"
   },
   "charts": {
     "revenue": "Ingresos",

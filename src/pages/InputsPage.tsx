@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -334,12 +335,12 @@ const InputsPage = () => {
         </AccordionItem>
         
         <AccordionItem value="structural" className="border rounded-lg">
-          <AccordionTrigger className="px-4">Structural Costs</AccordionTrigger>
+          <AccordionTrigger className="px-4">{t('inputs.structural')}</AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="employees">Employees</Label>
+                  <Label htmlFor="employees">{t('inputs.employees')}</Label>
                   <InfoTooltip id="employees" />
                 </div>
                 <Input 
@@ -353,7 +354,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="salary">Salary (per employee)</Label>
+                  <Label htmlFor="salary">{t('inputs.salary')}</Label>
                   <InfoTooltip id="salary" />
                 </div>
                 <Input 
@@ -368,7 +369,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="infra-cost">Infrastructure Cost (yearly)</Label>
+                  <Label htmlFor="infra-cost">{t('inputs.infraCost')}</Label>
                   <InfoTooltip id="infra-cost" />
                 </div>
                 <Input 
@@ -383,7 +384,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="web-maint">Web/App Maintenance (yearly)</Label>
+                  <Label htmlFor="web-maint">{t('inputs.webMaint')}</Label>
                   <InfoTooltip id="web-maint" />
                 </div>
                 <Input 
@@ -395,17 +396,35 @@ const InputsPage = () => {
                   onChange={(e) => updateSettings({ webMaint: Number(e.target.value) })}
                 />
               </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="director-commission">{t('inputs.directorCommission')}</Label>
+                    <InfoTooltip id="director-commission" />
+                  </div>
+                  <span className="text-sm">{formatPercentage(settings.directorCommission)}</span>
+                </div>
+                <Slider
+                  id="director-commission"
+                  min={0}
+                  max={0.2}
+                  step={0.01}
+                  value={[settings.directorCommission]}
+                  onValueChange={([value]) => updateSettings({ directorCommission: value })}
+                />
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
         
         <AccordionItem value="marketing" className="border rounded-lg">
-          <AccordionTrigger className="px-4">Marketing & Retention</AccordionTrigger>
+          <AccordionTrigger className="px-4">{t('inputs.marketing')}</AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="marketing-spend">Marketing Spend (yearly)</Label>
+                  <Label htmlFor="marketing-spend">{t('inputs.marketingSpend')}</Label>
                   <InfoTooltip id="marketing-spend" />
                 </div>
                 <Input 
@@ -420,7 +439,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="new-customers">New Customers (yearly)</Label>
+                  <Label htmlFor="new-customers">{t('inputs.newCustomers')}</Label>
                   <InfoTooltip id="new-customers" />
                 </div>
                 <Input 
@@ -434,7 +453,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="rentals-per-customer">Rentals Per Customer</Label>
+                  <Label htmlFor="rentals-per-customer">{t('inputs.rentalsPerCustomer')}</Label>
                   <InfoTooltip id="rentals-per-customer" />
                 </div>
                 <Input 
@@ -450,7 +469,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="churn">Churn Rate</Label>
+                    <Label htmlFor="churn">{t('inputs.churn')}</Label>
                     <InfoTooltip id="churn" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.churn)}</span>
@@ -469,13 +488,13 @@ const InputsPage = () => {
         </AccordionItem>
         
         <AccordionItem value="globals" className="border rounded-lg">
-          <AccordionTrigger className="px-4">Global Settings</AccordionTrigger>
+          <AccordionTrigger className="px-4">{t('inputs.globals')}</AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="growth">Growth Rate</Label>
+                    <Label htmlFor="growth">{t('inputs.growth')}</Label>
                     <InfoTooltip id="growth" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.growth)}</span>
@@ -493,7 +512,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="inflation">Inflation Rate</Label>
+                    <Label htmlFor="inflation">{t('inputs.inflation')}</Label>
                     <InfoTooltip id="inflation" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.inflation)}</span>
@@ -510,7 +529,7 @@ const InputsPage = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="forecast-years">Forecast Years</Label>
+                  <Label htmlFor="forecast-years">{t('inputs.forecastYears')}</Label>
                   <InfoTooltip id="forecast-years" />
                 </div>
                 <Select 
@@ -518,12 +537,12 @@ const InputsPage = () => {
                   onValueChange={(value) => updateSettings({ forecastYears: Number(value) })}
                 >
                   <SelectTrigger id="forecast-years">
-                    <SelectValue placeholder="Select years" />
+                    <SelectValue placeholder={t('inputs.forecastYears')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="3">3 Years</SelectItem>
-                    <SelectItem value="4">4 Years</SelectItem>
-                    <SelectItem value="5">5 Years</SelectItem>
+                    <SelectItem value="3">3 {t('common.yearForecast')}</SelectItem>
+                    <SelectItem value="4">4 {t('common.yearForecast')}</SelectItem>
+                    <SelectItem value="5">5 {t('common.yearForecast')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -531,7 +550,7 @@ const InputsPage = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Label htmlFor="discount-rate">Discount Rate (WACC)</Label>
+                    <Label htmlFor="discount-rate">{t('inputs.discountRate')}</Label>
                     <InfoTooltip id="discount-rate" />
                   </div>
                   <span className="text-sm">{formatPercentage(settings.discountRate)}</span>
@@ -543,6 +562,21 @@ const InputsPage = () => {
                   step={0.01}
                   value={[settings.discountRate]}
                   onValueChange={([value]) => updateSettings({ discountRate: value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="initial-investment">{t('inputs.initialInvestment')}</Label>
+                  <InfoTooltip id="initial-investment" />
+                </div>
+                <Input 
+                  id="initial-investment"
+                  type="number"
+                  min={0}
+                  step={1000}
+                  value={settings.initialInvestment} 
+                  onChange={(e) => updateSettings({ initialInvestment: Number(e.target.value) })}
                 />
               </div>
             </div>
