@@ -19,6 +19,15 @@ import MethodologySection from '@/components/investor/MethodologySection';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { runMonteCarloSimulation, runTornadoAnalysis } from '@/lib/finance';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";    // 👈 NUEVO
+
 
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
