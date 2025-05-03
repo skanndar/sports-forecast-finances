@@ -20,7 +20,14 @@
     "months": "meses",
     "notAvailable": "N/D",
     "notInForecast": "Fuera del período de previsión",
-    "maximumLimitReached": "Límite máximo alcanzado"
+    "maximumLimitReached": "Límite máximo alcanzado",
+    "byYear": "al año",
+    "yearForecast": "años de previsión",
+    "yearly": "Anual",
+    "expand": "Expandir",
+    "collapse": "Contraer",
+    "hideDetail": "Ocultar Detalle",
+    "showDetail": "Ver Detalle"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -86,7 +93,9 @@
     "product-variable-cost": "Coste directo por alquiler: consumibles, envío, limpieza, etc.",
     "product-occupancy": "Porcentaje medio de tiempo que la máquina está alquilada (0-100%).",
     "prescriber-share": "Porcentaje de ingresos totales atribuidos a este prescriptor.",
-    "prescriber-commission": "Porcentaje de comisión aplicado sobre los ingresos atribuidos al prescriptor."
+    "prescriber-commission": "Porcentaje de comisión aplicado sobre los ingresos atribuidos al prescriptor.",
+    "director-commission": "Porcentaje sobre la facturación total que cobra el Director.",
+    "initial-investment": "Inversión inicial necesaria para arrancar el negocio (capex, stock de máquinas, licencias...). Se descuenta en el año 0 para el cálculo de TIR y VAN."
   },
   "scenarioLab": {
     "title": "Laboratorio de Escenarios",
@@ -141,6 +150,8 @@
     "salary": "Salario",
     "infraCost": "Coste de Infraestructura",
     "webMaint": "Mantenimiento Web",
+    "directorCommission": "Comisión del Director",
+    "initialInvestment": "Inversión Inicial",
     "marketingSpend": "Gasto en Marketing",
     "newCustomers": "Nuevos Clientes",
     "rentalsPerCustomer": "Alquileres por Cliente",
@@ -176,12 +187,28 @@
     "title": "Paquete para Inversores",
     "generatePdf": "Generar PDF",
     "downloadCsv": "Descargar CSV",
+    "downloadInvestorPacket": "Descargar Paquete Inversor (PDF)",
     "summaryReport": "Informe Resumido",
     "detailedForecast": "Previsión Detallada",
+    "lineItemDetail": "Desglose línea por línea de ingresos y costes",
     "generatingPdf": "Generando PDF...",
     "pdfGenerated": "PDF generado",
     "downloadReady": "Tu descarga está lista",
-    "csvReady": "Datos CSV generados"
+    "csvReady": "Datos CSV generados",
+    "generationFailed": "Error al generar PDF",
+    "downloadFailed": "Error al descargar archivo",
+    "executiveSummary": "Resumen Ejecutivo",
+    "financialHighlights": "Aspectos financieros destacados",
+    "keyPerformanceIndicators": "Indicadores Clave de Rendimiento",
+    "financialOperationalKpis": "KPIs financieros y operacionales",
+    "financialProjections": "Proyecciones Financieras",
+    "unitEconomics": "Economía Unitaria",
+    "keyAssumptions": "Supuestos Clave",
+    "cac": "Coste de Adquisición de Cliente (CAC)",
+    "ltv": "Valor del Ciclo de Vida del Cliente (LTV)",
+    "ltvCacRatio": "Ratio LTV/CAC",
+    "paybackPeriod": "Período de Recuperación",
+    "differentProductOfferings": "diferentes ofertas de productos"
   },
   "charts": {
     "revenue": "Ingresos",
@@ -194,10 +221,22 @@
   "table": {
     "year": "Año",
     "revenue": "Ingresos",
+    "totalRevenue": "Ingresos Totales",
     "variableCosts": "Costes Variables",
+    "totalVariableCosts": "Costes Variables Totales",
+    "productCosts": "Costes de Productos",
+    "prescriberCommissions": "Comisiones de Prescriptores",
+    "directorCommission": "Comisión del Director",
     "grossMargin": "Margen Bruto",
     "structuralCosts": "Costes Estructurales",
     "ebitda": "EBITDA",
-    "cashFlow": "Flujo de Caja"
+    "ebitdaMargin": "Margen EBITDA",
+    "cashFlow": "Flujo de Caja",
+    "initialInvestment": "Inversión Inicial",
+    "operatingCashFlow": "Flujo de Caja Operativo",
+    "netCashFlow": "Flujo de Caja Neto",
+    "cumulativeCashFlow": "Flujo de Caja Acumulado",
+    "metric": "Métrica",
+    "item": "Concepto"
   }
 }

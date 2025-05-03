@@ -1,6 +1,6 @@
 
 import { describe, test, expect } from 'vitest';
-import { calculateIRR } from '@/lib/finance';
+import { calculateIRR, buildCashFlows } from '@/lib/finance';
 
 describe('IRR Calculation', () => {
   test('should return a valid IRR for valid cash flows', () => {
@@ -41,5 +41,28 @@ describe('IRR Calculation', () => {
     const nonConvergent = [-1000000, 0, 0, 0, 0, 1000100];
     // Should return null instead of -∞
     expect(calculateIRR(nonConvergent)).not.toBe(-Infinity);
+  });
+  
+  test('should calculate correct IRR for typical investment scenario', () => {
+    // Initial investment of 100,000 and 30,000 annual cash flows for 5 years
+    // Should yield approximately 18% IRR
+    const cashFlows = [-100000, 30000, 30000, 30000, 30000, 30000];
+    const result = calculateIRR(cashFlows);
+    expect(result).toBeGreaterThan(0.17); // 17%
+    expect(result).toBeLessThan(0.19); // 19%
+  });
+  
+  test('should build cash flows correctly with initial investment', () => {
+    const yearlyResults = [
+      { year: 0, cash: 10000, revenue: 0, variableCosts: 0, structuralCosts: 0, ebitda: 0 },
+      { year: 1, cash: 20000, revenue: 0, variableCosts: 0, structuralCosts: 0, ebitda: 0 },
+      { year: 2, cash: 30000, revenue: 0, variableCosts: 0, structuralCosts: 0, ebitda: 0 }
+    ];
+    
+    const initialInvestment = 50000;
+    
+    const cashFlows = buildCashFlows(yearlyResults, initialInvestment);
+    
+    expect(cashFlows).toEqual([-50000, 10000, 20000, 30000]);
   });
 });

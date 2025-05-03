@@ -20,7 +20,14 @@
     "months": "months",
     "notAvailable": "N/A",
     "notInForecast": "Not in forecast period",
-    "maximumLimitReached": "Maximum limit reached"
+    "maximumLimitReached": "Maximum limit reached",
+    "byYear": "by year",
+    "yearForecast": "year forecast",
+    "yearly": "Yearly",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "hideDetail": "Hide Detail",
+    "showDetail": "Show Detail"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -86,7 +93,9 @@
     "product-variable-cost": "Direct cost per rental: consumables, shipping, cleaning, etc.",
     "product-occupancy": "Average % of time the machine is rented (0-100%).",
     "prescriber-share": "Percentage of total revenue attributed to this prescriber.",
-    "prescriber-commission": "Commission rate applied to the prescriber's attributed revenue."
+    "prescriber-commission": "Commission rate applied to the prescriber's attributed revenue.",
+    "director-commission": "Commission percentage applied to total revenue for the Director.",
+    "initial-investment": "Initial investment required to start the business (capex, equipment inventory, licenses...). Deducted in year 0 for IRR and NPV calculations."
   },
   "scenarioLab": {
     "title": "Scenario Lab",
@@ -141,6 +150,8 @@
     "salary": "Salary",
     "infraCost": "Infrastructure Cost",
     "webMaint": "Web Maintenance",
+    "directorCommission": "Director Commission",
+    "initialInvestment": "Initial Investment",
     "marketingSpend": "Marketing Spend",
     "newCustomers": "New Customers",
     "rentalsPerCustomer": "Rentals per Customer",
@@ -176,12 +187,28 @@
     "title": "Investor Packet",
     "generatePdf": "Generate PDF",
     "downloadCsv": "Download CSV",
+    "downloadInvestorPacket": "Download Investor Packet (PDF)",
     "summaryReport": "Summary Report",
     "detailedForecast": "Detailed Forecast",
+    "lineItemDetail": "Line-by-line breakdown of revenue and costs",
     "generatingPdf": "Generating PDF...",
     "pdfGenerated": "PDF generated",
     "downloadReady": "Your download is ready",
-    "csvReady": "CSV data generated"
+    "csvReady": "CSV data generated",
+    "generationFailed": "Failed to generate PDF",
+    "downloadFailed": "Failed to download file",
+    "executiveSummary": "Executive Summary",
+    "financialHighlights": "Financial highlights and key metrics",
+    "keyPerformanceIndicators": "Key Performance Indicators",
+    "financialOperationalKpis": "Financial and operational KPIs",
+    "financialProjections": "Financial Projections",
+    "unitEconomics": "Unit Economics",
+    "keyAssumptions": "Key Assumptions",
+    "cac": "Customer Acquisition Cost (CAC)",
+    "ltv": "Customer Lifetime Value (LTV)",
+    "ltvCacRatio": "LTV/CAC Ratio",
+    "paybackPeriod": "Payback Period",
+    "differentProductOfferings": "different product offerings"
   },
   "charts": {
     "revenue": "Revenue",
@@ -194,10 +221,22 @@
   "table": {
     "year": "Year",
     "revenue": "Revenue",
+    "totalRevenue": "Total Revenue",
     "variableCosts": "Variable Costs",
+    "totalVariableCosts": "Total Variable Costs",
+    "productCosts": "Product Costs",
+    "prescriberCommissions": "Prescriber Commissions",
+    "directorCommission": "Director Commission",
     "grossMargin": "Gross Margin",
     "structuralCosts": "Structural Costs",
     "ebitda": "EBITDA",
-    "cashFlow": "Cash Flow"
+    "ebitdaMargin": "EBITDA Margin",
+    "cashFlow": "Cash Flow",
+    "initialInvestment": "Initial Investment",
+    "operatingCashFlow": "Operating Cash Flow",
+    "netCashFlow": "Net Cash Flow",
+    "cumulativeCashFlow": "Cumulative Cash Flow",
+    "metric": "Metric",
+    "item": "Item"
   }
 }

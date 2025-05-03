@@ -22,7 +22,14 @@ export const tooltips: TooltipContent = {
   "product-occupancy": "Porcentaje medio de tiempo que la máquina está alquilada (0-100%).",
   
   // Prescriber tooltips
+  "prescriber-share": "Porcentaje de ingresos totales atribuidos a este prescriptor.",
   "prescriber-commission": "Porcentaje de ingresos pagados al prescriptor. Puede ser 0%.",
+  
+  // Director commission tooltip
+  "director-commission": "Porcentaje sobre la facturación total que cobra el Director.",
+  
+  // Investment tooltip
+  "initial-investment": "Inversión inicial necesaria para arrancar el negocio (capex, stock de máquinas, licencias...). Se descuenta en el año 0 para el cálculo de IRR y NPV.",
   
   // Structural tooltips
   "employees": "Personal a tiempo completo en nómina.",
@@ -40,5 +47,19 @@ export const tooltips: TooltipContent = {
   "growth": "Tasa de crecimiento anual aplicada a la demanda (unidades alquiladas).",
   "inflation": "Aumento anual aplicado a los costes (salarios, costes variables, etc.).",
   "forecast-years": "Horizonte de proyección en años (3-5).",
-  "discount-rate": "Coste Medio Ponderado de Capital. Usado para descontar flujos en cálculos de VAN/TIR."
+  "discount-rate": "Coste Medio Ponderado de Capital. Usado para descontar flujos en cálculos de VAN/TIR.",
+  
+  // Detailed table tooltips
+  "total-revenue": "Suma de ingresos de todos los productos.",
+  "product-costs": "Costes variables asociados directamente con el alquiler de productos.",
+  "prescriber-commissions": "Comisiones pagadas a prescriptores (% sobre su parte de ingresos atribuidos).",
+  "director-commission": "Comisión pagada al Director (% sobre la facturación total).",
+  "total-variable-costs": "Suma de todos los costes variables (productos, comisiones prescriptores, comisión director).",
+  "gross-margin": "Ingresos - Costes Variables. Representa el margen después de costes directos.",
+  "structural-costs": "Costes fijos y de estructura (empleados, infraestructura, web, etc.).",
+  "ebitda-detail": "Beneficio antes de intereses, impuestos, depreciaciones y amortizaciones.",
+  "initial-investment": "Inversión inicial (capex) necesaria para comenzar el negocio.",
+  "operating-cash-flow": "Flujo operativo generado por el negocio (simplificado como EBITDA en este modelo).",
+  "net-cash-flow": "Flujo de caja después de considerar la inversión inicial y otras inversiones.",
+  "cumulative-cash-flow": "Suma acumulada de los flujos de caja netos hasta cada año."
 };

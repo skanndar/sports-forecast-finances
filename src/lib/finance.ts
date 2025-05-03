@@ -63,11 +63,18 @@ export function calculateCommissions(revenue: number, s: Settings): number {
 }
 
 /**
+ * Calculate director commission for given revenue
+ */
+export function calculateDirectorCommission(revenue: number, s: Settings): number {
+  return revenue * s.directorCommission;
+}
+
+/**
  * Calculate results for a specific year
  */
 export function calculateYearResult(year: number, s: Settings): YearResult {
   let totalRevenue = 0;
-  let totalVariableCosts = 0;
+  let totalProductCosts = 0;
   const revenueByProduct: Record<string, number> = {};
 
   // Calculate revenue and variable costs for each product
@@ -76,14 +83,17 @@ export function calculateYearResult(year: number, s: Settings): YearResult {
     const productVariableCosts = variableCostsForProduct(product, year, s);
     
     totalRevenue += productRevenue;
-    totalVariableCosts += productVariableCosts;
+    totalProductCosts += productVariableCosts;
     
     revenueByProduct[product.name || `Product ${index + 1}`] = productRevenue;
   });
 
-  // Add commission costs as part of variable costs
-  const commissionCosts = calculateCommissions(totalRevenue, s);
-  totalVariableCosts += commissionCosts;
+  // Calculate commission costs
+  const prescriberCommissions = calculateCommissions(totalRevenue, s);
+  const directorCommission = calculateDirectorCommission(totalRevenue, s);
+  
+  // Total variable costs
+  const totalVariableCosts = totalProductCosts + prescriberCommissions + directorCommission;
 
   // Calculate structural costs
   const yearStructuralCosts = structuralCosts(year, s);
@@ -96,11 +106,28 @@ export function calculateYearResult(year: number, s: Settings): YearResult {
     year,
     revenue: totalRevenue,
     variableCosts: totalVariableCosts,
+    productCosts: totalProductCosts,
+    prescriberCosts: prescriberCommissions,
+    directorCost: directorCommission,
     structuralCosts: yearStructuralCosts,
     ebitda,
     cash,
     revenueByProduct
   };
+}
+
+/**
+ * Build cash flows array including initial investment for IRR calculation
+ */
+export function buildCashFlows(yearlyResults: YearResult[], initialInvestment: number): number[] {
+  const cashFlows = [-Math.abs(initialInvestment)]; // Initial investment as negative in year 0
+  
+  // Add cash flows from each subsequent year
+  yearlyResults.forEach(result => {
+    cashFlows.push(result.cash);
+  });
+  
+  return cashFlows;
 }
 
 /**
@@ -114,11 +141,14 @@ export function calculateProjectResults(s: Settings): ProjectResult {
     yearlyResults.push(calculateYearResult(year, s));
   }
 
+  // Build cash flows array including initial investment
+  const cashFlows = buildCashFlows(yearlyResults, s.initialInvestment);
+  
   // Calculate NPV
-  const npv = calculateNPV(yearlyResults.map(y => y.cash), s.discountRate);
+  const npv = calculateNPV(cashFlows, s.discountRate);
   
   // Calculate IRR
-  const irr = calculateIRR(yearlyResults.map(y => y.cash));
+  const irr = calculateIRR(cashFlows);
 
   // Calculate unit economics
   const unitEconomics = calculateUnitEconomics(s, yearlyResults);
@@ -442,6 +472,7 @@ export function getDefaultSettings(): Settings {
     salary: 50000,
     infraCost: 24000,
     webMaint: 12000,
+    directorCommission: 0.03, // 3% commission on total revenue
     marketingSpend: 30000,
     newCustomers: 100,
     rentalsPerCustomer: 2,
@@ -449,6 +480,7 @@ export function getDefaultSettings(): Settings {
     growth: 0.15,
     inflation: 0.03,
     forecastYears: 5,
-    discountRate: 0.1
+    discountRate: 0.1,
+    initialInvestment: 100000 // Default initial investment of 100k
   };
 }

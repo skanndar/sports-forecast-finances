@@ -12,10 +12,14 @@ import { useAppStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import { Download } from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import DetailedFinancialTable from '@/components/investor/DetailedFinancialTable';
+import TornadoChart from '@/components/investor/TornadoChart';
 
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isGenerating, setIsGenerating] = useState(false);
   
   const handleGeneratePDF = async () => {
@@ -24,8 +28,8 @@ const InvestorPacketPage = () => {
       
       // This is a placeholder - in a real implementation you would use jsPDF or similar
       toast({
-        title: 'PDF Generation',
-        description: 'This feature would generate a PDF for investors in the real implementation.',
+        title: t('investorPacket.pdfGenerated'),
+        description: t('investorPacket.downloadReady'),
       });
       
       // Simulate delay
@@ -35,8 +39,8 @@ const InvestorPacketPage = () => {
     } catch (error) {
       setIsGenerating(false);
       toast({
-        title: 'Generation failed',
-        description: 'Failed to generate the PDF.',
+        title: t('common.error'),
+        description: t('investorPacket.generationFailed'),
         variant: 'destructive'
       });
     }
@@ -46,8 +50,8 @@ const InvestorPacketPage = () => {
     try {
       if (!activeScenario.results || !activeScenario.results.yearlyResults.length) {
         toast({
-          title: 'No data available',
-          description: 'Please ensure your scenario has financial results.',
+          title: t('dashboard.noData'),
+          description: t('dashboard.configureInputs'),
           variant: 'destructive'
         });
         return;
@@ -82,13 +86,13 @@ const InvestorPacketPage = () => {
       document.body.removeChild(link);
       
       toast({
-        title: 'CSV downloaded',
-        description: 'The financial data has been downloaded successfully.'
+        title: t('investorPacket.csvReady'),
+        description: t('investorPacket.downloadReady')
       });
     } catch (error) {
       toast({
-        title: 'Download failed',
-        description: 'Failed to download the CSV file.',
+        title: t('common.error'),
+        description: t('investorPacket.downloadFailed'),
         variant: 'destructive'
       });
     }
@@ -99,8 +103,8 @@ const InvestorPacketPage = () => {
       <div className="container mx-auto px-4 py-10 flex items-center justify-center">
         <Card className="w-full max-w-lg">
           <CardHeader>
-            <CardTitle>No Data Available</CardTitle>
-            <CardDescription>Please configure your financial inputs first.</CardDescription>
+            <CardTitle>{t('dashboard.noData')}</CardTitle>
+            <CardDescription>{t('dashboard.configureInputs')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -112,7 +116,7 @@ const InvestorPacketPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Investor Packet</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('investorPacket.title')}</h1>
       
       <div className="mb-6 flex flex-wrap gap-4">
         <Button 
@@ -121,7 +125,7 @@ const InvestorPacketPage = () => {
           className="flex items-center gap-2"
         >
           <Download size={16} />
-          {isGenerating ? 'Generating...' : 'Generate PDF'}
+          {isGenerating ? t('investorPacket.generatingPdf') : t('investorPacket.downloadInvestorPacket')}
         </Button>
         
         <Button 
@@ -129,67 +133,73 @@ const InvestorPacketPage = () => {
           onClick={handleDownloadCSV}
           className="flex items-center gap-2"
         >
-          <Download size={16} /> Download CSV
+          <Download size={16} /> {t('investorPacket.downloadCsv')}
         </Button>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>Executive Summary</CardTitle>
-            <CardDescription>Financial highlights and key metrics</CardDescription>
+            <CardTitle>{t('investorPacket.executiveSummary')}</CardTitle>
+            <CardDescription>{t('investorPacket.financialHighlights')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Financial Highlights</h3>
+              <h3 className="text-lg font-medium">{t('investorPacket.financialHighlights')}</h3>
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  <strong>Revenue:</strong> {formatCurrency(lastYearResult.revenue)} by year {settings.forecastYears}
+                  <strong>{t('table.revenue')}:</strong> {formatCurrency(lastYearResult.revenue)} {t('common.byYear')} {settings.forecastYears}
                 </li>
                 <li>
-                  <strong>EBITDA:</strong> {formatCurrency(lastYearResult.ebitda)} ({formatPercentage(lastYearResult.ebitda / lastYearResult.revenue)})
+                  <strong>{t('table.ebitda')}:</strong> {formatCurrency(lastYearResult.ebitda)} ({formatPercentage(lastYearResult.ebitda / lastYearResult.revenue)})
                 </li>
                 <li>
-                  <strong>IRR:</strong> {formatPercentage(results.irr)}
+                  <strong>{t('kpis.irr')}:</strong> {formatPercentage(results.irr)}
                 </li>
                 <li>
-                  <strong>NPV:</strong> {formatCurrency(results.npv)}
+                  <strong>{t('kpis.npv')}:</strong> {formatCurrency(results.npv)}
                 </li>
               </ul>
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Unit Economics</h3>
+              <h3 className="text-lg font-medium">{t('investorPacket.unitEconomics')}</h3>
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  <strong>Customer Acquisition Cost (CAC):</strong> {formatCurrency(results.unitEconomics.cac)}
+                  <strong>{t('investorPacket.cac')}:</strong> {formatCurrency(results.unitEconomics.cac)}
                 </li>
                 <li>
-                  <strong>Customer Lifetime Value (LTV):</strong> {formatCurrency(results.unitEconomics.ltv)}
+                  <strong>{t('investorPacket.ltv')}:</strong> {formatCurrency(results.unitEconomics.ltv)}
                 </li>
                 <li>
-                  <strong>LTV/CAC Ratio:</strong> {(results.unitEconomics.ltv / results.unitEconomics.cac).toFixed(1)}x
+                  <strong>{t('investorPacket.ltvCacRatio')}:</strong> {(results.unitEconomics.ltv / results.unitEconomics.cac).toFixed(1)}x
                 </li>
                 <li>
-                  <strong>Payback Period:</strong> {formatNumber(results.unitEconomics.paybackMonths)} months
+                  <strong>{t('investorPacket.paybackPeriod')}:</strong> {formatNumber(results.unitEconomics.paybackMonths)} {t('common.months')}
                 </li>
               </ul>
             </div>
             
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Key Assumptions</h3>
+              <h3 className="text-lg font-medium">{t('investorPacket.keyAssumptions')}</h3>
               <ul className="list-disc pl-5 space-y-2">
                 <li>
-                  <strong>Growth Rate:</strong> {formatPercentage(settings.growth)}
+                  <strong>{t('inputs.growth')}:</strong> {formatPercentage(settings.growth)}
                 </li>
                 <li>
-                  <strong>Products:</strong> {settings.products.length} different product offerings
+                  <strong>{t('inputs.products')}:</strong> {settings.products.length} {t('investorPacket.differentProductOfferings')}
                 </li>
                 <li>
-                  <strong>New Customers (Yearly):</strong> {formatNumber(settings.newCustomers)}
+                  <strong>{t('inputs.newCustomers')} ({t('common.yearly')}):</strong> {formatNumber(settings.newCustomers)}
                 </li>
                 <li>
-                  <strong>Churn Rate:</strong> {formatPercentage(settings.churn)}
+                  <strong>{t('inputs.churn')}:</strong> {formatPercentage(settings.churn)}
+                </li>
+                <li>
+                  <strong>{t('inputs.initialInvestment')}:</strong> {formatCurrency(settings.initialInvestment)}
+                </li>
+                <li>
+                  <strong>{t('inputs.directorCommission')}:</strong> {formatPercentage(settings.directorCommission)}
                 </li>
               </ul>
             </div>
@@ -198,42 +208,42 @@ const InvestorPacketPage = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Key Performance Indicators</CardTitle>
-            <CardDescription>Financial and operational KPIs</CardDescription>
+            <CardTitle>{t('investorPacket.keyPerformanceIndicators')}</CardTitle>
+            <CardDescription>{t('investorPacket.financialOperationalKpis')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Revenue (Year {settings.forecastYears})</p>
+                  <p className="text-sm text-muted-foreground">{t('table.revenue')} ({t('common.year')} {settings.forecastYears})</p>
                   <p className="text-2xl font-bold">{formatCurrency(lastYearResult.revenue)}</p>
                 </div>
                 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">EBITDA Margin</p>
+                  <p className="text-sm text-muted-foreground">{t('table.ebitdaMargin')}</p>
                   <p className="text-2xl font-bold">{formatPercentage(lastYearResult.ebitda / lastYearResult.revenue)}</p>
                 </div>
                 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">IRR</p>
+                  <p className="text-sm text-muted-foreground">{t('kpis.irr')}</p>
                   <p className="text-2xl font-bold">{formatPercentage(results.irr)}</p>
                 </div>
                 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">NPV</p>
+                  <p className="text-sm text-muted-foreground">{t('kpis.npv')}</p>
                   <p className="text-2xl font-bold">{formatCurrency(results.npv)}</p>
                 </div>
                 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">LTV/CAC</p>
+                  <p className="text-sm text-muted-foreground">{t('kpis.ltvCacRatio')}</p>
                   <p className="text-2xl font-bold">
                     {(results.unitEconomics.ltv / results.unitEconomics.cac).toFixed(1)}x
                   </p>
                 </div>
                 
                 <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">Payback</p>
-                  <p className="text-2xl font-bold">{formatNumber(results.unitEconomics.paybackMonths)} months</p>
+                  <p className="text-sm text-muted-foreground">{t('kpis.cacPayback')}</p>
+                  <p className="text-2xl font-bold">{formatNumber(results.unitEconomics.paybackMonths)} {t('common.months')}</p>
                 </div>
               </div>
             </div>
@@ -243,35 +253,35 @@ const InvestorPacketPage = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Financial Projections</CardTitle>
-          <CardDescription>{settings.forecastYears}-year forecast</CardDescription>
+          <CardTitle>{t('investorPacket.financialProjections')}</CardTitle>
+          <CardDescription>{settings.forecastYears}-{t('common.yearForecast')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-2">Metric</th>
+                  <th className="text-left p-2">{t('table.metric')}</th>
                   {results.yearlyResults.map((_, index) => (
-                    <th key={index} className="text-right p-2">Year {index + 1}</th>
+                    <th key={index} className="text-right p-2">{t('common.year')} {index + 1}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b">
-                  <td className="p-2">Revenue</td>
+                  <td className="p-2">{t('table.revenue')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatCurrency(yr.revenue)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">Variable Costs</td>
+                  <td className="p-2">{t('table.variableCosts')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatCurrency(yr.variableCosts)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">Gross Margin</td>
+                  <td className="p-2">{t('table.grossMargin')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">
                       {formatPercentage((yr.revenue - yr.variableCosts) / yr.revenue)}
@@ -279,31 +289,31 @@ const InvestorPacketPage = () => {
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">Structural Costs</td>
+                  <td className="p-2">{t('table.structuralCosts')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatCurrency(yr.structuralCosts)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">EBITDA</td>
+                  <td className="p-2">{t('table.ebitda')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatCurrency(yr.ebitda)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">EBITDA Margin</td>
+                  <td className="p-2">{t('table.ebitdaMargin')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatPercentage(yr.ebitda / yr.revenue)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">Cash Flow</td>
+                  <td className="p-2">{t('table.cashFlow')}</td>
                   {results.yearlyResults.map((yr, index) => (
                     <td key={index} className="text-right p-2">{formatCurrency(yr.cash)}</td>
                   ))}
                 </tr>
                 <tr className="border-b">
-                  <td className="p-2">Cumulative Cash Flow</td>
+                  <td className="p-2">{t('table.cumulativeCashFlow')}</td>
                   {results.yearlyResults.map((_, index) => (
                     <td key={index} className="text-right p-2">
                       {formatCurrency(
@@ -319,6 +329,16 @@ const InvestorPacketPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Detailed Financial Table */}
+      <DetailedFinancialTable 
+        yearlyResults={results.yearlyResults} 
+        initialInvestment={settings.initialInvestment}
+        id="detail-table"
+      />
+      
+      {/* Sensitivity Analysis */}
+      <TornadoChart id="tornado-chart" />
     </div>
   );
 };

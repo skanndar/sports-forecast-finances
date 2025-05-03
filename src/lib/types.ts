@@ -27,6 +27,7 @@ export type Settings = {
   salary: number;
   infraCost: number; 
   webMaint: number;
+  directorCommission: number; // 0-1: commission rate on total revenue
 
   marketingSpend: number; 
   newCustomers: number;
@@ -37,12 +38,16 @@ export type Settings = {
   inflation: number;
   forecastYears: number; 
   discountRate: number;
+  initialInvestment: number; // Initial investment (CAPEX) for IRR calculation
 };
 
 export type YearResult = {
   year: number; 
   revenue: number; 
   variableCosts: number;
+  directorCost?: number;    // Commission for director
+  prescriberCosts?: number; // Commission for prescribers
+  productCosts?: number;    // Variable costs for products
   structuralCosts: number; 
   ebitda: number; 
   cash: number;
