@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import {
   Card,
@@ -17,12 +18,42 @@ import TornadoChart from '@/components/investor/TornadoChart';
 import MethodologySection from '@/components/investor/MethodologySection';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { runMonteCarloSimulation, runTornadoAnalysis } from '@/lib/finance';
 
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
   const { toast } = useToast();
   const { t } = useTranslation();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [monteCarloResult, setMonteCarloResult] = useState(null);
+  const [tornadoData, setTornadoData] = useState(null);
+  
+  // Calculate Monte Carlo and Tornado analysis results
+  const runAnalysis = () => {
+    if (!activeScenario.settings) return;
+    
+    try {
+      const mcResult = runMonteCarloSimulation(activeScenario.settings);
+      setMonteCarloResult(mcResult);
+      
+      const tdResult = runTornadoAnalysis(activeScenario.settings);
+      setTornadoData(tdResult);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      toast({
+        title: t('common.error'),
+        description: t('sensitivity.analysisFailed', { defaultValue: "Failed to run sensitivity analysis" }),
+        variant: 'destructive'
+      });
+    }
+  };
+  
+  // Run analysis on component mount if needed
+  React.useEffect(() => {
+    if (activeScenario.settings && !monteCarloResult && !tornadoData) {
+      runAnalysis();
+    }
+  }, [activeScenario.settings]);
   
   const handleGeneratePDF = async () => {
     try {
@@ -75,11 +106,23 @@ const InvestorPacketPage = () => {
       // Capture tornado chart 
       await addHtmlToPDF('tornado-chart', t('sensitivity.title'));
       
+      // Capture Monte Carlo section if it exists
+      const monteCarloSection = document.getElementById('monte-carlo-section');
+      if (monteCarloSection) {
+        await addHtmlToPDF('monte-carlo-section', t('investorPacket.monteCarloSimulation', { defaultValue: "Monte Carlo Simulation" }));
+      }
+      
+      // Capture risk analysis section if it exists
+      const riskAnalysisSection = document.getElementById('risk-analysis-section');
+      if (riskAnalysisSection) {
+        await addHtmlToPDF('risk-analysis-section', t('investorPacket.riskAnalysisSummary', { defaultValue: "Risk Analysis Summary" }));
+      }
+      
       // Capture methodology section
       await addHtmlToPDF('methodology-section', t('investorPacket.methodology'));
 
-      // Save the PDF
-      doc.save(`${activeScenario.name || 'investor-packet'}.pdf`);
+      // Save the PDF - using await to ensure it completes
+      await doc.save(`${activeScenario.name || 'investor-packet'}.pdf`);
       
       toast({
         title: t('investorPacket.pdfGenerated'),
@@ -162,7 +205,7 @@ const InvestorPacketPage = () => {
       </div>
     );
   }
-  
+
   const { results, settings } = activeScenario;
   const lastYearResult = results.yearlyResults[results.yearlyResults.length - 1];
 
@@ -393,6 +436,171 @@ const InvestorPacketPage = () => {
       
       {/* Sensitivity Analysis */}
       <TornadoChart id="tornado-chart" />
+      
+      {/* Monte Carlo Simulation */}
+      {monteCarloResult && (
+        <Card className="mt-6" id="monte-carlo-section">
+          <CardHeader>
+            <CardTitle>{t('investorPacket.monteCarloSimulation', { defaultValue: "Monte Carlo Simulation" })}</CardTitle>
+            <CardDescription>
+              {t('investorPacket.monteCarloDesc', { defaultValue: "1,000 runs with random variations in key parameters" })}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium mb-2">
+                  {t('investorPacket.confidenceInterval', { defaultValue: "90% Confidence Interval" })}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {t('investorPacket.monteCarloExplanation', { 
+                    defaultValue: "Based on 1,000 simulation runs with ±20% random variations in key parameters, the 90% confidence interval for the final year EBITDA is:" 
+                  })}
+                </p>
+                
+                <div className="relative pt-8 pb-4">
+                  <div className="absolute w-full h-2 bg-gray-200 rounded-full">
+                    <div 
+                      className="absolute h-full bg-brand-500 rounded-full"
+                      style={{ 
+                        left: `${0}%`, 
+                        width: `${100}%` 
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="flex justify-between mt-6">
+                    <div className="text-center">
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p5', { defaultValue: "P5 (Pessimistic)" })}
+                      </div>
+                      <div className="font-bold">{formatCurrency(monteCarloResult.p5)}</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p50', { defaultValue: "P50 (Base)" })}
+                      </div>
+                      <div className="font-bold">{formatCurrency(monteCarloResult.p50)}</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p95', { defaultValue: "P95 (Optimistic)" })}
+                      </div>
+                      <div className="font-bold">{formatCurrency(monteCarloResult.p95)}</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <Table className="mt-6">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('table.metric')}</TableHead>
+                      <TableHead className="text-right">{t('table.value')}</TableHead>
+                      <TableHead>{t('investorPacket.interpretation', { defaultValue: "Interpretation" })}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-medium">{t('investorPacket.p5', { defaultValue: "P5" })}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(monteCarloResult.p5)}</TableCell>
+                      <TableCell>{t('investorPacket.p5Desc', { defaultValue: "Worst case scenario (5%)" })}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium">{t('investorPacket.p50', { defaultValue: "P50" })}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(monteCarloResult.p50)}</TableCell>
+                      <TableCell>{t('investorPacket.p50Desc', { defaultValue: "Median case (50%)" })}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-medium">{t('investorPacket.p95', { defaultValue: "P95" })}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(monteCarloResult.p95)}</TableCell>
+                      <TableCell>{t('investorPacket.p95Desc', { defaultValue: "Best case scenario (95%)" })}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
+      {/* Risk Analysis Summary */}
+      {tornadoData && (
+        <Card className="mt-6" id="risk-analysis-section">
+          <CardHeader>
+            <CardTitle>
+              {t('investorPacket.riskAnalysisSummary', { defaultValue: "Risk Analysis Summary" })}
+            </CardTitle>
+            <CardDescription>
+              {t('investorPacket.riskAnalysisDesc', { defaultValue: "Key findings from sensitivity analysis" })}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium mb-2">
+                  {t('investorPacket.sensititiveVariables', { defaultValue: "Most Sensitive Parameters" })}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {t('investorPacket.sensititiveVariablesDesc', { defaultValue: "These parameters have the highest impact on your financial results" })}
+                </p>
+                
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('table.variable', { defaultValue: "Variable" })}</TableHead>
+                      <TableHead className="text-right">{t('investorPacket.impactOnEbitda', { defaultValue: "Impact on EBITDA (%)" })}</TableHead>
+                      <TableHead>{t('investorPacket.mitigationPriority', { defaultValue: "Mitigation Priority" })}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tornadoData.slice(0, 5).map((item, index) => {
+                      const impact = Math.max(Math.abs(item.positiveImpact), Math.abs(item.negativeImpact)) * 100;
+                      let priority = "Low";
+                      if (impact > 15) priority = "High";
+                      else if (impact > 7) priority = "Medium";
+                      
+                      return (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{item.variable}</TableCell>
+                          <TableCell className="text-right">±{impact.toFixed(1)}%</TableCell>
+                          <TableCell>
+                            {t(`investorPacket.priority${priority}`, { defaultValue: priority })}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-medium mb-2">
+                  {t('investorPacket.recommendations', { defaultValue: "Recommendations" })}
+                </h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>
+                    {t('investorPacket.recommendation1', { 
+                      defaultValue: "Focus on optimizing the top sensitive parameters to improve financial outcomes" 
+                    })}
+                  </li>
+                  <li>
+                    {t('investorPacket.recommendation2', { 
+                      defaultValue: "Consider scenario planning for both pessimistic and optimistic cases" 
+                    })}
+                  </li>
+                  <li>
+                    {t('investorPacket.recommendation3', { 
+                      defaultValue: "Revisit assumptions regularly to refine the forecast accuracy" 
+                    })}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       {/* Methodology Section */}
       <MethodologySection 

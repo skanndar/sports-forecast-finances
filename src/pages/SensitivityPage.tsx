@@ -11,14 +11,17 @@ import { useAppStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency } from '@/lib/formatters';
 import { runTornadoAnalysis, runMonteCarloSimulation } from '@/lib/finance';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer } from 'recharts';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useTranslation } from 'react-i18next';
 
 const SensitivityPage = () => {
   const { activeScenario } = useAppStore();
   const { toast } = useToast();
-  const [tornadoData, setTornadoData] = useState<ReturnType<typeof runTornadoAnalysis> | null>(null);
-  const [monteCarloResult, setMonteCarloResult] = useState<ReturnType<typeof runMonteCarloSimulation> | null>(null);
+  const { t } = useTranslation();
+  const [tornadoData, setTornadoData] = useState(null);
+  const [monteCarloResult, setMonteCarloResult] = useState(null);
   const [isRunningAnalysis, setIsRunningAnalysis] = useState(false);
 
   const runAnalysis = async () => {
@@ -36,19 +39,26 @@ const SensitivityPage = () => {
         setIsRunningAnalysis(false);
         
         toast({
-          title: 'Analysis complete',
-          description: 'Sensitivity analysis has been completed successfully.'
+          title: t('sensitivity.analysisComplete', { defaultValue: 'Analysis complete' }),
+          description: t('sensitivity.analysisSuccess', { defaultValue: 'Sensitivity analysis has been completed successfully.' })
         });
       }, 100);
     } catch (error) {
       setIsRunningAnalysis(false);
       toast({
-        title: 'Analysis failed',
-        description: 'An error occurred while running the sensitivity analysis.',
+        title: t('sensitivity.analysisFailed', { defaultValue: 'Analysis failed' }),
+        description: t('sensitivity.analysisError', { defaultValue: 'An error occurred while running the sensitivity analysis.' }),
         variant: 'destructive'
       });
     }
   };
+
+  // Run analysis on component mount if we have a valid scenario
+  useEffect(() => {
+    if (activeScenario.settings && !tornadoData && !monteCarloResult && !isRunningAnalysis) {
+      runAnalysis();
+    }
+  }, [activeScenario.settings]);
 
   // Format tornado data for the chart
   const formattedTornadoData = tornadoData?.map(item => ({
@@ -59,7 +69,7 @@ const SensitivityPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Sensitivity Analysis</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('sensitivity.title', { defaultValue: "Sensitivity Analysis" })}</h1>
       
       <div className="mb-6 flex justify-end">
         <Button 
@@ -67,20 +77,27 @@ const SensitivityPage = () => {
           disabled={isRunningAnalysis}
           className="flex items-center gap-2"
         >
-          {isRunningAnalysis ? 'Running Analysis...' : 'Run Analysis'}
+          {isRunningAnalysis ? 
+            t('sensitivity.runningAnalysis', { defaultValue: 'Running Analysis...' }) : 
+            t('sensitivity.runAnalysis', { defaultValue: 'Run Analysis' })}
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Fixed: Added grid-cols-1 and gap-4 to prevent overlapping on small screens */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <Card>
           <CardHeader>
-            <CardTitle>Tornado Analysis</CardTitle>
-            <CardDescription>Impact of ±10% variation in key parameters on EBITDA</CardDescription>
+            <CardTitle>{t('sensitivity.tornadoChart', { defaultValue: "Tornado Analysis" })}</CardTitle>
+            <CardDescription>
+              {t('sensitivity.tornadoDesc', { defaultValue: "Impact of ±10% variation in key parameters on EBITDA" })}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {!tornadoData ? (
               <div className="flex items-center justify-center h-[300px]">
-                <p className="text-muted-foreground">Run analysis to see results</p>
+                <p className="text-muted-foreground">
+                  {t('sensitivity.runToSeeResults', { defaultValue: "Run analysis to see results" })}
+                </p>
               </div>
             ) : (
               <div className="h-[400px] w-full">
@@ -91,15 +108,19 @@ const SensitivityPage = () => {
                     margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" label={{ value: 'Impact on EBITDA (%)', position: 'insideBottom', offset: -5 }} />
+                    <XAxis type="number" label={{ 
+                      value: t('sensitivity.impactOnEbitda', { defaultValue: 'Impact on EBITDA (%)' }), 
+                      position: 'insideBottom', 
+                      offset: -5 
+                    }} />
                     <YAxis type="category" dataKey="variable" />
                     <Tooltip 
-                      formatter={(value: number) => [`${value.toFixed(1)}%`, 'Impact']} 
-                      labelFormatter={(label) => `Variable: ${label}`}
+                      formatter={(value: number) => [`${value.toFixed(1)}%`, t('sensitivity.impact', { defaultValue: 'Impact' })]} 
+                      labelFormatter={(label) => `${t('sensitivity.variable', { defaultValue: 'Variable' })}: ${label}`}
                     />
                     <ReferenceLine x={0} stroke="#000" />
-                    <Bar dataKey="negative" fill="#f87171" name="Negative Impact" />
-                    <Bar dataKey="positive" fill="#4ade80" name="Positive Impact" />
+                    <Bar dataKey="negative" fill="#f87171" name={t('sensitivity.negativeImpact', { defaultValue: "Negative Impact" })} />
+                    <Bar dataKey="positive" fill="#4ade80" name={t('sensitivity.positiveImpact', { defaultValue: "Positive Impact" })} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -109,13 +130,17 @@ const SensitivityPage = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Monte Carlo Simulation</CardTitle>
-            <CardDescription>1,000 runs with random variations in key parameters</CardDescription>
+            <CardTitle>{t('investorPacket.monteCarloSimulation', { defaultValue: "Monte Carlo Simulation" })}</CardTitle>
+            <CardDescription>
+              {t('investorPacket.monteCarloDesc', { defaultValue: "1,000 runs with random variations in key parameters" })}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {!monteCarloResult ? (
               <div className="flex items-center justify-center h-[300px]">
-                <p className="text-muted-foreground">Run analysis to see results</p>
+                <p className="text-muted-foreground">
+                  {t('sensitivity.runToSeeResults', { defaultValue: "Run analysis to see results" })}
+                </p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -132,17 +157,23 @@ const SensitivityPage = () => {
                   
                   <div className="flex justify-between mt-6">
                     <div className="text-center">
-                      <div className="text-sm font-medium text-muted-foreground">P5 (Pessimistic)</div>
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p5', { defaultValue: "P5 (Pessimistic)" })}
+                      </div>
                       <div className="font-bold">{formatCurrency(monteCarloResult.p5)}</div>
                     </div>
                     
                     <div className="text-center">
-                      <div className="text-sm font-medium text-muted-foreground">P50 (Base)</div>
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p50', { defaultValue: "P50 (Base)" })}
+                      </div>
                       <div className="font-bold">{formatCurrency(monteCarloResult.p50)}</div>
                     </div>
                     
                     <div className="text-center">
-                      <div className="text-sm font-medium text-muted-foreground">P95 (Optimistic)</div>
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t('investorPacket.p95', { defaultValue: "P95 (Optimistic)" })}
+                      </div>
                       <div className="font-bold">{formatCurrency(monteCarloResult.p95)}</div>
                     </div>
                   </div>
@@ -150,38 +181,48 @@ const SensitivityPage = () => {
                 
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium">Final Year EBITDA - 90% Confidence Interval</h3>
+                    <h3 className="text-lg font-medium">
+                      {t('investorPacket.confidenceInterval', { defaultValue: "Final Year EBITDA - 90% Confidence Interval" })}
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Based on 1,000 simulation runs with random variations in key parameters
+                      {t('investorPacket.simulationRuns', { defaultValue: "Based on 1,000 simulation runs with random variations in key parameters" })}
                     </p>
                   </div>
                   
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-2">Percentile</th>
-                        <th className="text-right p-2">EBITDA</th>
-                        <th className="text-right p-2">Interpretation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b">
-                        <td className="p-2">P5</td>
-                        <td className="text-right p-2">{formatCurrency(monteCarloResult.p5)}</td>
-                        <td className="text-right p-2">Worst case scenario (5%)</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="p-2">P50</td>
-                        <td className="text-right p-2">{formatCurrency(monteCarloResult.p50)}</td>
-                        <td className="text-right p-2">Median case (50%)</td>
-                      </tr>
-                      <tr className="border-b">
-                        <td className="p-2">P95</td>
-                        <td className="text-right p-2">{formatCurrency(monteCarloResult.p95)}</td>
-                        <td className="text-right p-2">Best case scenario (95%)</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('table.percentile', { defaultValue: "Percentile" })}</TableHead>
+                        <TableHead className="text-right">{t('table.ebitda')}</TableHead>
+                        <TableHead className="text-right">
+                          {t('investorPacket.interpretation', { defaultValue: "Interpretation" })}
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium">P5</TableCell>
+                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p5)}</TableCell>
+                        <TableCell className="text-right">
+                          {t('investorPacket.p5Desc', { defaultValue: "Worst case scenario (5%)" })}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">P50</TableCell>
+                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p50)}</TableCell>
+                        <TableCell className="text-right">
+                          {t('investorPacket.p50Desc', { defaultValue: "Median case (50%)" })}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">P95</TableCell>
+                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p95)}</TableCell>
+                        <TableCell className="text-right">
+                          {t('investorPacket.p95Desc', { defaultValue: "Best case scenario (95%)" })}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
             )}
@@ -191,44 +232,74 @@ const SensitivityPage = () => {
       
       <Card>
         <CardHeader>
-          <CardTitle>Risk Analysis Summary</CardTitle>
-          <CardDescription>Key findings from sensitivity analysis</CardDescription>
+          <CardTitle>
+            {t('investorPacket.riskAnalysisSummary', { defaultValue: "Risk Analysis Summary" })}
+          </CardTitle>
+          <CardDescription>
+            {t('investorPacket.riskAnalysisDesc', { defaultValue: "Key findings from sensitivity analysis" })}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {!tornadoData || !monteCarloResult ? (
             <div className="text-center py-6">
-              <p className="text-muted-foreground">Run analysis to see results</p>
+              <p className="text-muted-foreground">
+                {t('sensitivity.runToSeeResults', { defaultValue: "Run analysis to see results" })}
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-medium">Most Sensitive Parameters</h3>
+                <h3 className="text-lg font-medium">
+                  {t('investorPacket.sensititiveVariables', { defaultValue: "Most Sensitive Parameters" })}
+                </h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  These parameters have the highest impact on your financial results
+                  {t('investorPacket.sensititiveVariablesDesc', { defaultValue: "These parameters have the highest impact on your financial results" })}
                 </p>
                 <ul className="list-disc pl-5 space-y-1">
                   {tornadoData.slice(0, 3).map((item, index) => (
-                    <li key={index}>{item.variable} (±{Math.max(Math.abs(item.positiveImpact), Math.abs(item.negativeImpact)).toFixed(1)}%)</li>
+                    <li key={index}>
+                      {item.variable} (±{Math.max(Math.abs(item.positiveImpact), Math.abs(item.negativeImpact)).toFixed(1)}%)
+                    </li>
                   ))}
                 </ul>
               </div>
               
               <div>
-                <h3 className="text-lg font-medium">EBITDA Range</h3>
+                <h3 className="text-lg font-medium">
+                  {t('investorPacket.ebitdaRange', { defaultValue: "EBITDA Range" })}
+                </h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  90% confidence interval from Monte Carlo simulation
+                  {t('investorPacket.confidenceInterval', { defaultValue: "90% confidence interval from Monte Carlo simulation" })}
                 </p>
                 <p>
-                  With 90% certainty, the final year EBITDA will be between {formatCurrency(monteCarloResult.p5)} and {formatCurrency(monteCarloResult.p95)}
+                  {t('investorPacket.ebitdaConfidence', { 
+                    defaultValue: "With 90% certainty, the final year EBITDA will be between {{p5}} and {{p95}}",
+                    p5: formatCurrency(monteCarloResult.p5),
+                    p95: formatCurrency(monteCarloResult.p95)
+                  })}
                 </p>
               </div>
               
               <div>
-                <h3 className="text-lg font-medium">Recommendations</h3>
+                <h3 className="text-lg font-medium">
+                  {t('investorPacket.recommendations', { defaultValue: "Recommendations" })}
+                </h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Focus on optimizing the top sensitive parameters to improve financial outcomes</li>
-                  <li>Consider scenario planning for both pessimistic and optimistic cases</li>
-                  <li>Revisit assumptions regularly to refine the forecast accuracy</li>
+                  <li>
+                    {t('investorPacket.recommendation1', { 
+                      defaultValue: "Focus on optimizing the top sensitive parameters to improve financial outcomes" 
+                    })}
+                  </li>
+                  <li>
+                    {t('investorPacket.recommendation2', { 
+                      defaultValue: "Consider scenario planning for both pessimistic and optimistic cases" 
+                    })}
+                  </li>
+                  <li>
+                    {t('investorPacket.recommendation3', { 
+                      defaultValue: "Revisit assumptions regularly to refine the forecast accuracy" 
+                    })}
+                  </li>
                 </ul>
               </div>
             </div>

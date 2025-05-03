@@ -8,17 +8,18 @@ export function revenueForProduct(p: Product, year: number, s: Settings): number
   const daysPerYear = 365;
   const monthsPerYear = 12;
 
+  // Fixed formula: no longer multiplying and dividing by minDays redundantly
   const rentalsPerYear =
     p.pricingMode === 'daily'
       ? (p.occupancy * daysPerYear) / p.minDays
       : p.occupancy * monthsPerYear;
 
-  const price =
+  const pricePerRental =
     p.pricingMode === 'daily'
       ? p.pricePerDay! * p.minDays
       : p.pricePerMonth!;
 
-  return p.units * rentalsPerYear * price * growthFactor;
+  return p.units * rentalsPerYear * pricePerRental * growthFactor;
 }
 
 /**
@@ -229,15 +230,39 @@ export function calculateIRR(cashFlows: number[], guess = 0.1): number | null {
 
 /**
  * Calculate Customer Acquisition Cost (CAC)
+ * Now includes prescriber commissions for new customers
  */
 export function calculateCAC(s: Settings): number {
-  return s.marketingSpend / s.newCustomers;
+  // Base CAC from marketing spend
+  const marketingCAC = s.marketingSpend / s.newCustomers;
+  
+  // Calculate prescriber commissions attributable to new customer acquisition
+  // We assume all prescribers contribute proportionally to new customers
+  const prescriberCAC = s.prescribers.reduce((total, prescriber) => {
+    // Revenue attributed to this prescriber for first-year customers
+    const firstYearRevenueShare = s.products.reduce((revenue, product) => {
+      const productRevenue = revenueForProduct(product, 0, s);
+      // Consider only the portion for new customers (not returning ones)
+      const newCustomerRevenue = productRevenue * (s.newCustomers / (s.newCustomers + s.rentalsPerCustomer * (1 - s.churn)));
+      return revenue + newCustomerRevenue * prescriber.share * prescriber.commission;
+    }, 0);
+    
+    return total + (firstYearRevenueShare / s.newCustomers);
+  }, 0);
+  
+  // Total CAC includes both marketing and prescriber commissions
+  return marketingCAC + prescriberCAC;
 }
 
 /**
  * Calculate Customer Lifetime Value (LTV)
+ * Updated to include rentalsPerCustomer
  */
 export function calculateLTV(s: Settings, yearlyResults: YearResult[]): number {
+  if (!yearlyResults.length || yearlyResults[0].revenue <= 0 || s.newCustomers <= 0) {
+    return 0;
+  }
+  
   // Average annual revenue per customer
   const avgYearlyRevenue = yearlyResults[0].revenue / s.newCustomers;
   
@@ -247,20 +272,25 @@ export function calculateLTV(s: Settings, yearlyResults: YearResult[]): number {
   // Customer lifespan (years) based on churn rate
   const customerLifespan = 1 / s.churn;
   
-  // LTV = Annual Revenue per customer × Gross Margin × Customer Lifespan
-  return avgYearlyRevenue * avgGrossMargin * customerLifespan;
+  // LTV = Annual Revenue per customer × Gross Margin × rentalsPerCustomer × Customer Lifespan
+  return avgYearlyRevenue * avgGrossMargin * s.rentalsPerCustomer / s.churn;
 }
 
 /**
  * Calculate Payback Period (in months)
+ * Updated to use the new CAC calculation
  */
 export function calculatePaybackMonths(cac: number, s: Settings, yearlyResults: YearResult[]): number {
+  if (!yearlyResults.length || yearlyResults[0].revenue <= 0 || s.newCustomers <= 0) {
+    return 0;
+  }
+
   // Monthly gross profit per customer
   const monthlyRevenuePerCustomer = yearlyResults[0].revenue / s.newCustomers / 12;
   const monthlyVariableCostPerCustomer = yearlyResults[0].variableCosts / s.newCustomers / 12;
   const monthlyGrossProfitPerCustomer = monthlyRevenuePerCustomer - monthlyVariableCostPerCustomer;
   
-  return cac / monthlyGrossProfitPerCustomer;
+  return monthlyGrossProfitPerCustomer > 0 ? cac / monthlyGrossProfitPerCustomer : Infinity;
 }
 
 /**

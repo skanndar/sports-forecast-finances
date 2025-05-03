@@ -7,8 +7,8 @@ export const tooltips: TooltipContent = {
   "npv": "Valor Presente Neto descontando los flujos con la tasa WACC.",
   "discountRate": "Coste Medio Ponderado de Capital (WACC); usado para VAN y como referencia de TIR.",
   "ltvCac": "LTV/CAC > 3 indica un buen modelo de negocio.",
-  "cac": "Coste de Adquisición de Cliente = marketing / nuevos clientes.",
-  "ltv": "Valor del Ciclo de Vida del Cliente = ingresos por cliente a lo largo de su vida.",
+  "cac": "Coste de Adquisición de Cliente = (marketing + comisiones prescriptores) / nuevos clientes.",
+  "ltv": "Valor del Ciclo de Vida del Cliente = (ingresos por cliente × margen) × alquileres por cliente / churn.",
   "payback": "Tiempo para recuperar el CAC. Ideal < 12 meses.",
   "breakeven": "Punto donde los ingresos igualan a los costes totales.",
   

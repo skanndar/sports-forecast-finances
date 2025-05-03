@@ -20,6 +20,21 @@ interface MethodologySectionProps {
 const MethodologySection = ({ settings, className = "", id }: MethodologySectionProps) => {
   const { t } = useTranslation();
 
+  // Example calculation for better understanding
+  const exampleUnits = 10;
+  const exampleOccupancy = 0.5;
+  const exampleDaysMin = 15;
+  const examplePricePerDay = 50;
+  const examplePricePerMonth = 1000;
+  
+  // Example calculations for daily pricing
+  const exampleRentalsYearDaily = (exampleOccupancy * 365) / exampleDaysMin;
+  const exampleRevenueDaily = exampleUnits * exampleRentalsYearDaily * examplePricePerDay * exampleDaysMin;
+  
+  // Example calculations for monthly pricing
+  const exampleRentalsYearMonthly = exampleOccupancy * 12;
+  const exampleRevenueMonthly = exampleUnits * exampleRentalsYearMonthly * examplePricePerMonth;
+
   return (
     <Card className={`mt-6 ${className}`} id={id}>
       <CardHeader>
@@ -32,10 +47,39 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
             <h3 className="text-lg font-medium mb-2">{t('investorPacket.revenueCalculation')}</h3>
             <p className="mb-2">{t('investorPacket.revenueFormula')}</p>
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
-              {t('investorPacket.revenueDailyFormula')}
+              {t('investorPacket.rentalsPerYearDaily', { defaultValue: "Daily pricing: Rentals/Year = Occupancy × 365 days / Min Days" })}
               {'\n'}
-              {t('investorPacket.revenueMonthlyFormula')}
+              {t('investorPacket.revenueDailyFormula', { defaultValue: "Daily pricing: Revenue = Units × Rentals/Year × Price per Day × Min Days" })}
+              {'\n\n'}
+              {t('investorPacket.rentalsPerYearMonthly', { defaultValue: "Monthly pricing: Rentals/Year = Occupancy × 12 months" })}
+              {'\n'}
+              {t('investorPacket.revenueMonthlyFormula', { defaultValue: "Monthly pricing: Revenue = Units × Rentals/Year × Price per Month" })}
             </pre>
+            
+            <div className="mt-4 bg-muted/50 p-2 rounded-md">
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc', { defaultValue: "Example calculation" })}</h4>
+              <p className="text-sm">
+                {t('investorPacket.exampleDailyFormula', {
+                  defaultValue: "Daily: With {{units}} units, {{occupancy}}% occupancy, {{daysMin}} min days, {{price}}€/day → Rentals/Year = {{rentals}}, Revenue = {{revenue}}€",
+                  units: exampleUnits,
+                  occupancy: exampleOccupancy * 100,
+                  daysMin: exampleDaysMin,
+                  price: examplePricePerDay,
+                  rentals: exampleRentalsYearDaily.toFixed(1),
+                  revenue: Math.round(exampleRevenueDaily).toLocaleString()
+                })}
+              </p>
+              <p className="text-sm mt-1">
+                {t('investorPacket.exampleMonthlyFormula', {
+                  defaultValue: "Monthly: With {{units}} units, {{occupancy}}% occupancy, {{price}}€/month → Rentals/Year = {{rentals}}, Revenue = {{revenue}}€",
+                  units: exampleUnits,
+                  occupancy: exampleOccupancy * 100,
+                  price: examplePricePerMonth,
+                  rentals: exampleRentalsYearMonthly.toFixed(1),
+                  revenue: Math.round(exampleRevenueMonthly).toLocaleString()
+                })}
+              </p>
+            </div>
           </div>
 
           <div>
@@ -82,11 +126,11 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">{t('investorPacket.cac')}</TableCell>
-                  <TableCell>{t('investorPacket.cacFormula')}</TableCell>
+                  <TableCell>{t('investorPacket.cacFormula', { defaultValue: "CAC = (Marketing Spend + Prescriber Commissions for New Customers) / New Customers" })}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">{t('investorPacket.ltv')}</TableCell>
-                  <TableCell>{t('investorPacket.ltvFormula')}</TableCell>
+                  <TableCell>{t('investorPacket.ltvFormula', { defaultValue: "LTV = (Revenue per Customer × Gross Margin %) × Rentals per Customer / Churn" })}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">{t('investorPacket.paybackPeriod')}</TableCell>
