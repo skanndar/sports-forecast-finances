@@ -19,19 +19,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { YearResult } from '@/lib/types';
-import { formatCurrency, formatPercentage } from '@/lib/formatters';
+import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import InfoTooltip from "@/components/ui/info-tooltip";
 
 interface DetailedFinancialTableProps {
   yearlyResults: YearResult[];
   initialInvestment?: number;
+  churn?: number;
+  rentalsPerCustomer?: number;
   className?: string;
   id?: string;
 }
 
 const DetailedFinancialTable = ({ 
   yearlyResults, 
-  initialInvestment = 0, 
+  initialInvestment = 0,
+  churn = 0,
+  rentalsPerCustomer = 0,
   className = "",
   id
 }: DetailedFinancialTableProps) => {
@@ -225,6 +229,37 @@ const DetailedFinancialTable = ({
                     <TableCell key={index} className="text-right font-medium">
                       {formatCurrency(yr.ebitda)}
                       ({formatPercentage(yr.ebitda / yr.revenue)})
+                    </TableCell>
+                  ))}
+                </TableRow>
+                
+                {/* Retention Metrics */}
+                <TableRow className="bg-muted">
+                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
+                    {t('investorPacket.retention')}
+                  </TableCell>
+                </TableRow>
+                
+                <TableRow>
+                  <TableCell className="pl-6">
+                    {t('inputs.churn')}
+                    <InfoTooltip id="churn" />
+                  </TableCell>
+                  {yearlyResults.map((_, index) => (
+                    <TableCell key={index} className="text-right">
+                      {formatPercentage(churn)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                
+                <TableRow>
+                  <TableCell className="pl-6">
+                    {t('inputs.rentalsPerCustomer')}
+                    <InfoTooltip id="rentals-per-customer" />
+                  </TableCell>
+                  {yearlyResults.map((_, index) => (
+                    <TableCell key={index} className="text-right">
+                      {formatNumber(rentalsPerCustomer)}
                     </TableCell>
                   ))}
                 </TableRow>

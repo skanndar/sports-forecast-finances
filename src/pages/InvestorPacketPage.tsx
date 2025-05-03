@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   Card,
@@ -15,6 +14,9 @@ import { Download } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import DetailedFinancialTable from '@/components/investor/DetailedFinancialTable';
 import TornadoChart from '@/components/investor/TornadoChart';
+import MethodologySection from '@/components/investor/MethodologySection';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
@@ -26,17 +28,67 @@ const InvestorPacketPage = () => {
     try {
       setIsGenerating(true);
       
-      // This is a placeholder - in a real implementation you would use jsPDF or similar
+      // Create a new PDF document with landscape orientation for better table viewing
+      const doc = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Helper function to capture and add HTML content to the PDF
+      const addHtmlToPDF = async (elementId: string, title?: string, options = {}) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        // Add a page break except for the first element
+        if (doc.getNumberOfPages() > 0) {
+          doc.addPage();
+        }
+        
+        // Add title if provided
+        if (title) {
+          doc.setFontSize(16);
+          doc.text(title, 14, 15);
+          doc.setFontSize(12);
+        }
+        
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          ...options
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 280; // slightly reduced to fit margins
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        doc.addImage(imgData, 'PNG', 10, title ? 25 : 10, imgWidth, imgHeight);
+      };
+      
+      // Capture summary section
+      await addHtmlToPDF('summary-section', t('investorPacket.executiveSummary'));
+      
+      // Capture financial projections table
+      await addHtmlToPDF('detail-table', t('investorPacket.financial_detail'));
+      
+      // Capture tornado chart 
+      await addHtmlToPDF('tornado-chart', t('sensitivity.title'));
+      
+      // Capture methodology section
+      await addHtmlToPDF('methodology-section', t('investorPacket.methodology'));
+
+      // Save the PDF
+      doc.save(`${activeScenario.name || 'investor-packet'}.pdf`);
+      
       toast({
         title: t('investorPacket.pdfGenerated'),
         description: t('investorPacket.downloadReady'),
       });
       
-      // Simulate delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       setIsGenerating(false);
     } catch (error) {
+      console.error('PDF generation error:', error);
       setIsGenerating(false);
       toast({
         title: t('common.error'),
@@ -137,7 +189,7 @@ const InvestorPacketPage = () => {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" id="summary-section">
         <Card>
           <CardHeader>
             <CardTitle>{t('investorPacket.executiveSummary')}</CardTitle>
@@ -334,11 +386,19 @@ const InvestorPacketPage = () => {
       <DetailedFinancialTable 
         yearlyResults={results.yearlyResults} 
         initialInvestment={settings.initialInvestment}
+        churn={settings.churn}
+        rentalsPerCustomer={settings.rentalsPerCustomer}
         id="detail-table"
       />
       
       {/* Sensitivity Analysis */}
       <TornadoChart id="tornado-chart" />
+      
+      {/* Methodology Section */}
+      <MethodologySection 
+        settings={settings} 
+        id="methodology-section" 
+      />
     </div>
   );
 };
