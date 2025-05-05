@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -100,7 +101,8 @@ const LoginPage = () => {
   const handleContinueAsGuest = () => {
     // Store guest mode in localStorage to maintain it across sessions
     localStorage.setItem('guestMode', 'true');
-    navigate('/');
+    // Force navigation to the home page
+    window.location.href = '/';
   };
 
   // If still checking authentication status, show loading

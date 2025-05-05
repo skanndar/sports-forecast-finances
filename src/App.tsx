@@ -56,6 +56,12 @@ const Protected = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const check = async () => {
+      // Check for guest mode first
+      if (localStorage.getItem('guestMode') === 'true') {
+        return setAuthed(true);
+      }
+      
+      // Then check for Supabase configuration and auth
       if (!isSupabaseConfigured()) return setAuthed(true);
 
       const { data } = await supabase.auth.getSession();
@@ -68,6 +74,12 @@ const Protected = ({ children }: { children: React.ReactNode }) => {
     check();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      // If in guest mode, stay authenticated
+      if (localStorage.getItem('guestMode') === 'true') {
+        setAuthed(true);
+        return;
+      }
+      
       setAuthed(!!session);
       if (!session) navigate("/login");
     });
