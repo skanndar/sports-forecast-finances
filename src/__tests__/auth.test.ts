@@ -1,10 +1,10 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
 // Mock the supabase client
-vi.mock('@/integrations/supabase/client', () => ({
+vi.mock('@/lib/supabase', () => ({
   supabase: {
     auth: {
       signInWithOtp: vi.fn(),

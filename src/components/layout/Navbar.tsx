@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/lib/store';
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, LogIn, LogOut } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from '@/lib/supabase';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import LanguageSelector from './LanguageSelector';
 
