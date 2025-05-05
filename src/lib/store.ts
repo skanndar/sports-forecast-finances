@@ -122,7 +122,7 @@ export const useAppStore = create<AppState>()(
 
       addProduct: () => {
         set((state) => {
-          if (state.activeScenario.settings.products.length >= 5) {
+          if (state.activeScenario.settings.products.length >= 10) {
             return state;
           }
 
@@ -182,7 +182,7 @@ export const useAppStore = create<AppState>()(
 
       addPrescriber: () => {
         set((state) => {
-          if (state.activeScenario.settings.prescribers.length >= 5) {
+          if (state.activeScenario.settings.prescribers.length >= 10) {
             return state;
           }
 
