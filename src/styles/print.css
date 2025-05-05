@@ -1,0 +1,39 @@
+
+@media print {
+  html, body {
+    width: 100%;
+    height: auto;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #investor-packet-content {
+    page-break-inside: avoid;
+  }
+
+  * {
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  div, section, article {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 20mm !important;
+  }
+
+  table {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  tr {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}

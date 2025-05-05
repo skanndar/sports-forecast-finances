@@ -21,6 +21,9 @@ import { toast } from "@/components/ui/use-toast";
 /* ---------- i18n ---------- */
 import "@/lib/i18n";
 
+/* ---------- estilos ---------- */
+import "@/styles/print.css";
+
 /* ---------- páginas ---------- */
 import DashboardPage from "@/pages/DashboardPage";
 import InputsPage from "@/pages/InputsPage";
