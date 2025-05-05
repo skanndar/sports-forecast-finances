@@ -71,7 +71,7 @@ const LoginPage = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: import.meta.env.VITE_SITE_URL || window.location.origin,
         }
       });
       
@@ -89,7 +89,7 @@ const LoginPage = () => {
       console.error('Error sending magic link:', error);
       toast({
         title: t('login.error'),
-        description: (error as Error).message,
+        description: t('login.linkSendingFailed'),
         variant: 'destructive'
       });
     } finally {
@@ -98,6 +98,8 @@ const LoginPage = () => {
   };
   
   const handleContinueAsGuest = () => {
+    // Store guest mode in localStorage to maintain it across sessions
+    localStorage.setItem('guestMode', 'true');
     navigate('/');
   };
 

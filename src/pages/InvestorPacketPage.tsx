@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';   // 👈 NUEVO
 
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -26,8 +26,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/ui/table";    // 👈 NUEVO
-
+} from "@/components/ui/table";
 
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
@@ -58,7 +57,7 @@ const InvestorPacketPage = () => {
   };
   
   // Run analysis on component mount if needed
-  React.useEffect(() => {
+  useEffect(() => {
     if (activeScenario.settings && !monteCarloResult && !tornadoData) {
       runAnalysis();
     }

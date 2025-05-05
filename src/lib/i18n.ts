@@ -29,4 +29,9 @@ i18n
     }
   });
 
+// Add this function to help detect missing translations
+i18n.on('missingKey', (lngs, namespace, key) => {
+  console.warn(`Missing translation key: ${key} for languages: ${lngs.join(', ')}`);
+});
+
 export default i18n;

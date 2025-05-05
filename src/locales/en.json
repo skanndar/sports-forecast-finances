@@ -49,7 +49,11 @@
     "checkEmail": "Please check your email for the login link",
     "error": "Login error",
     "invalidEmail": "Invalid email",
-    "enterValidEmail": "Please enter a valid email"
+    "enterValidEmail": "Please enter a valid email address",
+    "linkSendingFailed": "We couldn't send the login link. Please try again later.",
+    "magicLinkInfo": "We've sent a magic link to your email. Check your inbox and click the link to sign in.",
+    "checkEmailForLink": "Check your inbox for the magic link",
+    "tryDifferentEmail": "Use a different email"
   },
   "dashboard": {
     "title": "Financial Dashboard",
@@ -174,8 +178,8 @@
     "title": "Sensitivity Analysis",
     "tornadoChart": "Tornado Chart",
     "monteCarlo": "Monte Carlo Simulation",
-    "tornadoDesc": "Impact on EBITDA when varying each parameter ±10%",
     "monteCarloDesc": "EBITDA probability distribution based on 1,000 simulations",
+    "tornadoDesc": "Impact on EBITDA when varying each parameter ±10%",
     "variable": "Variable",
     "negativeImpact": "Negative Impact",
     "positiveImpact": "Positive Impact",
@@ -191,7 +195,13 @@
     "analysisError": "An error occurred while running the sensitivity analysis.",
     "runToSeeResults": "Run analysis to see results",
     "impact": "Impact",
-    "impactOnEbitda": "Impact on EBITDA (%)"
+    "impactOnEbitda": "Impact on EBITDA (%)",
+    "riskAnalysis": "Risk Analysis Summary",
+    "variableImpact": "Variable Impact Analysis",
+    "mitigation": "Mitigation Priority",
+    "mitigationHigh": "High",
+    "mitigationMedium": "Medium",
+    "mitigationLow": "Low"
   },
   "investorPacket": {
     "title": "Investor Packet",

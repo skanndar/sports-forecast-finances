@@ -40,7 +40,8 @@ const DetailedFinancialTable = ({
   id
 }: DetailedFinancialTableProps) => {
   const { t } = useTranslation();
-  const [isExpanded, setIsExpanded] = useState(false);
+  // Changed to expanded by default
+  const [isExpanded, setIsExpanded] = useState(true);
 
   if (!yearlyResults.length) return null;
 
