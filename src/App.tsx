@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   BrowserRouter,
@@ -99,16 +100,18 @@ const AuthAndDataBootstrap = () => {
   const { setSavedScenarios, setActiveScenario } = useAppStore();
   const location = useLocation();
 
-  /* 1 · intercambia #access_token por cookie (solo v2.49+) */
+  /* 1 · procesa token de auth en la URL (si existe) */
   useEffect(() => {
-    if (typeof supabase.auth.getSessionFromURL === "function") {
-      supabase.auth.getSessionFromURL().catch(console.error);
+    // Check for auth hash in the URL (#access_token=...)
+    if (location.hash.includes("access_token")) {
+      // Let Supabase handle the hash fragment
+      supabase.auth.getSession().catch(console.error);
     }
-  }, []);
+  }, [location]);
 
   /* 2 · procesa share‑link en el hash (#<base64>) */
   useEffect(() => {
-    if (location.hash.length > 1) {
+    if (location.hash.length > 1 && !location.hash.includes("access_token")) {
       try {
         const decoded = JSON.parse(atob(location.hash.substring(1)));
         console.log("decoded share settings", decoded);
