@@ -2,19 +2,23 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// Pull in the site URL so that Odoo can serve your built files from the right path
 const siteUrl = process.env.VITE_SITE_URL || "/";
+const allowedHosts = [
+  "localhost",
+  "127.0.0.1",
+  "0.0.0.0",
+  "1262c9f7-a689-49d7-8f3e-1ae2dd8ad808.lovableproject.com", // Añadido para Lovable
+];
 
 export default defineConfig(({ mode }) => ({
-  base: siteUrl,         // e.g. "/pnl_forecaster_AAD/static/src/"
+  base: siteUrl,
   server: {
-    // Only relevant for `npm run dev`
     host: "0.0.0.0",
     port: 8080,
+    allowedHosts, // <-- Aquí se permite explícitamente el host
   },
   plugins: [
     react(),
-    // If you still want lovable-tagger **locally**, guard it behind an env var:
     mode === "development" && process.env.USE_LOVABLE && require("lovable-tagger").componentTagger(),
   ].filter(Boolean),
   resolve: {

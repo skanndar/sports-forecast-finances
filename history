@@ -1,0 +1,248 @@
+310  cd src/odoo/
+ 1311  git status
+ 1312  git pull
+ 1313  git status
+ 1314  cd ../..
+ 1315  cd odoo-14-psql-14-multi/
+ 1316  git status
+ 1317  git stash --include-untracked
+ 1318  git pull origin master
+ 1319  git stash pop
+ 1320  htop
+ 1321  ssh odoo_pro 
+ 1322  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2024.22.2-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2024.22.2-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1323  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1324  cd odoo-14-psql-14-multi/
+ 1325  /home/skanndar/SynologyDrive/local/14.0/odoo-14-psql-14-multi/
+ 1326  git stash --include-untracked
+ 1327  cd /home/skanndar/SynologyDrive/local/14.0/odoo-14-psql-14-multi/
+ 1328  git stash --include-untracked
+ 1329  git pull origin master
+ 1330  git stash pop
+ 1331  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1332  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1333  cd /home/skanndar/SynologyDrive/local/14.0/odoo-14-psql-14-multi/
+ 1334  git stash --include-untracked
+ 1335  git pull origin master
+ 1336  git stash pop
+ 1337  ssh root@51.89.7.29
+ 1338  ssh root@51.89.7.29 -p 22
+ 1339  ssh odoo_pro 
+ 1340  pip3 install parameterized
+ 1341  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.0.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1342  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1343  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1344  source ~/SynologyDrive/local/14.0/venv/bin/activate
+ 1345  pip uninstall cryptography -y
+ 1346  pip install "cryptography<39"
+ 1347  odoo -u l10n_es_facturae --stop-after-init
+ 1348  pip install "invoice2data"
+ 1349  ssh odoo_pro 
+ 1350  ssh odoo_pro 
+ 1351  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python
+ 1352  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1353  ssh odoo_pro 
+ 1354  ssh odoo_pro 
+ 1355  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1356  cat ~/.ssh/config
+ 1357  ls -l ~/.ssh/
+ 1358  code ~/.ssh/config
+ 1359  code /home/skanndar/.ssh/id_rsa
+ 1360  ssh rehabOficina 
+ 1361  ssh -vvv -p 2226 usuario@80.28.110.70
+ 1362  ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "skanndar@local"
+ 1363  ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 2226 usuario@80.28.110.70
+ 1364  ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 2226 root@80.28.110.70
+ 1365  ssh rehabOficina 
+ 1366  ssh 192.168.0.176
+ 1367  sh 192.168.0.176 
+ 1368  ssh 192.168.0.176 -p 22
+ 1369  ssh root@192.168.0.176
+ 1370  pip install pandas googletrans==4.0.0-rc1
+ 1371  pip install pandas googletrans==4.0.0-rc1
+ 1372  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input rehabProyectos/doofinder/default_translations.csv --output test_translated.csv --engine libre
+ 1373  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate2.py --input rehabProyectos/doofinder/default_translations.csv --output test_translated.csv --engine libre
+ 1374  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1375  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py
+ 1376  pip install pandas googletrans==4.0.0-rc1 deepl requests openai
+ 1377  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py
+ 1378  pip install -U aiohttp
+ 1379  pip cache purge
+ 1380  python -c "import aiohttp; print(aiohttp.__version__)"
+ 1381  pip show openai | grep Location
+ 1382  pip show aiohttp | grep Location
+ 1383  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py
+ 1384  head -n 6 rehabProyectos/doofinder/default_translations.csv > test.csv
+ 1385  python translate.py --input default_translations.csv --output test_translated.csv --engine deepl
+ 1386  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input default_translations.csv --output test_translated.csv --engine deepl
+ 1387  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input rehabProyectos/doofinder/default_translations.csv --output test_translated.csv --engine deepl
+ 1388  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py
+ 1389  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input rehabProyectos/doofinder/default_translations.csv --output test_translated.csv --engine deepl
+ 1390  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input 
+ 1391  python /home/skanndar/SynologyDrive/local/rehabProyectos/doofinder/translate.py --input rehabProyectos/doofinder/default_translations.csv --output test_translated.csv --engine deepl
+ 1392  ping rehabmedic.com
+ 1393  htop
+ 1394  ping rehabmedic.com
+ 1395  history
+ 1396  code ~/.ssh/config
+ 1397  ssh odoo_pro_rise 
+ 1398  ping rehabmedic.com
+ 1399  ssh rehabOficina 
+ 1400  rm -rf /rehab/odoo-14-psql-14-multi/OdooDeploy/odoo\ 14\ deploy/
+ 1401  rm -rf /rehab/odoo-14-psql-14-multi/old
+ 1402  rm -rf /rehab/odoo-14-psql-14-multi/OdooDeploy/__MACOSX/
+ 1403  ssh rehabOficina 
+ 1404  ssh root@192.168.0.176
+ 1405  ssh admin@80.28.110.70:2228
+ 1406  ssh root@80.28.110.70:2228
+ 1407  ssh root@80.28.110.70:2228/BACKUPVM/
+ 1408  ssh root@80.28.110.70:2228/BACKUPVM/postgresql/
+ 1409  ssh admin@80.28.110.70:2228/BACKUPVM/postgresql/
+ 1410  ssh admin@80.28.110.70 -p 2228
+ 1411  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.2.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1412  ssh odoo_pro_advance 
+ 1413  ssh rehabOficina 
+ 1414  ssh odoo_pro 
+ 1415  ssh odoo_pro_advance 
+ 1416  ssh odoo_pro 
+ 1417  ssh odoo_pro_rise 
+ 1418  ssh odoo_pro_advance 
+ 1419  ssh -L 5000:192.168.0.22:5000 rehabOficina
+ 1420  ssh -L 5000:192.168.0.20:8006 rehabOficina
+ 1421  ssh -L 8006:192.168.0.20:8006 root@80.28.110.70 -p 2225
+ 1422  ssh -L 5000:192.168.0.22:5000 rehabOficina
+ 1423  ssh rehabOficina 
+ 1424  ssh  root@80.28.110.70 -p 2225
+ 1425  ssh -L 5000:192.168.0.20:8006 rehabOficina
+ 1426  ssh -L 5000:192.168.0.22:5000 rehabOficina
+ 1427  ssh -L 5000:192.168.0.20:8006 rehabOficina
+ 1428  ssh -L 5000:192.168.0.22:5000 rehabOficina
+ 1429  ssh -L 8006:192.168.0.20:8006 rehabOficina
+ 1430  ssh rehabOficina 
+ 1431  ssh 80.28.110.70 -p 2225
+ 1432  ssh root@80.28.110.70 -p 2225
+ 1433  ssh admin@80.28.110.70 -p 2228
+ 1434  docker ps
+ 1435  docker exec -it db psql -U odoo -c "\q"
+ 1436  /home/skanndar/SynologyDrive/local/14.0/venv/bin/python /home/skanndar/SynologyDrive/local/rehabProyectos/advance/odoo_backup/restore_odoo_backup.py
+ 1437  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1438  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1439  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1440  code /etc/hosts
+ 1441  ssh odoo_pro 
+ 1442  ssh rehabOficina 
+ 1443  cd /home/skanndar/SynologyDrive/local/rehabProyectos/pgadmin
+ 1444  scp -r odoo_pro_rise:/var/lib/pgadmin/storage/aabbas_rehabmedic.com/ .
+ 1445  scp -r odoo_pro_rise:/tmp/aabbas_rehabmedic.com/ .
+ 1446  curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify"      -H "Authorization: Bearer CzlWOtChI3MXvdv41sqsbPVxbOolEP8t1gdp5lop"      -H "Content-Type:application/json"
+ 1447  ssh rehabOficina 
+ 1448  sh 192.168.0.176
+ 1449  sh root@192.168.0.176
+ 1450  ssh root@192.168.0.176
+ 1451  ssh rehabOficina 
+ 1452  history
+ 1453  ssh root@192.168.0.176
+ 1454  ssh odoo_pro_advance 
+ 1455  ssh rehabOficina 
+ 1456  ping rehabmedic.com
+ 1457  '/home/skanndar/Descargas/tor-browser/start-tor-browser.desktop' 
+ 1458  ./home/skanndar/Descargas/tor-browser/start-tor-browser.desktop
+ 1459  cd /home/skanndar/Descargas/tor-browser/
+ 1460  ./start-tor-browser.desktop 
+ 1461  ./start-tor-browser.desktop --register-app
+ 1462  ssh rehabOficina 
+ 1463  ssh odoo_pro_advance 
+ 1464  ssh rehabOficina 
+ 1465  ssh -L 8006:192.168.0.20:8006 rehabOficina
+ 1466  htop
+ 1467  docker ps
+ 1468  htop
+ 1469  git remote -v
+ 1470  cd /home/skanndar/SynologyDrive/local/14.0/odoo-14-psql-14-multi
+ 1471  git remote -v
+ 1472  # Eliminar el remote antiguo (opcional si vas a renombrarlo)
+ 1473  git remote rename odoo_pro odoo_pro_advance
+ 1474  # Cambiar la URL del nuevo remote
+ 1475  git remote set-url odoo_pro_advance odoo_pro_advance:/rehab/odoo-14-psql-14-multi
+ 1476  git remote rename odoo_pro odoo_pro_advance
+ 1477  git remote set-url origin odoo_pro_advance:/rehab/odoo-14-psql-14-multi
+ 1478  git remote -v
+ 1479  git stash --include-untracked
+ 1480  git pull origin master
+ 1481  git pull --no-rebase 
+ 1482  # 1. Verifica que tienes el stash (opcional)
+ 1483  git stash list
+ 1484  # 2. Cancela la fusión actual con conflictos
+ 1485  git merge --abort
+ 1486  # 3. Borra cualquier cambio en archivos rastreados
+ 1487  git reset --hard
+ 1488  # 4. Elimina archivos no rastreados y directorios (como __pycache__)
+ 1489  git clean -fdx
+ 1490  # 5. Trae los cambios remotos, solo si se puede avanzar directamente
+ 1491  git pull --ff-only origin master
+ 1492  # 6. Aplica el stash que guardaste antes
+ 1493  git stash pop
+ 1494  git config --global pull.ff only
+ 1495  ssh root@192.168.0.176
+ 1496  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1497  ssh odoo_pro_advance 
+ 1498  ssh rehabOficina 
+ 1499  htop
+ 1500  v4l2-ctl --list-devices
+ 1501  sudo apt install v4l-utils
+ 1502  v4l2-ctl --list-devices
+ 1503  lsmod | grep uvcvideo
+ 1504  lsusb
+ 1505  ls -l /dev/video*
+ 1506  sudo apt update
+ 1507  sudo apt upgrade
+ 1508  sudo apt install guvcview
+ 1509  guvcview
+ 1510  sudo usermod -aG video $USER
+ 1511  sudo apt update
+ 1512  sudo apt install --reinstall v4l2loopback-dkms v4l-utils
+ 1513  uname -r
+ 1514  lsusb | grep "Quanta Computer"
+ 1515  sudo apt install build-essential
+ 1516  sudo apt purge v4l2loopback-dkms          # Elimínalo por completo
+ 1517  sudo apt autoremove                       # Limpia dependencias sobrantes
+ 1518  sudo mokutil --sb-state          # debería devolver "SecureBoot disabled"
+ 1519  sudo apt install build-essential linux-headers-$(uname -r) dkms git
+ 1520  git clone https://github.com/fus0g/Quanta-HD-User-Facing-0x0408-0x4035_linux.git
+ 1521  cd Quanta-HD-User-Facing-0x0408-0x4035_linux
+ 1522  chmod +x install_driver.sh
+ 1523  ./install_driver.sh                     # compila y copia uvcvideo.ko
+ 1524  sudo systemctl enable loaduvc.service
+ 1525  sudo systemctl start  loaduvc.service   # sin reiniciar, para probar
+ 1526  v4l2-ctl --list-devices
+ 1527  cheese          # o tu aplicación preferida
+ 1528  sudo apt  install cheese
+ 1529  cheese          # o tu aplicación preferida
+ 1530  htop
+ 1531  /bin/python3 /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/printEnvVariablesToFile.py /home/skanndar/.vscode/extensions/ms-python.python-2025.4.0-linux-x64/python_files/deactivate/bash/envVars.txt
+ 1532  reboot
+ 1533  ssh rehabOficina 
+ 1534  ssh -L 8006:192.168.0.20:8006 rehabOficina
+ 1535  ssh odoo_pro_advance 
+ 1536  # Desde la raíz del proyecto
+ 1537  grep -R "from .*supabase" --line-number --exclude-dir=node_modules
+ 1538  grep -R "from .*generated/client" --line-number --exclude-dir=node_modules
+ 1539  find src -type f -name "*.ts*" -exec sed -i   -e 's|@/integrations/supabase/client|@/lib/supabase|g' {} +
+ 1540  grep -R "from .*supabase" --line-number --exclude-dir=node_modules
+ 1541  # 1 · Borrar la carpeta duplicada
+ 1542  rm -rf src/integrations/supabaseX
+ 1543  # 2 · Editar src/App.tsx (líneas 8‑10)
+ 1544  grep -R "from .*supabase" --line-number --exclude-dir=node_modules
+ 1545  VITE_SITE_URL=/pnl_forecaster_AAD/static/src/ npm run build
+ 1546  git status
+ 1547  git fetch origin
+ 1548  git pull origin main
+ 1549  git add .
+ 1550  git commit -m "✨ Ajustes: actualización de supabase, escenarios, tests y config"
+ 1551  git pull origin main
+ 1552  git fetch origin
+ 1553  git merge origin/main
+ 1554  git fetch origin
+ 1555  git merge origin/main
+ 1556  git push --force-with-lease origin main
+ 1557  history
