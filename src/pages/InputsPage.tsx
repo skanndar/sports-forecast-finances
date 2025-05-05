@@ -43,7 +43,7 @@ const InputsPage = () => {
   const shareExceeds = totalShare > 1;
   
   const handleAddProduct = () => {
-    if (settings.products.length >= 5) {
+    if (settings.products.length >= 10) {
       toast({
         title: t('common.maximumLimitReached'),
         description: t('inputs.maxProductsReached'),
@@ -59,7 +59,7 @@ const InputsPage = () => {
   };
   
   const handleAddPrescriber = () => {
-    if (settings.prescribers.length >= 5) {
+    if (settings.prescribers.length >= 10) {
       toast({
         title: t('common.maximumLimitReached'),
         description: t('inputs.maxPrescribersReached'),
