@@ -249,7 +249,7 @@ const InputsPage = () => {
                 variant="outline" 
                 onClick={handleAddProduct} 
                 className="flex items-center gap-2"
-                disabled={settings.products.length >= 5}
+                disabled={settings.products.length >= 10}
               >
                 <Plus size={16} /> {t('inputs.addProduct')}
               </Button>
@@ -328,7 +328,7 @@ const InputsPage = () => {
                 variant="outline" 
                 onClick={handleAddPrescriber} 
                 className="flex items-center gap-2"
-                disabled={settings.prescribers.length >= 5}
+                disabled={settings.prescribers.length >= 10}
               >
                 <Plus size={16} /> {t('inputs.addPrescriber')}
               </Button>
@@ -410,7 +410,7 @@ const InputsPage = () => {
                 <Slider
                   id="director-commission"
                   min={0}
-                  max={0.2}
+                  max={0.3}
                   step={0.01}
                   value={[settings.directorCommission]}
                   onValueChange={([value]) => updateSettings({ directorCommission: value })}
@@ -504,7 +504,7 @@ const InputsPage = () => {
                 <Slider
                   id="growth"
                   min={0}
-                  max={0.5}
+                  max={1}
                   step={0.01}
                   value={[settings.growth]}
                   onValueChange={([value]) => updateSettings({ growth: value })}
