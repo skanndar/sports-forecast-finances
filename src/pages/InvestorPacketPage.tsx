@@ -17,6 +17,7 @@ import TornadoChart from '@/components/investor/TornadoChart';
 import MethodologySection from '@/components/investor/MethodologySection';
 import { runMonteCarloSimulation, runTornadoAnalysis } from '@/lib/finance';
 import { usePdfGenerator } from '@/hooks/usePdfGenerator';
+import InfoTooltip from "@/components/ui/info-tooltip";
 import {
   Table,
   TableHeader,
@@ -196,9 +197,11 @@ const InvestorPacketPage = () => {
                   </li>
                   <li>
                     <strong>{t('kpis.irr')}:</strong> {formatPercentage(results.irr)}
+                    <InfoTooltip id="irr" />
                   </li>
                   <li>
                     <strong>{t('kpis.npv')}:</strong> {formatCurrency(results.npv)}
+                    <InfoTooltip id="npv" />
                   </li>
                 </ul>
               </div>
@@ -208,15 +211,19 @@ const InvestorPacketPage = () => {
                 <ul className="list-disc pl-5 space-y-2">
                   <li>
                     <strong>{t('investorPacket.cac')}:</strong> {formatCurrency(results.unitEconomics.cac)}
+                    <InfoTooltip id="cac" />
                   </li>
                   <li>
                     <strong>{t('investorPacket.ltv')}:</strong> {formatCurrency(results.unitEconomics.ltv)}
+                    <InfoTooltip id="ltv" />
                   </li>
                   <li>
                     <strong>{t('investorPacket.ltvCacRatio')}:</strong> {(results.unitEconomics.ltv / results.unitEconomics.cac).toFixed(1)}x
+                    <InfoTooltip id="ltvCac" />
                   </li>
                   <li>
                     <strong>{t('investorPacket.paybackPeriod')}:</strong> {formatNumber(results.unitEconomics.paybackMonths)} {t('common.months')}
+                    <InfoTooltip id="payback" />
                   </li>
                 </ul>
               </div>
@@ -266,24 +273,36 @@ const InvestorPacketPage = () => {
                   </div>
                   
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('kpis.irr')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('kpis.irr')}
+                      <InfoTooltip id="irr" />
+                    </p>
                     <p className="text-2xl font-bold">{formatPercentage(results.irr)}</p>
                   </div>
                   
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('kpis.npv')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('kpis.npv')}
+                      <InfoTooltip id="npv" />
+                    </p>
                     <p className="text-2xl font-bold">{formatCurrency(results.npv)}</p>
                   </div>
                   
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('kpis.ltvCacRatio')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('kpis.ltvCacRatio')}
+                      <InfoTooltip id="ltvCac" />
+                    </p>
                     <p className="text-2xl font-bold">
                       {(results.unitEconomics.ltv / results.unitEconomics.cac).toFixed(1)}x
                     </p>
                   </div>
                   
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('kpis.cacPayback')}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('kpis.cacPayback')}
+                      <InfoTooltip id="payback" />
+                    </p>
                     <p className="text-2xl font-bold">{formatNumber(results.unitEconomics.paybackMonths)} {t('common.months')}</p>
                   </div>
                 </div>

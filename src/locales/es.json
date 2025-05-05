@@ -1,4 +1,3 @@
-
 {
   "common": {
     "loading": "Cargando...",
@@ -322,5 +321,14 @@
     "value": "Valor",
     "variable": "Variable",
     "percentile": "Percentil"
+  },
+  "metrics": {
+    "irrDesc": "Compara con WACC para decidir si crea valor.",
+    "npvDesc": "Valor presente neto de los flujos de caja futuros.",
+    "cacDesc": "Coste promedio para adquirir un nuevo cliente.",
+    "ltvDesc": "Valor económico total que un cliente aporta durante su ciclo de vida.",
+    "paybackDesc": "Tiempo necesario para recuperar el coste de adquisición.",
+    "ltvCacDesc": "Ratio > 3 indica un buen modelo de negocio.",
+    "breakEvenDesc": "Punto donde los ingresos igualan a los costes totales."
   }
 }

@@ -32,7 +32,7 @@ export const usePdfGenerator = () => {
         jsPDF: {
           unit: 'mm',
           format: 'a4',
-          orientation: 'landscape',
+          orientation: 'portrait', // Changed to portrait for better fit
         },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };

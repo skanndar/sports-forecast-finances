@@ -113,28 +113,57 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
                 <TableRow>
                   <TableHead>{t('table.metric')}</TableHead>
                   <TableHead>{t('investorPacket.formula')}</TableHead>
+                  <TableHead>{t('investorPacket.interpretation', { defaultValue: "Interpretación" })}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className="font-medium">{t('kpis.irr')}</TableCell>
+                  <TableCell className="font-medium">
+                    {t('kpis.irr')}
+                    <InfoTooltip id="irr" />
+                  </TableCell>
                   <TableCell>{t('investorPacket.irrFormula')}</TableCell>
+                  <TableCell>{t('metrics.irrDesc', { defaultValue: "Compara con WACC para decidir si crea valor." })}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">{t('kpis.npv')}</TableCell>
+                  <TableCell className="font-medium">
+                    {t('kpis.npv')}
+                    <InfoTooltip id="npv" />
+                  </TableCell>
                   <TableCell>{t('investorPacket.npvFormula')}</TableCell>
+                  <TableCell>{t('metrics.npvDesc', { defaultValue: "Valor presente neto de los flujos de caja futuros." })}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">{t('investorPacket.cac')}</TableCell>
+                  <TableCell className="font-medium">
+                    {t('investorPacket.cac')}
+                    <InfoTooltip id="cac" />
+                  </TableCell>
                   <TableCell>{t('investorPacket.cacFormula', { defaultValue: "CAC = (Marketing Spend + Prescriber Commissions for New Customers) / New Customers" })}</TableCell>
+                  <TableCell>{t('metrics.cacDesc', { defaultValue: "Coste promedio para adquirir un nuevo cliente." })}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">{t('investorPacket.ltv')}</TableCell>
+                  <TableCell className="font-medium">
+                    {t('investorPacket.ltv')}
+                    <InfoTooltip id="ltv" />
+                  </TableCell>
                   <TableCell>{t('investorPacket.ltvFormula', { defaultValue: "LTV = (Revenue per Customer × Gross Margin %) × Rentals per Customer / Churn" })}</TableCell>
+                  <TableCell>{t('metrics.ltvDesc', { defaultValue: "Valor económico total que un cliente aporta durante su ciclo de vida." })}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className="font-medium">{t('investorPacket.paybackPeriod')}</TableCell>
+                  <TableCell className="font-medium">
+                    {t('investorPacket.paybackPeriod')}
+                    <InfoTooltip id="payback" />
+                  </TableCell>
                   <TableCell>{t('investorPacket.paybackFormula')}</TableCell>
+                  <TableCell>{t('metrics.paybackDesc', { defaultValue: "Tiempo necesario para recuperar el coste de adquisición." })}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    {t('kpis.ltvCacRatio')}
+                    <InfoTooltip id="ltvCac" />
+                  </TableCell>
+                  <TableCell>LTV / CAC</TableCell>
+                  <TableCell>{t('metrics.ltvCacDesc', { defaultValue: "Ratio > 3 indica un buen modelo de negocio." })}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

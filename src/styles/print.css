@@ -36,4 +36,11 @@
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
+
+  /* Ensure tooltips are visible in print */
+  [data-radix-popper-content-wrapper] {
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+  }
 }

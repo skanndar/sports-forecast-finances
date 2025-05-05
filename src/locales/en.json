@@ -1,4 +1,3 @@
-
 {
   "common": {
     "loading": "Loading...",
@@ -322,5 +321,14 @@
     "value": "Value",
     "variable": "Variable",
     "percentile": "Percentile"
+  },
+  "metrics": {
+    "irrDesc": "Compare with WACC to decide if value is created.",
+    "npvDesc": "Net present value of future cash flows.",
+    "cacDesc": "Average cost to acquire a new customer.",
+    "ltvDesc": "Total economic value a customer brings during their lifetime.",
+    "paybackDesc": "Time needed to recover acquisition cost.",
+    "ltvCacDesc": "Ratio > 3 indicates a good business model.",
+    "breakEvenDesc": "Point where revenue equals total costs."
   }
 }
