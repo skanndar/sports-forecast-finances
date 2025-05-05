@@ -16,11 +16,18 @@ export const usePdfGenerator = () => {
         // @ts-ignore - Force set attribute to open state
         content.setAttribute('data-state', 'open');
       });
+      
+      // Expand all tooltips for printing
+      const tooltips = element.querySelectorAll('[data-radix-tooltip-trigger]');
+      tooltips.forEach((tooltip) => {
+        // Make tooltips visible in print mode without requiring hover
+        tooltip.setAttribute('data-print-visible', 'true');
+      });
 
       // PDF generation options optimized to prevent content cutting
       const options = {
         filename: filename,
-        margin: [10, 10, 10, 10], // 10mm margins on all sides
+        margin: [15, 15, 15, 15], // 15mm margins on all sides
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
           scale: 2, // Higher scale for better quality
@@ -32,9 +39,13 @@ export const usePdfGenerator = () => {
         jsPDF: {
           unit: 'mm',
           format: 'a4',
-          orientation: 'portrait', // Changed to portrait for better fit
+          orientation: 'portrait', // Portrait mode for better fit
         },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak: { 
+          mode: ['avoid-all', 'css', 'legacy'],
+          before: '.page-break-before',
+          after: '.page-break-after'
+        }
       };
 
       // Generate PDF

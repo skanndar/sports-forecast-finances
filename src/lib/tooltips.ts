@@ -11,6 +11,8 @@ export const tooltips: TooltipContent = {
   "ltv": "Valor del Ciclo de Vida del Cliente = (ingresos por cliente × margen) × alquileres por cliente / churn.",
   "payback": "Tiempo para recuperar el CAC. Ideal < 12 meses.",
   "breakeven": "Punto donde los ingresos igualan a los costes totales.",
+  "ebitda": "Beneficio antes de intereses, impuestos, depreciaciones y amortizaciones. Mide el rendimiento operativo.",
+  "ebitda-margin": "Porcentaje que representa el EBITDA sobre los ingresos totales. Indica eficiencia operativa.",
   
   // Product tooltips
   "product-units": "Número de máquinas disponibles para alquiler.",
@@ -68,6 +70,5 @@ export const tooltips: TooltipContent = {
   "download_investor_packet": "Descargar paquete inversor (PDF)",
   
   // Additional tooltips for new features
-  "revenue": "Ingresos totales generados por todos los productos.",
-  "ebitda": "Beneficio antes de intereses, impuestos, depreciaciones y amortizaciones."
+  "revenue": "Ingresos totales generados por todos los productos."
 };

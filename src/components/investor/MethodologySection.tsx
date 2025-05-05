@@ -165,6 +165,22 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
                   <TableCell>LTV / CAC</TableCell>
                   <TableCell>{t('metrics.ltvCacDesc', { defaultValue: "Ratio > 3 indica un buen modelo de negocio." })}</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    {t('kpis.ebitda')}
+                    <InfoTooltip id="ebitda" />
+                  </TableCell>
+                  <TableCell>{t('investorPacket.ebitdaFormula', { defaultValue: "EBITDA = Revenue - Total Variable Costs - Structural Costs" })}</TableCell>
+                  <TableCell>{t('metrics.ebitdaDesc', { defaultValue: "Beneficio antes de intereses, impuestos, depreciaciones y amortizaciones." })}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    {t('table.ebitdaMargin')}
+                    <InfoTooltip id="ebitda-margin" />
+                  </TableCell>
+                  <TableCell>{t('investorPacket.ebitdaMarginFormula', { defaultValue: "EBITDA Margin = EBITDA / Revenue" })}</TableCell>
+                  <TableCell>{t('metrics.ebitdaMarginDesc', { defaultValue: "Rentabilidad operativa del negocio como porcentaje de los ingresos." })}</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </div>

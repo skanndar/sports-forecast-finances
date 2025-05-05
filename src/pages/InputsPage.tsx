@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -192,19 +191,22 @@ const InputsPage = () => {
                         </div>
                       )}
                       
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor={`product-min-days-${index}`}>{t('inputs.minDays')}</Label>
-                          <InfoTooltip id="product-min-days" />
+                      {/* Only show minDays field if pricing mode is daily */}
+                      {product.pricingMode === 'daily' && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Label htmlFor={`product-min-days-${index}`}>{t('inputs.minDays')}</Label>
+                            <InfoTooltip id="product-min-days" />
+                          </div>
+                          <Input 
+                            id={`product-min-days-${index}`}
+                            type="number"
+                            min={1}
+                            value={product.minDays} 
+                            onChange={(e) => updateProductField(index, 'minDays', Number(e.target.value))}
+                          />
                         </div>
-                        <Input 
-                          id={`product-min-days-${index}`}
-                          type="number"
-                          min={1}
-                          value={product.minDays} 
-                          onChange={(e) => updateProductField(index, 'minDays', Number(e.target.value))}
-                        />
-                      </div>
+                      )}
                       
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">

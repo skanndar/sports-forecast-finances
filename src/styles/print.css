@@ -43,4 +43,18 @@
     position: static !important;
     transform: none !important;
   }
+  
+  /* Make tooltips visible when printing */
+  [data-print-visible="true"] + [data-radix-popper-content-wrapper] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: inline-block !important;
+    position: relative !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  /* Add page breaks before specific sections */
+  #detail-table, #methodology-section, #tornado-chart, #monte-carlo-section, #risk-analysis-section {
+    page-break-before: always !important;
+  }
 }
