@@ -14,7 +14,6 @@ import { useAppStore } from '@/lib/store';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart, TooltipProps, Cell } from 'recharts';
 import { PieChart, Pie } from 'recharts';
-import { YearResult } from '@/lib/types';
 
 const COLORS = [
   '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#9370DB', 

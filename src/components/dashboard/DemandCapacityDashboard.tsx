@@ -20,7 +20,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { ProjectResult, Settings } from '@/lib/types';
 import { formatNumber, formatPercentage } from '@/lib/formatters';
 import KpiCard from './KpiCard';
-import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface DemandCapacityDashboardProps {
   results: ProjectResult;

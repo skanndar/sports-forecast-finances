@@ -1,4 +1,3 @@
-
 {
   "common": {
     "locale": "en-US",
@@ -20,7 +19,18 @@
     "by": "by",
     "byYear": "per year",
     "year": "Year",
-    "yearForecast": "Year Forecast"
+    "yearForecast": "Year Forecast",
+    "months": "months",
+    "notInForecast": "Not in forecast"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "inputs": "Inputs",
+    "scenarioLab": "Scenario Lab",
+    "sensitivity": "Sensitivity Analysis",
+    "investorPacket": "Investor Pack",
+    "login": "Login",
+    "logout": "Logout"
   },
   "auth": {
     "emailLabel": "Email",
@@ -50,7 +60,22 @@
     "configureInputs": "Please configure your inputs to see results",
     "demandCapacity": "Demand vs Capacity",
     "demandCapacitySummary": "Analysis of customer demand against product capacity",
-    "occupancyRates": "Occupancy Rates"
+    "occupancyRates": "Occupancy Rates",
+    "financialProjections": "Financial Projections",
+    "cashFlow": "Cash Flow",
+    "revenueVsCosts": "Revenue vs Costs",
+    "margins": "Margins",
+    "revenueByProduct": "Revenue by Product",
+    "finalYearRevenue": "Final year revenue distribution",
+    "yearlyResults": "Yearly Results"
+  },
+  "charts": {
+    "revenue": "Revenue",
+    "ebitda": "EBITDA",
+    "cashFlow": "Cash Flow",
+    "totalCosts": "Total Costs",
+    "grossMarginPct": "Gross Margin %",
+    "ebitdaMarginPct": "EBITDA Margin %"
   },
   "table": {
     "year": "Year",
@@ -60,11 +85,16 @@
     "variableCosts": "Variable Costs",
     "productCosts": "Product Costs",
     "prescriberCosts": "Prescriber Costs",
+    "prescriberCommissions": "Prescriber Commissions",
     "directorCost": "Director Commission",
+    "directorCommission": "Director Commission",
     "structuralCosts": "Structural Costs",
     "ebitda": "EBITDA",
     "ebitdaMargin": "EBITDA Margin",
-    "cash": "Cash Flow"
+    "cash": "Cash Flow",
+    "grossMargin": "Gross Margin",
+    "totalVariableCosts": "Total Variable Costs",
+    "variable": "Variable"
   },
   "inputs": {
     "title": "Input Parameters",
@@ -193,7 +223,10 @@
     "riskAnalysis": "Risk Analysis",
     "riskFactors": "Key Risk Factors",
     "riskImpact": "Impact on Financials",
-    "analysisFailed": "Failed to run sensitivity analysis"
+    "analysisFailed": "Failed to run sensitivity analysis",
+    "variable": "Variable",
+    "negativeImpact": "Negative Impact",
+    "positiveImpact": "Positive Impact"
   },
   "scenarios": {
     "title": "Scenario Lab",
@@ -245,46 +278,25 @@
     "customerGrowthFormula": "Customer Growth Formula:",
     "revenueCalculation": "Revenue Calculation",
     "revenueFormula": "How revenue is calculated across products and pricing modes",
-    "rentalsPerYearDaily": "Daily pricing: Maximum Rentals/Year = 365 days / Min Days",
-    "revenueDailyFormula": "Daily pricing: Revenue = Actual Rentals × Price per Day × Min Days × Growth Factor",
-    "rentalsPerYearMonthly": "Monthly pricing: Maximum Rentals/Year = 12 months",
-    "revenueMonthlyFormula": "Monthly pricing: Revenue = Actual Rentals × Price per Month × Growth Factor",
-    "costsCalculation": "Costs Calculation",
-    "productCostsFormula": "Product Costs = Actual Rentals × Variable Cost × Inflation Factor × Growth Factor",
-    "prescriberCostsFormula": "Prescriber Costs = Sum(Revenue × Prescriber Share × Commission Rate)",
-    "directorCostsFormula": "Director Commission = Total Revenue × Director Commission Rate",
-    "structuralCostsFormula": "Structural Costs = (Salaries + Infrastructure + Web Maintenance + Marketing) × Inflation Factor",
-    "profitabilityCalculation": "Profitability Calculation",
-    "grossMarginFormula": "Gross Margin = Revenue - Variable Costs",
-    "ebitdaFormula": "EBITDA = Revenue - Variable Costs - Structural Costs",
-    "ebitdaMarginFormula": "EBITDA Margin = EBITDA / Revenue",
-    "cashFlowFormula": "Cash Flow = EBITDA (simplified, ignoring taxes, CAPEX, etc.)",
-    "financialMetricsCalculation": "Financial Metrics Calculation",
-    "irrFormula": "IRR = r where NPV(r) = 0",
-    "npvFormula": "NPV = Sum(Cash Flow_n / (1 + Discount Rate)^n)",
-    "cacFormula": "CAC = (Marketing Spend + Prescriber Commissions for New Customers) / New Customers",
-    "ltvFormula": "LTV = Sum(Revenue_n × Gross Margin % × Survival Rate_n / (1 + Discount Rate)^n)",
-    "paybackFormula": "Payback Period = CAC / Monthly Gross Profit per Customer",
-    "cac": "CAC",
-    "ltv": "LTV",
-    "paybackPeriod": "Payback Period",
-    "retention": "Customer Retention",
-    "churnImpact": "Higher churn reduces customer base and LTV",
-    "rentalsImpact": "More rentals per customer increase demand and revenue",
-    "customersPerYear": "Customers per Year",
-    "actualRentals": "Actual Rentals",
-    "capacity": "rentals at capacity",
-    "demand": "rentals demand",
-    "daily": "daily",
-    "monthly": "monthly",
-    "exampleCalc": "Example calculation",
-    "exampleDailyFormula": "Daily: With {{units}} units, {{actualRentals}} actual rentals, {{daysMin}} min days, {{price}}€/day → Revenue = {{revenue}}€",
-    "exampleMonthlyFormula": "Monthly: With {{units}} units, {{actualRentals}} actual rentals, {{price}}€/month → Revenue = {{revenue}}€",
-    "maxRentalsFormula": "MaxRentalsPerUnit = Daily ? (365/MinDays) : 12",
-    "potentialCapacityFormula": "PotentialCapacity = Units × MaxRentalsPerUnit",
-    "demandFormula": "DemandRentals = CustomersPerYear × RentalsPerCustomer",
-    "realOccupancyFormula": "RealOccupancy = Min(1, DemandRentals/PotentialCapacity)",
-    "actualRentalsFormula": "ActualRentals = RealOccupancy × PotentialCapacity",
-    "growingCustomerBase": "Growing Customer Base"
+    "monteCarloSimulation": "Monte Carlo Simulation",
+    "monteCarloDesc": "Distribution of possible outcomes after 1,000 random variations",
+    "p5Desc": "Pessimistic scenario",
+    "p50Desc": "Most likely scenario",
+    "p95Desc": "Optimistic scenario",
+    "ebitdaRange": "EBITDA Range",
+    "ebitdaConfidence": "90% confidence interval for EBITDA: {p5} to {p95}",
+    "riskAnalysisSummary": "Risk Analysis Summary",
+    "riskAnalysisDesc": "Key risks that may impact project outcomes",
+    "sensititiveVariables": "Most Sensitive Variables",
+    "sensititiveVariablesDesc": "Variables that have the greatest impact on EBITDA",
+    "impactOnEbitda": "Impact on EBITDA",
+    "mitigationPriority": "Mitigation Priority",
+    "priorityHigh": "High",
+    "priorityMedium": "Medium",
+    "priorityLow": "Low",
+    "recommendations": "Recommendations",
+    "recommendation1": "Monitor and actively manage the most sensitive variables",
+    "recommendation2": "Develop contingency plans for pessimistic scenarios",
+    "recommendation3": "Regularly update forecasts as actual data becomes available"
   }
 }

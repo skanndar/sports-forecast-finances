@@ -7,6 +7,24 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslation from '../locales/en.json';
 import esTranslation from '../locales/es.json';
 
+// Create a wrapper function for the t function that shows missing translations visually
+export const createSafeTFunction = (t: typeof i18n.t) => {
+  return (key: string, options?: any) => {
+    const translation = t(key, options);
+    
+    // If the translation is the same as the key, it's probably missing
+    if (translation === key && key.includes('.')) {
+      console.warn(`Missing translation key: ${key}`);
+      // For development, show visual indicator
+      if (process.env.NODE_ENV === 'development') {
+        return `🔴 ${key}`;
+      }
+    }
+    
+    return translation;
+  };
+};
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
