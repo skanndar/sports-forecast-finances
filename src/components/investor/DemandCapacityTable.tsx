@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatNumber } from '@/lib/formatters';
+import { formatNumber, formatPercentage } from '@/lib/formatters';
 import { ProjectResult, Settings } from '@/lib/types';
 import {
   Table,
@@ -28,7 +28,12 @@ const DemandCapacityTable = ({ results, settings }: DemandCapacityTableProps) =>
             <TableHead>{t('table.year')}</TableHead>
             <TableHead>{t('investorPacket.customersPerYear')}</TableHead>
             {settings.products.map((product, idx) => (
-              <TableHead key={idx}>{t('investorPacket.actualRentals')}: {product.name}</TableHead>
+              <React.Fragment key={`header-${idx}`}>
+                <TableHead>{t('inputs.demandRentals')}: {product.name}</TableHead>
+                <TableHead>{t('inputs.potentialCapacity')}: {product.name}</TableHead>
+                <TableHead>{t('inputs.occupancyReal')}: {product.name}</TableHead>
+                <TableHead>{t('inputs.actualRentals')}: {product.name}</TableHead>
+              </React.Fragment>
             ))}
           </TableRow>
         </TableHeader>
@@ -38,9 +43,20 @@ const DemandCapacityTable = ({ results, settings }: DemandCapacityTableProps) =>
               <TableCell>{yearIndex + 1}</TableCell>
               <TableCell>{formatNumber(yr.customersCount || 0)}</TableCell>
               {settings.products.map((product, productIdx) => (
-                <TableCell key={productIdx}>
-                  {yr.actualRentals && formatNumber(yr.actualRentals[product.name] || 0)}
-                </TableCell>
+                <React.Fragment key={`data-${yearIndex}-${productIdx}`}>
+                  <TableCell>
+                    {yr.demandRentals && formatNumber(yr.demandRentals[product.name] || 0)}
+                  </TableCell>
+                  <TableCell>
+                    {yr.potentialCapacity && formatNumber(yr.potentialCapacity[product.name] || 0)}
+                  </TableCell>
+                  <TableCell>
+                    {yr.realOccupancy && formatPercentage(yr.realOccupancy[product.name] || 0)}
+                  </TableCell>
+                  <TableCell>
+                    {yr.actualRentals && formatNumber(yr.actualRentals[product.name] || 0)}
+                  </TableCell>
+                </React.Fragment>
               ))}
             </TableRow>
           ))}

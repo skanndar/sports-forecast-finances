@@ -1,4 +1,3 @@
-
 export type PricingMode = 'daily' | 'monthly';
 
 export type Product = {
@@ -56,6 +55,10 @@ export type YearResult = {
   revenueByProduct?: Record<string, number>;
   customersCount?: number;  // Number of customers for the year
   actualRentals?: Record<string, number>; // Actual rentals by product
+  demandRentals?: Record<string, number>; // Demand for rentals by product
+  potentialCapacity?: Record<string, number>; // Potential capacity by product
+  realOccupancy?: Record<string, number>; // Real occupancy by product
+  maxRentalsPerUnit?: Record<string, number>; // Max rentals per unit by product
 };
 
 export type UnitEconomics = { 
