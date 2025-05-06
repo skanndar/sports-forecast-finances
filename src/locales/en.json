@@ -95,6 +95,8 @@
     "product-min-days": "Minimum rental length. Default 15 days. Adjust for larger equipment if needed.",
     "product-variable-cost": "Direct cost per rental: consumables, shipping, cleaning, etc.",
     "product-occupancy": "Average % of time the machine is rented (0-100%).",
+    "product-shipping-income": "Income charged to client for shipping (per rental).",
+    "product-shipping-cost": "Cost to company for shipping (per rental).",
     "prescriber-share": "Percentage of total revenue attributed to this prescriber.",
     "prescriber-commission": "Commission rate applied to the prescriber's attributed revenue.",
     "director-commission": "Commission percentage applied to total revenue for the Director.",
@@ -171,7 +173,9 @@
     "maxPrescribersReached": "You can add up to 5 prescribers.",
     "shareExceedsWarning": "Warning: Total prescriber share exceeds 100%. This may lead to incorrect commission calculations.",
     "price": "Price",
-    "capexPlan": "CAPEX Plan"
+    "capexPlan": "CAPEX Plan",
+    "shippingIncome": "Shipping Income",
+    "shippingCost": "Shipping Cost"
   },
   "sensitivity": {
     "title": "Sensitivity Analysis",

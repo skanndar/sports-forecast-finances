@@ -1,4 +1,3 @@
-
 export type PricingMode = 'daily' | 'monthly';
 
 export type Product = {
@@ -11,6 +10,8 @@ export type Product = {
   minDays: number;        // default 15
   variableCost: number;   // €/rental
   occupancy: number;      // 0-1
+  shippingIncome: number; // income per rental
+  shippingCost: number;   // cost per rental
 };
 
 export type Prescriber = { 

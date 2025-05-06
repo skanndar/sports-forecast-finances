@@ -22,6 +22,8 @@ export const tooltips: TooltipContent = {
   "product-min-days": "Duración mínima de alquiler. Por defecto 15 días. Ajustar para equipos más grandes si es necesario.",
   "product-variable-cost": "Coste directo por alquiler: consumibles, envío, limpieza, etc.",
   "product-occupancy": "Porcentaje medio de tiempo que la máquina está alquilada (0-100%).",
+  "product-shipping-income": "Ingreso cobrado al cliente por envío (por alquiler).",
+  "product-shipping-cost": "Coste para la empresa por envío (por alquiler).",
   
   // Prescriber tooltips
   "prescriber-share": "Porcentaje de ingresos totales atribuidos a este prescriptor.",

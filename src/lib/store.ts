@@ -42,8 +42,49 @@ export const useAppStore = create<AppState>()(
       savedScenarios: [] as Scenario[],
       compareScenarios: [],
       theme: 'light',
-      setSavedScenarios: (list: Scenario[]) => set({ savedScenarios: list }),
-      setActiveScenario: (scenario: Scenario) => set({ activeScenario: { ...scenario, results: calculateProjectResults(scenario.settings) } }),
+      setSavedScenarios: (list: Scenario[]) => {
+        // Ensure all products in all scenarios have shippingIncome and shippingCost
+        const updatedList = list.map(scenario => {
+          const updatedProducts = scenario.settings.products.map(product => ({
+            ...product,
+            shippingIncome: product.shippingIncome ?? 0,
+            shippingCost: product.shippingCost ?? 0
+          }));
+          
+          return {
+            ...scenario,
+            settings: {
+              ...scenario.settings,
+              products: updatedProducts
+            }
+          };
+        });
+        
+        set({ savedScenarios: updatedList });
+      },
+      setActiveScenario: (scenario: Scenario) => {
+        // Ensure all products have shippingIncome and shippingCost
+        const updatedProducts = scenario.settings.products.map(product => ({
+          ...product,
+          shippingIncome: product.shippingIncome ?? 0,
+          shippingCost: product.shippingCost ?? 0
+        }));
+        
+        const updatedScenario = {
+          ...scenario,
+          settings: {
+            ...scenario.settings,
+            products: updatedProducts
+          }
+        };
+        
+        set({ 
+          activeScenario: { 
+            ...updatedScenario, 
+            results: calculateProjectResults(updatedScenario.settings) 
+          } 
+        });
+      },
 
       updateSettings: (settingsUpdate) => {
         set((state) => {
@@ -134,7 +175,9 @@ export const useAppStore = create<AppState>()(
             pricePerDay: 50,
             minDays: 15,
             variableCost: 10,
-            occupancy: 0.7
+            occupancy: 0.7,
+            shippingIncome: 0,
+            shippingCost: 0
           };
 
           const newSettings = {

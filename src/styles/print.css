@@ -1,4 +1,5 @@
 
+
 @media print {
   html, body {
     width: 100%;
@@ -57,4 +58,11 @@
   #detail-table, #methodology-section, #tornado-chart, #monte-carlo-section, #risk-analysis-section {
     page-break-before: always !important;
   }
+  
+  /* Ensure shipping fields have proper spacing */
+  .shipping-info {
+    display: block !important;
+    margin-top: 0.5rem !important;
+  }
 }
+

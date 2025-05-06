@@ -19,7 +19,13 @@ export function revenueForProduct(p: Product, year: number, s: Settings): number
       ? p.pricePerDay! * p.minDays
       : p.pricePerMonth!;
 
-  return p.units * rentalsPerYear * pricePerRental * growthFactor;
+  // Calculate rental revenue
+  const rentalRevenue = p.units * rentalsPerYear * pricePerRental * growthFactor;
+  
+  // Add shipping income if defined (multiply by rentals)
+  const shippingIncome = (p.shippingIncome || 0) * p.units * rentalsPerYear * growthFactor;
+  
+  return rentalRevenue + shippingIncome;
 }
 
 /**
@@ -36,7 +42,13 @@ export function variableCostsForProduct(p: Product, year: number, s: Settings): 
       ? (p.occupancy * daysPerYear) / p.minDays
       : p.occupancy * monthsPerYear;
 
-  return p.units * rentalsPerYear * p.variableCost * inflationFactor * growthFactor;
+  // Base variable cost from product
+  const baseVariableCost = p.units * rentalsPerYear * p.variableCost * inflationFactor * growthFactor;
+  
+  // Add shipping cost if defined (multiply by rentals)
+  const shippingCost = (p.shippingCost || 0) * p.units * rentalsPerYear * inflationFactor * growthFactor;
+  
+  return baseVariableCost + shippingCost;
 }
 
 /**
@@ -487,7 +499,9 @@ export function getDefaultSettings(): Settings {
         pricePerDay: 50,
         minDays: 15,
         variableCost: 10,
-        occupancy: 0.7
+        occupancy: 0.7,
+        shippingIncome: 0,
+        shippingCost: 0
       }
     ],
     prescribers: [

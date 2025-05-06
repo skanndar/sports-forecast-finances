@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -220,6 +221,37 @@ const InputsPage = () => {
                           step={0.01}
                           value={product.variableCost} 
                           onChange={(e) => updateProductField(index, 'variableCost', Number(e.target.value))}
+                        />
+                      </div>
+                      
+                      {/* New fields for shipping income and costs */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor={`product-shipping-income-${index}`}>{t('inputs.shippingIncome')}</Label>
+                          <InfoTooltip id="product-shipping-income" />
+                        </div>
+                        <Input 
+                          id={`product-shipping-income-${index}`}
+                          type="number"
+                          min={0}
+                          step={0.01}
+                          value={product.shippingIncome || 0} 
+                          onChange={(e) => updateProductField(index, 'shippingIncome', Number(e.target.value))}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor={`product-shipping-cost-${index}`}>{t('inputs.shippingCost')}</Label>
+                          <InfoTooltip id="product-shipping-cost" />
+                        </div>
+                        <Input 
+                          id={`product-shipping-cost-${index}`}
+                          type="number"
+                          min={0}
+                          step={0.01}
+                          value={product.shippingCost || 0} 
+                          onChange={(e) => updateProductField(index, 'shippingCost', Number(e.target.value))}
                         />
                       </div>
                       
