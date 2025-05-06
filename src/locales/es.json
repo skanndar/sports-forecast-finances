@@ -100,7 +100,9 @@
     "prescriber-share": "Porcentaje de ingresos totales atribuidos a este prescriptor.",
     "prescriber-commission": "Porcentaje de comisión aplicado sobre los ingresos atribuidos al prescriptor.",
     "director-commission": "Porcentaje sobre la facturación total que cobra el Director.",
-    "initial-investment": "Inversión inicial necesaria para arrancar el negocio (capex, stock de máquinas, licencias...). Se descuenta en el año 0 para el cálculo de TIR y VAN."
+    "initial-investment": "Inversión inicial necesaria para arrancar el negocio (capex, stock de máquinas, licencias...). Se descuenta en el año 0 para el cálculo de TIR y VAN.",
+    "shipping-income": "Ingreso adicional cobrado al cliente por el envío de cada alquiler.",
+    "shipping-cost": "Coste que asume la empresa por el envío en cada alquiler."
   },
   "scenarioLab": {
     "title": "Laboratorio de Escenarios",
@@ -175,7 +177,9 @@
     "price": "Precio",
     "capexPlan": "Plan de CAPEX",
     "shippingIncome": "Ingreso de Envío",
-    "shippingCost": "Coste de Envío"
+    "shippingCost": "Coste de Envío",
+    "shipping-income": "Ingreso adicional cobrado al cliente por el envío de cada alquiler.",
+    "shipping-cost": "Coste que asume la empresa por el envío en cada alquiler."
   },
   "sensitivity": {
     "title": "Análisis de Sensibilidad",
@@ -292,7 +296,21 @@
     "ebitdaRange": "Rango de EBITDA",
     "ebitdaConfidence": "Con un 90% de certeza, el EBITDA del año final estará entre {{p5}} y {{p95}}",
     "interpretation": "Interpretación",
-    "simulationRuns": "Basado en 1.000 ejecuciones de simulación con variaciones aleatorias en parámetros clave"
+    "simulationRuns": "Basado en 1.000 ejecuciones de simulación con variaciones aleatorias en parámetros clave",
+    "demandVsCapacity": "Demanda vs. Capacidad",
+    "demandVsCapacityDesc": "Análisis que compara la demanda de clientes con la capacidad disponible",
+    "demandFormula": "Demanda = Clientes × Alquileres por Cliente",
+    "capacityFormula": "Capacidad = Unidades × (Ocupación × Días/Año) / Días Mínimos (para precio diario) o Unidades × Ocupación × 12 (para precio mensual)",
+    "actualRentalsFormula": "Alquileres Efectivos = Min(Demanda, Capacidad)",
+    "customerGrowthFormula": "Clientes[Año] = Clientes[Año-1] × (1-Abandono) + Nuevos Clientes × (1+Crecimiento)^Año",
+    "customerRetention": "Modelo de Retención de Clientes",
+    "customerRetentionDesc": "Cómo evoluciona la base de clientes a lo largo del tiempo con abandono y crecimiento",
+    "capacity": "Capacidad",
+    "demand": "Demanda",
+    "actualRentals": "Alquileres Efectivos",
+    "customersPerYear": "Clientes por Año",
+    "limitations": "Limitaciones del Modelo",
+    "limitationsDesc": "Factores a considerar al interpretar los resultados"
   },
   "charts": {
     "revenue": "Ingresos",

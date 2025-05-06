@@ -8,16 +8,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Settings } from '@/lib/types';
+import { Settings, ProjectResult } from '@/lib/types';
 import InfoTooltip from "@/components/ui/info-tooltip";
 
 interface MethodologySectionProps {
   settings: Settings;
+  results?: ProjectResult;
   className?: string;
   id?: string;
 }
 
-const MethodologySection = ({ settings, className = "", id }: MethodologySectionProps) => {
+const MethodologySection = ({ settings, results, className = "", id }: MethodologySectionProps) => {
   const { t } = useTranslation();
 
   // Example calculation for better understanding
@@ -26,14 +27,34 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
   const exampleDaysMin = 15;
   const examplePricePerDay = 50;
   const examplePricePerMonth = 1000;
+  const exampleShippingIncome = 10;
+  const exampleShippingCost = 5;
   
   // Example calculations for daily pricing
   const exampleRentalsYearDaily = (exampleOccupancy * 365) / exampleDaysMin;
   const exampleRevenueDaily = exampleUnits * exampleRentalsYearDaily * examplePricePerDay * exampleDaysMin;
+  const exampleShippingRevenueDaily = exampleUnits * exampleRentalsYearDaily * exampleShippingIncome;
+  const exampleShippingCostDaily = exampleUnits * exampleRentalsYearDaily * exampleShippingCost;
   
   // Example calculations for monthly pricing
   const exampleRentalsYearMonthly = exampleOccupancy * 12;
   const exampleRevenueMonthly = exampleUnits * exampleRentalsYearMonthly * examplePricePerMonth;
+  const exampleShippingRevenueMonthly = exampleUnits * exampleRentalsYearMonthly * exampleShippingIncome;
+  const exampleShippingCostMonthly = exampleUnits * exampleRentalsYearMonthly * exampleShippingCost;
+  
+  // Example customer growth calculation
+  const exampleNewCustomers = 100;
+  const exampleGrowth = 0.15;
+  const exampleChurn = 0.2;
+  const exampleCustomersY1 = exampleNewCustomers;
+  const exampleCustomersY2 = exampleCustomersY1 * (1 - exampleChurn) + exampleNewCustomers * (1 + exampleGrowth);
+  const exampleCustomersY3 = exampleCustomersY2 * (1 - exampleChurn) + exampleNewCustomers * Math.pow((1 + exampleGrowth), 2);
+
+  // Example demand vs capacity calculation
+  const exampleRentalsPerCustomer = 2;
+  const exampleDemand = exampleCustomersY1 * exampleRentalsPerCustomer;
+  const exampleCapacity = exampleRentalsYearDaily * exampleUnits;
+  const exampleActualRentals = Math.min(exampleDemand, exampleCapacity);
 
   return (
     <Card className={`mt-6 ${className}`} id={id}>
@@ -44,16 +65,70 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
       <CardContent>
         <div className="space-y-6">
           <div>
+            <h3 className="text-lg font-medium mb-2">{t('investorPacket.customerRetention')}</h3>
+            <p className="mb-2">{t('investorPacket.customerRetentionDesc')}</p>
+            <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
+              {t('investorPacket.customerGrowthFormula')}
+              {"\n"}
+              {t('common.year')} 1: {t('inputs.newCustomers')}
+              {"\n"}
+              {t('common.year')} 2: {t('inputs.newCustomers')} × (1 + {t('inputs.growth')}) + {t('common.year')} 1 {t('inputs.rentalsPerCustomer')} × (1 - {t('inputs.churn')})
+              {"\n"}
+              {t('common.year')} 3: {t('inputs.newCustomers')} × (1 + {t('inputs.growth')})² + {t('common.year')} 2 {t('inputs.rentalsPerCustomer')} × (1 - {t('inputs.churn')})
+            </pre>
+            
+            <div className="mt-4 bg-muted/50 p-2 rounded-md">
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc', { defaultValue: "Example calculation" })}</h4>
+              <p className="text-sm">
+                {t('common.year')} 1: {exampleNewCustomers} {t('inputs.newCustomers')} = {exampleCustomersY1} {t('investorPacket.customersPerYear')}
+              </p>
+              <p className="text-sm mt-1">
+                {t('common.year')} 2: {exampleNewCustomers} × (1 + {(exampleGrowth * 100).toFixed(0)}%) + {exampleCustomersY1} × (1 - {(exampleChurn * 100).toFixed(0)}%) = {Math.round(exampleCustomersY2)} {t('investorPacket.customersPerYear')}
+              </p>
+              <p className="text-sm mt-1">
+                {t('common.year')} 3: {exampleNewCustomers} × (1 + {(exampleGrowth * 100).toFixed(0)}%)² + {Math.round(exampleCustomersY2)} × (1 - {(exampleChurn * 100).toFixed(0)}%) = {Math.round(exampleCustomersY3)} {t('investorPacket.customersPerYear')}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium mb-2">{t('investorPacket.demandVsCapacity')}</h3>
+            <p className="mb-2">{t('investorPacket.demandVsCapacityDesc')}</p>
+            <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
+              {t('investorPacket.demandFormula')}
+              {"\n"}
+              {t('investorPacket.capacityFormula')}
+              {"\n"}
+              {t('investorPacket.actualRentalsFormula')}
+            </pre>
+            
+            <div className="mt-4 bg-muted/50 p-2 rounded-md">
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
+              <p className="text-sm">
+                {t('investorPacket.demand')}: {exampleCustomersY1} {t('inputs.newCustomers')} × {exampleRentalsPerCustomer} {t('inputs.rentalsPerCustomer')} = {exampleDemand} {t('investorPacket.demand')}
+              </p>
+              <p className="text-sm mt-1">
+                {t('investorPacket.capacity')}: {exampleUnits} {t('inputs.units')} × {(exampleOccupancy * 100).toFixed(0)}% {t('inputs.occupancy')} × 365 / {exampleDaysMin} = {Math.round(exampleCapacity)} {t('investorPacket.capacity')}
+              </p>
+              <p className="text-sm mt-1">
+                {t('investorPacket.actualRentals')}: Min({exampleDemand}, {Math.round(exampleCapacity)}) = {Math.round(exampleActualRentals)} {t('investorPacket.actualRentals')}
+              </p>
+            </div>
+          </div>
+
+          <div>
             <h3 className="text-lg font-medium mb-2">{t('investorPacket.revenueCalculation')}</h3>
             <p className="mb-2">{t('investorPacket.revenueFormula')}</p>
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
               {t('investorPacket.rentalsPerYearDaily', { defaultValue: "Daily pricing: Rentals/Year = Occupancy × 365 days / Min Days" })}
               {'\n'}
-              {t('investorPacket.revenueDailyFormula', { defaultValue: "Daily pricing: Revenue = Units × Rentals/Year × Price per Day × Min Days" })}
-              {'\n\n'}
+              {t('investorPacket.revenueDailyFormula', { defaultValue: "Daily pricing: Revenue = Actual Rentals × Price per Day × Min Days" })}
+              {'\n'}
               {t('investorPacket.rentalsPerYearMonthly', { defaultValue: "Monthly pricing: Rentals/Year = Occupancy × 12 months" })}
               {'\n'}
-              {t('investorPacket.revenueMonthlyFormula', { defaultValue: "Monthly pricing: Revenue = Units × Rentals/Year × Price per Month" })}
+              {t('investorPacket.revenueMonthlyFormula', { defaultValue: "Monthly pricing: Revenue = Actual Rentals × Price per Month" })}
+              {'\n\n'}
+              {t('inputs.shippingIncome')}: {t('inputs.shippingIncome')} = {t('investorPacket.actualRentals')} × {t('inputs.shippingIncome')} {t('common.byYear')}
             </pre>
             
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
@@ -79,6 +154,9 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
                   revenue: Math.round(exampleRevenueMonthly).toLocaleString()
                 })}
               </p>
+              <p className="text-sm mt-1">
+                {t('inputs.shippingIncome')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × {exampleShippingIncome}€ = {Math.round(exampleShippingRevenueDaily)}€
+              </p>
             </div>
           </div>
 
@@ -87,12 +165,24 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
               {t('investorPacket.productCostsFormula')}
               {'\n'}
+              {t('inputs.shippingCost')}: {t('inputs.shippingCost')} = {t('investorPacket.actualRentals')} × {t('inputs.shippingCost')} {t('common.byYear')}
+              {'\n'}
               {t('investorPacket.prescriberCostsFormula')}
               {'\n'}
               {t('investorPacket.directorCostsFormula')}
               {'\n'}
               {t('investorPacket.structuralCostsFormula')}
             </pre>
+            
+            <div className="mt-4 bg-muted/50 p-2 rounded-md">
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
+              <p className="text-sm">
+                {t('table.productCosts')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × 10€ = {Math.round(exampleRentalsYearDaily.toFixed(1) * 10)}€
+              </p>
+              <p className="text-sm mt-1">
+                {t('inputs.shippingCost')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × {exampleShippingCost}€ = {Math.round(exampleShippingCostDaily)}€
+              </p>
+            </div>
           </div>
 
           <div>
@@ -215,6 +305,28 @@ const MethodologySection = ({ settings, className = "", id }: MethodologySection
               </TableBody>
             </Table>
           </div>
+          
+          {results && results.customersPerYear && (
+            <div>
+              <h3 className="text-lg font-medium mb-2">{t('investorPacket.customersPerYear')}</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('table.year')}</TableHead>
+                    <TableHead>{t('investorPacket.customersPerYear')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {results.customersPerYear.map((customers, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell>{Math.round(customers).toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

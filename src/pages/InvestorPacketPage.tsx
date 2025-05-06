@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   Card,
@@ -98,7 +99,7 @@ const InvestorPacketPage = () => {
       }
       
       // Generate CSV content
-      const headers = ['Year', 'Revenue', 'VariableCosts', 'StructuralCosts', 'EBITDA', 'Cash'];
+      const headers = ['Year', 'Revenue', 'VariableCosts', 'StructuralCosts', 'EBITDA', 'Cash', 'CustomersCount'];
       
       const csvContent = [
         headers.join(','),
@@ -108,7 +109,8 @@ const InvestorPacketPage = () => {
           yr.variableCosts,
           yr.structuralCosts,
           yr.ebitda,
-          yr.cash
+          yr.cash,
+          yr.customersCount || 0
         ].join(','))
       ].join('\n');
       
@@ -329,6 +331,14 @@ const InvestorPacketPage = () => {
                 </thead>
                 <tbody>
                   <tr className="border-b">
+                    <td className="p-2">{t('investorPacket.customersPerYear')}</td>
+                    {results.yearlyResults.map((yr, index) => (
+                      <td key={index} className="text-right p-2">
+                        {formatNumber(yr.customersCount || 0)}
+                      </td>
+                    ))}
+                  </tr>
+                  <tr className="border-b">
                     <td className="p-2">{t('table.revenue')}</td>
                     {results.yearlyResults.map((yr, index) => (
                       <td key={index} className="text-right p-2">{formatCurrency(yr.revenue)}</td>
@@ -363,24 +373,8 @@ const InvestorPacketPage = () => {
                   <tr className="border-b">
                     <td className="p-2">{t('table.ebitdaMargin')}</td>
                     {results.yearlyResults.map((yr, index) => (
-                      <td key={index} className="text-right p-2">{formatPercentage(yr.ebitda / yr.revenue)}</td>
-                    ))}
-                  </tr>
-                  <tr className="border-b">
-                    <td className="p-2">{t('table.cashFlow')}</td>
-                    {results.yearlyResults.map((yr, index) => (
-                      <td key={index} className="text-right p-2">{formatCurrency(yr.cash)}</td>
-                    ))}
-                  </tr>
-                  <tr className="border-b">
-                    <td className="p-2">{t('table.cumulativeCashFlow')}</td>
-                    {results.yearlyResults.map((_, index) => (
                       <td key={index} className="text-right p-2">
-                        {formatCurrency(
-                          results.yearlyResults
-                            .slice(0, index + 1)
-                            .reduce((sum, yr) => sum + yr.cash, 0)
-                        )}
+                        {formatPercentage(yr.ebitda / yr.revenue)}
                       </td>
                     ))}
                   </tr>
@@ -390,188 +384,173 @@ const InvestorPacketPage = () => {
           </CardContent>
         </Card>
         
-        {/* Detailed Financial Table */}
-        <DetailedFinancialTable 
-          yearlyResults={results.yearlyResults} 
-          initialInvestment={settings.initialInvestment}
-          churn={settings.churn}
-          rentalsPerCustomer={settings.rentalsPerCustomer}
+        <Card id="demand-capacity-section">
+          <CardHeader>
+            <CardTitle>{t('investorPacket.demandVsCapacity')}</CardTitle>
+            <CardDescription>{t('investorPacket.demandVsCapacityDesc')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('table.year')}</TableHead>
+                    <TableHead>{t('investorPacket.customersPerYear')}</TableHead>
+                    {settings.products.map((product, idx) => (
+                      <TableHead key={idx}>{t('investorPacket.actualRentals')}: {product.name}</TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {results.yearlyResults.map((yr, yearIndex) => (
+                    <TableRow key={yearIndex}>
+                      <TableCell>{yearIndex + 1}</TableCell>
+                      <TableCell>{formatNumber(yr.customersCount || 0)}</TableCell>
+                      {settings.products.map((product, productIdx) => (
+                        <TableCell key={productIdx}>
+                          {yr.actualRentals && formatNumber(yr.actualRentals[product.name] || 0)}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <DetailedFinancialTable
           id="detail-table"
+          results={results}
+          settings={settings}
         />
         
-        {/* Sensitivity Analysis */}
-        <TornadoChart id="tornado-chart" />
+        <MethodologySection 
+          id="methodology-section"
+          settings={settings}
+          results={results}
+        />
         
-        {/* Monte Carlo Simulation */}
+        {tornadoData && (
+          <Card className="mt-6" id="tornado-chart">
+            <CardHeader>
+              <CardTitle>{t('sensitivity.tornadoChart')}</CardTitle>
+              <CardDescription>{t('sensitivity.tornadoDesc')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TornadoChart data={tornadoData} />
+            </CardContent>
+          </Card>
+        )}
+        
         {monteCarloResult && (
           <Card className="mt-6" id="monte-carlo-section">
             <CardHeader>
-              <CardTitle>{t('investorPacket.monteCarloSimulation', { defaultValue: "Monte Carlo Simulation" })}</CardTitle>
-              <CardDescription>
-                {t('investorPacket.monteCarloDesc', { defaultValue: "1,000 runs with random variations in key parameters" })}
-              </CardDescription>
+              <CardTitle>{t('investorPacket.monteCarloSimulation')}</CardTitle>
+              <CardDescription>{t('investorPacket.monteCarloDesc')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-2">
-                    {t('investorPacket.confidenceInterval', { defaultValue: "90% Confidence Interval" })}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {t('investorPacket.monteCarloExplanation', { 
-                      defaultValue: "Based on 1,000 simulation runs with ±20% random variations in key parameters, the 90% confidence interval for the final year EBITDA is:" 
-                    })}
-                  </p>
+              <div className="space-y-4">
+                <p className="mb-4">{t('investorPacket.monteCarloExplanation')}</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card>
+                    <CardHeader className="p-4">
+                      <CardTitle className="text-lg">{t('investorPacket.p5')}</CardTitle>
+                      <CardDescription>{t('investorPacket.p5Desc')}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <p className="text-2xl font-bold">{formatCurrency(monteCarloResult.p5)}</p>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="relative pt-8 pb-4">
-                    <div className="absolute w-full h-2 bg-gray-200 rounded-full">
-                      <div 
-                        className="absolute h-full bg-brand-500 rounded-full"
-                        style={{ 
-                          left: `${0}%`, 
-                          width: `${100}%` 
-                        }}
-                      />
-                    </div>
-                    
-                    <div className="flex justify-between mt-6">
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-muted-foreground">
-                          {t('investorPacket.p5', { defaultValue: "P5 (Pessimistic)" })}
-                        </div>
-                        <div className="font-bold">{formatCurrency(monteCarloResult.p5)}</div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-muted-foreground">
-                          {t('investorPacket.p50', { defaultValue: "P50 (Base)" })}
-                        </div>
-                        <div className="font-bold">{formatCurrency(monteCarloResult.p50)}</div>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-sm font-medium text-muted-foreground">
-                          {t('investorPacket.p95', { defaultValue: "P95 (Optimistic)" })}
-                        </div>
-                        <div className="font-bold">{formatCurrency(monteCarloResult.p95)}</div>
-                      </div>
-                    </div>
-                  </div>
+                  <Card>
+                    <CardHeader className="p-4">
+                      <CardTitle className="text-lg">{t('investorPacket.p50')}</CardTitle>
+                      <CardDescription>{t('investorPacket.p50Desc')}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <p className="text-2xl font-bold">{formatCurrency(monteCarloResult.p50)}</p>
+                    </CardContent>
+                  </Card>
                   
-                  <Table className="mt-6">
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>{t('table.metric')}</TableHead>
-                        <TableHead className="text-right">{t('table.value')}</TableHead>
-                        <TableHead>{t('investorPacket.interpretation', { defaultValue: "Interpretation" })}</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">{t('investorPacket.p5', { defaultValue: "P5" })}</TableCell>
-                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p5)}</TableCell>
-                        <TableCell>{t('investorPacket.p5Desc', { defaultValue: "Worst case scenario (5%)" })}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">{t('investorPacket.p50', { defaultValue: "P50" })}</TableCell>
-                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p50)}</TableCell>
-                        <TableCell>{t('investorPacket.p50Desc', { defaultValue: "Median case (50%)" })}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">{t('investorPacket.p95', { defaultValue: "P95" })}</TableCell>
-                        <TableCell className="text-right">{formatCurrency(monteCarloResult.p95)}</TableCell>
-                        <TableCell>{t('investorPacket.p95Desc', { defaultValue: "Best case scenario (95%)" })}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                  <Card>
+                    <CardHeader className="p-4">
+                      <CardTitle className="text-lg">{t('investorPacket.p95')}</CardTitle>
+                      <CardDescription>{t('investorPacket.p95Desc')}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <p className="text-2xl font-bold">{formatCurrency(monteCarloResult.p95)}</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium mb-2">{t('investorPacket.ebitdaRange')}</h3>
+                  <p>{t('investorPacket.ebitdaConfidence', {
+                    p5: formatCurrency(monteCarloResult.p5),
+                    p95: formatCurrency(monteCarloResult.p95)
+                  })}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         )}
         
-        {/* Risk Analysis Summary */}
-        {tornadoData && (
-          <Card className="mt-6" id="risk-analysis-section">
-            <CardHeader>
-              <CardTitle>
-                {t('investorPacket.riskAnalysisSummary', { defaultValue: "Risk Analysis Summary" })}
-              </CardTitle>
-              <CardDescription>
-                {t('investorPacket.riskAnalysisDesc', { defaultValue: "Key findings from sensitivity analysis" })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-2">
-                    {t('investorPacket.sensititiveVariables', { defaultValue: "Most Sensitive Parameters" })}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {t('investorPacket.sensititiveVariablesDesc', { defaultValue: "These parameters have the highest impact on your financial results" })}
-                  </p>
-                  
+        <Card className="mt-6" id="risk-analysis-section">
+          <CardHeader>
+            <CardTitle>{t('investorPacket.riskAnalysisSummary')}</CardTitle>
+            <CardDescription>{t('investorPacket.riskAnalysisDesc')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium mb-2">{t('investorPacket.sensititiveVariables')}</h3>
+                <p className="mb-3">{t('investorPacket.sensititiveVariablesDesc')}</p>
+                
+                {tornadoData && (
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{t('table.variable', { defaultValue: "Variable" })}</TableHead>
-                        <TableHead className="text-right">{t('investorPacket.impactOnEbitda', { defaultValue: "Impact on EBITDA (%)" })}</TableHead>
-                        <TableHead>{t('investorPacket.mitigationPriority', { defaultValue: "Mitigation Priority" })}</TableHead>
+                        <TableHead>{t('table.variable')}</TableHead>
+                        <TableHead>{t('investorPacket.impactOnEbitda')}</TableHead>
+                        <TableHead>{t('investorPacket.mitigationPriority')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {tornadoData.slice(0, 5).map((item, index) => {
-                        const impact = Math.max(Math.abs(item.positiveImpact), Math.abs(item.negativeImpact)) * 100;
-                        let priority = "Low";
-                        if (impact > 15) priority = "High";
-                        else if (impact > 7) priority = "Medium";
-                        
-                        return (
-                          <TableRow key={index}>
-                            <TableCell className="font-medium">{item.variable}</TableCell>
-                            <TableCell className="text-right">±{impact.toFixed(1)}%</TableCell>
-                            <TableCell>
-                              {t(`investorPacket.priority${priority}`, { defaultValue: priority })}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      {tornadoData.slice(0, 3).map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell className="font-medium">{item.variable}</TableCell>
+                          <TableCell>
+                            {formatPercentage(Math.max(Math.abs(item.negativeImpact), Math.abs(item.positiveImpact)))}
+                          </TableCell>
+                          <TableCell>
+                            {index === 0 ? (
+                              <span className="text-red-500 font-medium">{t('investorPacket.priorityHigh')}</span>
+                            ) : index === 1 ? (
+                              <span className="text-amber-500 font-medium">{t('investorPacket.priorityMedium')}</span>
+                            ) : (
+                              <span className="text-green-600 font-medium">{t('investorPacket.priorityLow')}</span>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-2">
-                    {t('investorPacket.recommendations', { defaultValue: "Recommendations" })}
-                  </h3>
-                  <ul className="list-disc pl-5 space-y-2">
-                    <li>
-                      {t('investorPacket.recommendation1', { 
-                        defaultValue: "Focus on optimizing the top sensitive parameters to improve financial outcomes" 
-                      })}
-                    </li>
-                    <li>
-                      {t('investorPacket.recommendation2', { 
-                        defaultValue: "Consider scenario planning for both pessimistic and optimistic cases" 
-                      })}
-                    </li>
-                    <li>
-                      {t('investorPacket.recommendation3', { 
-                        defaultValue: "Revisit assumptions regularly to refine the forecast accuracy" 
-                      })}
-                    </li>
-                  </ul>
-                </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        )}
-        
-        {/* Methodology Section */}
-        <MethodologySection 
-          settings={settings} 
-          id="methodology-section" 
-        />
+              
+              <div>
+                <h3 className="text-lg font-medium mb-2">{t('investorPacket.recommendations')}</h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>{t('investorPacket.recommendation1')}</li>
+                  <li>{t('investorPacket.recommendation2')}</li>
+                  <li>{t('investorPacket.recommendation3')}</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

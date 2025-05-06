@@ -72,5 +72,8 @@ export const tooltips: TooltipContent = {
   "download_investor_packet": "Descargar paquete inversor (PDF)",
   
   // Additional tooltips for new features
-  "revenue": "Ingresos totales generados por todos los productos."
+  "revenue": "Ingresos totales generados por todos los productos.",
+  "shipping-income": "Ingreso adicional cobrado al cliente por el envío de cada alquiler.",
+  "shipping-cost": "Coste que asume la empresa por el envío en cada alquiler.",
+  "demand-vs-capacity": "Análisis que compara la demanda potencial de clientes con la capacidad disponible de equipos."
 };

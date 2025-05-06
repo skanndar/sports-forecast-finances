@@ -1,29 +1,76 @@
 import { Settings, Product, YearResult, UnitEconomics, ProjectResult, TornadoItem, MonteCarloResult } from './types';
 
 /**
- * Calculate revenue for a specific product in a given year
+ * Calculate customers per year based on new customers, growth rate, and churn rate
  */
-export function revenueForProduct(p: Product, year: number, s: Settings): number {
-  const growthFactor = Math.pow(1 + s.growth, year);
+export function calculateCustomersPerYear(s: Settings): number[] {
+  const customersPerYear: number[] = [];
+  
+  // First year is just the new customers
+  customersPerYear[0] = s.newCustomers;
+  
+  // Calculate customers for subsequent years
+  for (let year = 1; year < s.forecastYears; year++) {
+    // Retained customers from previous year plus new customers with growth
+    customersPerYear[year] = customersPerYear[year - 1] * (1 - s.churn) + 
+      s.newCustomers * Math.pow(1 + s.growth, year);
+  }
+  
+  return customersPerYear;
+}
+
+/**
+ * Calculate rentals capacity per product
+ */
+export function calculateCapacityRentals(p: Product): number {
   const daysPerYear = 365;
   const monthsPerYear = 12;
+  
+  return p.pricingMode === 'daily'
+    ? (p.occupancy * daysPerYear) / p.minDays
+    : p.occupancy * monthsPerYear;
+}
 
-  // Fixed formula: no longer multiplying and dividing by minDays redundantly
-  const rentalsPerYear =
-    p.pricingMode === 'daily'
-      ? (p.occupancy * daysPerYear) / p.minDays
-      : p.occupancy * monthsPerYear;
+/**
+ * Calculate demand for rentals based on customers and rentals per customer
+ */
+export function calculateDemandRentals(customersCount: number, rentalsPerCustomer: number): number {
+  return customersCount * rentalsPerCustomer;
+}
 
+/**
+ * Calculate actual rentals based on demand and capacity
+ */
+export function calculateActualRentals(demandRentals: number, capacityRentals: number, units: number): number {
+  return Math.min(demandRentals, capacityRentals * units);
+}
+
+/**
+ * Calculate revenue for a specific product in a given year
+ */
+export function revenueForProduct(p: Product, year: number, s: Settings, customersPerYear: number[]): number {
+  const growthFactor = Math.pow(1 + s.growth, year);
+  
+  // Calculate capacity rentals for this product
+  const capacityRentals = calculateCapacityRentals(p);
+  
+  // Calculate demand for rentals
+  const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
+  
+  // Calculate actual rentals (limited by capacity and demand)
+  const actualRentals = calculateActualRentals(demandRentals, capacityRentals, p.units);
+  
+  // Calculate price per rental based on pricing mode
   const pricePerRental =
     p.pricingMode === 'daily'
       ? p.pricePerDay! * p.minDays
       : p.pricePerMonth!;
-
-  // Calculate rental revenue
-  const rentalRevenue = p.units * rentalsPerYear * pricePerRental * growthFactor;
   
-  // Add shipping income if defined (multiply by rentals)
-  const shippingIncome = (p.shippingIncome || 0) * p.units * rentalsPerYear * growthFactor;
+  // Calculate rental revenue
+  const rentalRevenue = actualRentals * pricePerRental;
+  
+  // Add shipping income if defined
+  const shippingIncome = actualRentals * (p.shippingIncome || 0);
   
   return rentalRevenue + shippingIncome;
 }
@@ -31,22 +78,23 @@ export function revenueForProduct(p: Product, year: number, s: Settings): number
 /**
  * Calculate variable costs for a specific product in a given year
  */
-export function variableCostsForProduct(p: Product, year: number, s: Settings): number {
+export function variableCostsForProduct(p: Product, year: number, s: Settings, customersPerYear: number[]): number {
   const inflationFactor = Math.pow(1 + s.inflation, year);
-  const growthFactor = Math.pow(1 + s.growth, year);
-  const daysPerYear = 365;
-  const monthsPerYear = 12;
-
-  const rentalsPerYear =
-    p.pricingMode === 'daily'
-      ? (p.occupancy * daysPerYear) / p.minDays
-      : p.occupancy * monthsPerYear;
-
-  // Base variable cost from product
-  const baseVariableCost = p.units * rentalsPerYear * p.variableCost * inflationFactor * growthFactor;
   
-  // Add shipping cost if defined (multiply by rentals)
-  const shippingCost = (p.shippingCost || 0) * p.units * rentalsPerYear * inflationFactor * growthFactor;
+  // Calculate capacity rentals for this product
+  const capacityRentals = calculateCapacityRentals(p);
+  
+  // Calculate demand for rentals
+  const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
+  
+  // Calculate actual rentals (limited by capacity and demand)
+  const actualRentals = calculateActualRentals(demandRentals, capacityRentals, p.units);
+  
+  // Base variable cost from product
+  const baseVariableCost = actualRentals * p.variableCost * inflationFactor;
+  
+  // Add shipping cost if defined
+  const shippingCost = actualRentals * (p.shippingCost || 0) * inflationFactor;
   
   return baseVariableCost + shippingCost;
 }
@@ -85,20 +133,28 @@ export function calculateDirectorCommission(revenue: number, s: Settings): numbe
 /**
  * Calculate results for a specific year
  */
-export function calculateYearResult(year: number, s: Settings): YearResult {
+export function calculateYearResult(year: number, s: Settings, customersPerYear: number[]): YearResult {
   let totalRevenue = 0;
   let totalProductCosts = 0;
   const revenueByProduct: Record<string, number> = {};
+  const actualRentalsByProduct: Record<string, number> = {};
 
   // Calculate revenue and variable costs for each product
   s.products.forEach((product, index) => {
-    const productRevenue = revenueForProduct(product, year, s);
-    const productVariableCosts = variableCostsForProduct(product, year, s);
+    const productRevenue = revenueForProduct(product, year, s, customersPerYear);
+    const productVariableCosts = variableCostsForProduct(product, year, s, customersPerYear);
     
     totalRevenue += productRevenue;
     totalProductCosts += productVariableCosts;
     
+    // Store revenue by product for reporting
     revenueByProduct[product.name || `Product ${index + 1}`] = productRevenue;
+    
+    // Calculate and store actual rentals by product for reporting
+    const capacityRentals = calculateCapacityRentals(product);
+    const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
+    const actualRentals = calculateActualRentals(demandRentals, capacityRentals, product.units);
+    actualRentalsByProduct[product.name || `Product ${index + 1}`] = actualRentals;
   });
 
   // Calculate commission costs
@@ -125,7 +181,9 @@ export function calculateYearResult(year: number, s: Settings): YearResult {
     structuralCosts: yearStructuralCosts,
     ebitda,
     cash,
-    revenueByProduct
+    revenueByProduct,
+    customersCount: customersPerYear[year],
+    actualRentals: actualRentalsByProduct
   };
 }
 
@@ -147,11 +205,14 @@ export function buildCashFlows(yearlyResults: YearResult[], initialInvestment: n
  * Calculate project financial results
  */
 export function calculateProjectResults(s: Settings): ProjectResult {
+  // Calculate customers per year
+  const customersPerYear = calculateCustomersPerYear(s);
+  
   const yearlyResults: YearResult[] = [];
   
   // Calculate results for each year
   for (let year = 0; year < s.forecastYears; year++) {
-    yearlyResults.push(calculateYearResult(year, s));
+    yearlyResults.push(calculateYearResult(year, s, customersPerYear));
   }
 
   // Build cash flows array including initial investment
@@ -164,13 +225,14 @@ export function calculateProjectResults(s: Settings): ProjectResult {
   const irr = calculateIRR(cashFlows);
 
   // Calculate unit economics
-  const unitEconomics = calculateUnitEconomics(s, yearlyResults);
+  const unitEconomics = calculateUnitEconomics(s, yearlyResults, customersPerYear);
 
   return {
     yearlyResults,
     npv,
     irr,
-    unitEconomics
+    unitEconomics,
+    customersPerYear
   };
 }
 
@@ -241,25 +303,37 @@ export function calculateIRR(cashFlows: number[], guess = 0.1): number | null {
 }
 
 /**
- * Calculate Customer Acquisition Cost (CAC)
- * Now includes prescriber commissions for new customers
+ * Calculate Customer Acquisition Cost (CAC) for a specific year
  */
-export function calculateCAC(s: Settings): number {
-  // Base CAC from marketing spend
-  const marketingCAC = s.marketingSpend / s.newCustomers;
+export function calculateCAC(s: Settings, year: number, customersPerYear: number[]): number {
+  if (customersPerYear[year] <= 0) return 0;
+  
+  // Calculate marketing CAC for this year
+  const marketingCAC = s.marketingSpend / customersPerYear[year];
   
   // Calculate prescriber commissions attributable to new customer acquisition
   // We assume all prescribers contribute proportionally to new customers
   const prescriberCAC = s.prescribers.reduce((total, prescriber) => {
     // Revenue attributed to this prescriber for first-year customers
     const firstYearRevenueShare = s.products.reduce((revenue, product) => {
-      const productRevenue = revenueForProduct(product, 0, s);
-      // Consider only the portion for new customers (not returning ones)
-      const newCustomerRevenue = productRevenue * (s.newCustomers / (s.newCustomers + s.rentalsPerCustomer * (1 - s.churn)));
-      return revenue + newCustomerRevenue * prescriber.share * prescriber.commission;
+      // Calculate revenue for this product
+      const capacityRentals = calculateCapacityRentals(product);
+      const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
+      const actualRentals = calculateActualRentals(demandRentals, capacityRentals, product.units);
+      
+      // Calculate price per rental based on pricing mode
+      const pricePerRental =
+        product.pricingMode === 'daily'
+          ? product.pricePerDay! * product.minDays
+          : product.pricePerMonth!;
+      
+      // Product revenue
+      const productRevenue = actualRentals * pricePerRental;
+      
+      return revenue + productRevenue * prescriber.share * prescriber.commission;
     }, 0);
     
-    return total + (firstYearRevenueShare / s.newCustomers);
+    return total + (firstYearRevenueShare / customersPerYear[year]);
   }, 0);
   
   // Total CAC includes both marketing and prescriber commissions
@@ -267,39 +341,64 @@ export function calculateCAC(s: Settings): number {
 }
 
 /**
- * Calculate Customer Lifetime Value (LTV)
- * Updated to include rentalsPerCustomer
+ * Calculate Customer Lifetime Value (LTV) with discounted cash flow
  */
 export function calculateLTV(s: Settings, yearlyResults: YearResult[]): number {
-  if (!yearlyResults.length || yearlyResults[0].revenue <= 0 || s.newCustomers <= 0) {
+  if (!yearlyResults.length || yearlyResults[0].revenue <= 0 || !yearlyResults[0].customersCount || yearlyResults[0].customersCount <= 0) {
     return 0;
   }
   
-  // Average annual revenue per customer
-  const avgYearlyRevenue = yearlyResults[0].revenue / s.newCustomers;
-  
-  // Average gross margin
-  const avgGrossMargin = 1 - yearlyResults[0].variableCosts / yearlyResults[0].revenue;
-  
-  // Customer lifespan (years) based on churn rate
+  // Customer lifetime based on churn rate (in years)
   const customerLifespan = 1 / s.churn;
   
-  // LTV = Annual Revenue per customer × Gross Margin × rentalsPerCustomer × Customer Lifespan
-  return avgYearlyRevenue * avgGrossMargin * s.rentalsPerCustomer / s.churn;
+  // Maximum years to consider for LTV calculation (avoid infinite series)
+  const maxYears = Math.min(20, Math.ceil(customerLifespan * 3)); // Cap at 3x lifespan or 20 years
+  
+  // First year's values as baseline
+  const firstYearResult = yearlyResults[0];
+  const revenuePerCustomer = firstYearResult.revenue / firstYearResult.customersCount;
+  const variableCostPerCustomer = firstYearResult.variableCosts / firstYearResult.customersCount;
+  const grossMargin = 1 - variableCostPerCustomer / revenuePerCustomer;
+  
+  // Calculate LTV using discounted cash flow method
+  let ltv = 0;
+  let survivalRate = 1; // Start with 100% of customers
+  
+  for (let year = 0; year < maxYears; year++) {
+    // Discount factor for this year
+    const discountFactor = 1 / Math.pow(1 + s.discountRate, year);
+    
+    // Revenue for this cohort in this year
+    const yearRevenue = revenuePerCustomer * s.rentalsPerCustomer * survivalRate * discountFactor;
+    
+    // Gross profit for this cohort in this year
+    const yearGrossProfit = yearRevenue * grossMargin;
+    
+    // Add to lifetime value
+    ltv += yearGrossProfit;
+    
+    // Reduce survival rate for next year due to churn
+    survivalRate *= (1 - s.churn);
+    
+    // Stop if virtually all customers have churned
+    if (survivalRate < 0.01) break;
+  }
+  
+  return ltv;
 }
 
 /**
  * Calculate Payback Period (in months)
- * Updated to use the new CAC calculation
  */
 export function calculatePaybackMonths(cac: number, s: Settings, yearlyResults: YearResult[]): number {
-  if (!yearlyResults.length || yearlyResults[0].revenue <= 0 || s.newCustomers <= 0) {
+  if (!yearlyResults.length || !yearlyResults[0].customersCount || yearlyResults[0].customersCount <= 0) {
     return 0;
   }
 
   // Monthly gross profit per customer
-  const monthlyRevenuePerCustomer = yearlyResults[0].revenue / s.newCustomers / 12;
-  const monthlyVariableCostPerCustomer = yearlyResults[0].variableCosts / s.newCustomers / 12;
+  const firstYearResult = yearlyResults[0];
+  const monthlyRevenuePerCustomer = firstYearResult.revenue / firstYearResult.customersCount / 12;
+  const monthlyVariableCostPerCustomer = firstYearResult.variableCosts / firstYearResult.customersCount / 12;
   const monthlyGrossProfitPerCustomer = monthlyRevenuePerCustomer - monthlyVariableCostPerCustomer;
   
   return monthlyGrossProfitPerCustomer > 0 ? cac / monthlyGrossProfitPerCustomer : Infinity;
@@ -321,7 +420,7 @@ export function calculateBreakEvenYear(yearlyResults: YearResult[]): number | un
 /**
  * Calculate Break-Even Units
  */
-export function calculateBreakEvenUnits(s: Settings): number {
+export function calculateBreakEvenUnits(s: Settings, customersPerYear: number[]): number {
   // Simple approach: Find number of units where revenue = costs
   // For the first year only, averaged across products
   
@@ -336,8 +435,17 @@ export function calculateBreakEvenUnits(s: Settings): number {
   s.products.forEach(product => {
     totalUnits += product.units;
     
-    const revenuePerUnit = revenueForProduct(product, 0, s) / product.units;
-    const variableCostPerUnit = variableCostsForProduct(product, 0, s) / product.units;
+    const capacityRentals = calculateCapacityRentals(product);
+    const demandRentals = calculateDemandRentals(customersPerYear[0], s.rentalsPerCustomer);
+    const actualRentals = calculateActualRentals(demandRentals, capacityRentals, product.units);
+    
+    // Calculate revenue and costs for this product
+    const pricePerRental = product.pricingMode === 'daily' ? product.pricePerDay! * product.minDays : product.pricePerMonth!;
+    const revenuePerUnit = actualRentals * pricePerRental / product.units;
+    
+    const variableCostPerRental = product.variableCost;
+    const shippingCostPerRental = product.shippingCost || 0;
+    const variableCostPerUnit = actualRentals * (variableCostPerRental + shippingCostPerRental) / product.units;
     
     totalContributionMargin += (revenuePerUnit - variableCostPerUnit) * product.units;
   });
@@ -351,12 +459,12 @@ export function calculateBreakEvenUnits(s: Settings): number {
 /**
  * Calculate Unit Economics
  */
-export function calculateUnitEconomics(s: Settings, yearlyResults: YearResult[]): UnitEconomics {
-  const cac = calculateCAC(s);
+export function calculateUnitEconomics(s: Settings, yearlyResults: YearResult[], customersPerYear: number[]): UnitEconomics {
+  const cac = calculateCAC(s, 0, customersPerYear); // First year CAC
   const ltv = calculateLTV(s, yearlyResults);
   const paybackMonths = calculatePaybackMonths(cac, s, yearlyResults);
   const breakEvenYear = calculateBreakEvenYear(yearlyResults);
-  const breakEvenUnits = calculateBreakEvenUnits(s);
+  const breakEvenUnits = calculateBreakEvenUnits(s, customersPerYear);
   
   return {
     cac,

@@ -1,5 +1,6 @@
 
 
+
 @media print {
   html, body {
     width: 100%;
@@ -55,7 +56,7 @@
   }
   
   /* Add page breaks before specific sections */
-  #detail-table, #methodology-section, #tornado-chart, #monte-carlo-section, #risk-analysis-section {
+  #detail-table, #methodology-section, #tornado-chart, #monte-carlo-section, #risk-analysis-section, #demand-capacity-section {
     page-break-before: always !important;
   }
   

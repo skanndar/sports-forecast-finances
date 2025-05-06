@@ -1,3 +1,4 @@
+
 export type PricingMode = 'daily' | 'monthly';
 
 export type Product = {
@@ -53,6 +54,8 @@ export type YearResult = {
   ebitda: number; 
   cash: number;
   revenueByProduct?: Record<string, number>;
+  customersCount?: number;  // Number of customers for the year
+  actualRentals?: Record<string, number>; // Actual rentals by product
 };
 
 export type UnitEconomics = { 
@@ -80,6 +83,7 @@ export type ProjectResult = {
   irr: number | null;
   npv: number;
   unitEconomics: UnitEconomics;
+  customersPerYear?: number[];  // Track customers per year
 };
 
 export type Scenario = {
