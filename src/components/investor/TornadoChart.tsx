@@ -9,24 +9,19 @@ import {
 } from "@/components/ui/card";
 import { TornadoItem } from '@/lib/types';
 import { formatPercentage } from '@/lib/formatters';
-import { runTornadoAnalysis } from '@/lib/finance';
-import { useAppStore } from '@/lib/store';
 
 interface TornadoChartProps {
+  data: TornadoItem[];
   className?: string;
   id?: string;
 }
 
-const TornadoChart = ({ className = "", id }: TornadoChartProps) => {
+const TornadoChart = ({ data, className = "", id }: TornadoChartProps) => {
   const { t } = useTranslation();
-  const { activeScenario } = useAppStore();
-  
-  // Calculate tornado analysis results
-  const tornadoResults = runTornadoAnalysis(activeScenario.settings);
   
   // Maximum impact for consistent scale
   const maxImpact = Math.max(
-    ...tornadoResults.flatMap(item => [
+    ...data.flatMap(item => [
       Math.abs(item.negativeImpact),
       Math.abs(item.positiveImpact)
     ])
@@ -49,7 +44,7 @@ const TornadoChart = ({ className = "", id }: TornadoChartProps) => {
             <div className="w-[45%] text-center">{t('sensitivity.positiveImpact')}</div>
           </div>
           
-          {tornadoResults.map((item, index) => (
+          {data.map((item, index) => (
             <div key={index} className="flex items-center">
               <div className="flex-1 font-medium text-sm">{item.variable}</div>
               

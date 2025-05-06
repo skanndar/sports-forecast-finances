@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -18,30 +17,31 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { YearResult } from '@/lib/types';
+import { ProjectResult, Settings, YearResult } from '@/lib/types';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import InfoTooltip from "@/components/ui/info-tooltip";
 
 interface DetailedFinancialTableProps {
-  yearlyResults: YearResult[];
-  initialInvestment?: number;
-  churn?: number;
-  rentalsPerCustomer?: number;
+  results: ProjectResult;
+  settings: Settings;
   className?: string;
   id?: string;
 }
 
 const DetailedFinancialTable = ({ 
-  yearlyResults, 
-  initialInvestment = 0,
-  churn = 0,
-  rentalsPerCustomer = 0,
+  results, 
+  settings,
   className = "",
   id
 }: DetailedFinancialTableProps) => {
   const { t } = useTranslation();
   // Changed to expanded by default
   const [isExpanded, setIsExpanded] = useState(true);
+  
+  const yearlyResults = results.yearlyResults;
+  const initialInvestment = settings.initialInvestment || 0;
+  const churn = settings.churn || 0;
+  const rentalsPerCustomer = settings.rentalsPerCustomer || 0;
 
   if (!yearlyResults.length) return null;
 

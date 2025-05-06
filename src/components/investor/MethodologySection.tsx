@@ -21,7 +21,7 @@ interface MethodologySectionProps {
 const MethodologySection = ({ settings, results, className = "", id }: MethodologySectionProps) => {
   const { t } = useTranslation();
 
-  // Example calculation for better understanding
+  // Example calculation for better understanding - ensure all values are numbers
   const exampleUnits = 10;
   const exampleOccupancy = 0.5;
   const exampleDaysMin = 15;
@@ -155,7 +155,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                 })}
               </p>
               <p className="text-sm mt-1">
-                {t('inputs.shippingIncome')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × {exampleShippingIncome}€ = {Math.round(exampleShippingRevenueDaily)}€
+                {t('inputs.shippingIncome')}: {Math.round(exampleRentalsYearDaily)} {t('investorPacket.actualRentals')} × {exampleShippingIncome}€ = {Math.round(exampleShippingRevenueDaily)}€
               </p>
             </div>
           </div>
@@ -177,10 +177,10 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
               <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
               <p className="text-sm">
-                {t('table.productCosts')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × 10€ = {Math.round(exampleRentalsYearDaily.toFixed(1) * 10)}€
+                {t('table.productCosts')}: {Math.round(exampleRentalsYearDaily)} {t('investorPacket.actualRentals')} × 10€ = {Math.round(exampleRentalsYearDaily * 10)}€
               </p>
               <p className="text-sm mt-1">
-                {t('inputs.shippingCost')}: {Math.round(exampleRentalsYearDaily.toFixed(1))} {t('investorPacket.actualRentals')} × {exampleShippingCost}€ = {Math.round(exampleShippingCostDaily)}€
+                {t('inputs.shippingCost')}: {Math.round(exampleRentalsYearDaily)} {t('investorPacket.actualRentals')} × {exampleShippingCost}€ = {Math.round(exampleShippingCostDaily)}€
               </p>
             </div>
           </div>
