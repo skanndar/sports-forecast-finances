@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Settings, ProjectResult } from '@/lib/types';
+import { formatNumber, formatPercentage } from '@/lib/formatters';
 import InfoTooltip from "@/components/ui/info-tooltip";
 
 interface MethodologySectionProps {

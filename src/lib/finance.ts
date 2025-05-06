@@ -354,9 +354,11 @@ export function calculateCAC(s: Settings, year: number, customersPerYear: number
     // Revenue attributed to this prescriber for first-year customers
     const firstYearRevenueShare = s.products.reduce((revenue, product) => {
       // Calculate revenue for this product
-      const capacityRentals = calculateCapacityRentals(product);
+      const maxRentalsPerUnit = calculateMaxRentalsPerUnit(product);
+      const potentialCapacity = product.units * maxRentalsPerUnit;
       const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
-      const actualRentals = calculateActualRentals(demandRentals, capacityRentals, product.units);
+      const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+      const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
       
       // Calculate price per rental based on pricing mode
       const pricePerRental =
@@ -472,9 +474,11 @@ export function calculateBreakEvenUnits(s: Settings, customersPerYear: number[])
   s.products.forEach(product => {
     totalUnits += product.units;
     
-    const capacityRentals = calculateCapacityRentals(product);
+    const maxRentalsPerUnit = calculateMaxRentalsPerUnit(product);
+    const potentialCapacity = product.units * maxRentalsPerUnit;
     const demandRentals = calculateDemandRentals(customersPerYear[0], s.rentalsPerCustomer);
-    const actualRentals = calculateActualRentals(demandRentals, capacityRentals, product.units);
+    const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+    const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
     
     // Calculate revenue and costs for this product
     const pricePerRental = product.pricingMode === 'daily' ? product.pricePerDay! * product.minDays : product.pricePerMonth!;

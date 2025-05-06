@@ -86,25 +86,21 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
           title={t('inputs.demandRentals')}
           value={formatNumber(totalDemand)}
           description={t('investorPacket.demand')}
-          icon={<TrendingUp size={16} />}
         />
         <KpiCard
           title={t('inputs.potentialCapacity')}
           value={formatNumber(totalCapacity)}
           description={t('investorPacket.capacity')}
-          icon={<TrendingUp size={16} />}
         />
         <KpiCard
           title={t('inputs.actualRentals')}
           value={formatNumber(totalActual)}
           description={t('investorPacket.actualRentals')}
-          icon={totalDemand > totalCapacity ? <TrendingDown size={16} /> : <TrendingUp size={16} />}
         />
         <KpiCard
           title={t('inputs.occupancyReal')}
           value={formatPercentage(avgOccupancy)}
           description={t('dashboard.occupancyRates')}
-          icon={avgOccupancy > 0.8 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
         />
       </div>
 
