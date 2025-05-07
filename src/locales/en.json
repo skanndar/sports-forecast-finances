@@ -1,3 +1,4 @@
+
 {
   "common": {
     "locale": "en-US",
@@ -21,7 +22,10 @@
     "year": "Year",
     "yearForecast": "Year Forecast",
     "months": "months",
-    "notInForecast": "Not in forecast"
+    "notInForecast": "Not in forecast",
+    "yearly": "Yearly",
+    "hideDetail": "Hide Detail",
+    "showDetail": "Show Detail"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -94,7 +98,12 @@
     "cash": "Cash Flow",
     "grossMargin": "Gross Margin",
     "totalVariableCosts": "Total Variable Costs",
-    "variable": "Variable"
+    "variable": "Variable",
+    "item": "Item",
+    "cashFlow": "Cash Flow",
+    "operatingCashFlow": "Operating Cash Flow",
+    "netCashFlow": "Net Cash Flow",
+    "cumulativeCashFlow": "Cumulative Cash Flow"
   },
   "inputs": {
     "title": "Input Parameters",
@@ -168,7 +177,11 @@
     "breakEvenUnits": "Break-even Units",
     "breakEvenYear": "Break-even Year",
     "ebitda": "EBITDA",
-    "ebitdaMargin": "EBITDA Margin"
+    "ebitdaMargin": "EBITDA Margin",
+    "revenue": "Revenue",
+    "grossMargin": "Gross Margin",
+    "cacPayback": "CAC Payback",
+    "breakeven": "Break-even"
   },
   "tooltips": {
     "product-units": "Number of physical units available for rental",
@@ -280,6 +293,7 @@
     "revenueFormula": "How revenue is calculated across products and pricing modes",
     "monteCarloSimulation": "Monte Carlo Simulation",
     "monteCarloDesc": "Distribution of possible outcomes after 1,000 random variations",
+    "monteCarloExplanation": "Monte Carlo simulation helps understand the range of possible outcomes by running multiple scenarios with random variations of key parameters.",
     "p5Desc": "Pessimistic scenario",
     "p50Desc": "Most likely scenario",
     "p95Desc": "Optimistic scenario",
@@ -287,8 +301,8 @@
     "ebitdaConfidence": "90% confidence interval for EBITDA: {p5} to {p95}",
     "riskAnalysisSummary": "Risk Analysis Summary",
     "riskAnalysisDesc": "Key risks that may impact project outcomes",
-    "sensititiveVariables": "Most Sensitive Variables",
-    "sensititiveVariablesDesc": "Variables that have the greatest impact on EBITDA",
+    "sensitiveVariables": "Most Sensitive Variables",
+    "sensitiveVariablesDesc": "Variables that have the greatest impact on EBITDA",
     "impactOnEbitda": "Impact on EBITDA",
     "mitigationPriority": "Mitigation Priority",
     "priorityHigh": "High",
@@ -297,6 +311,20 @@
     "recommendations": "Recommendations",
     "recommendation1": "Monitor and actively manage the most sensitive variables",
     "recommendation2": "Develop contingency plans for pessimistic scenarios",
-    "recommendation3": "Regularly update forecasts as actual data becomes available"
+    "recommendation3": "Regularly update forecasts as actual data becomes available",
+    "unitEconomics": "Unit Economics",
+    "cac": "Customer Acquisition Cost",
+    "ltv": "Customer Lifetime Value",
+    "ltvCacRatio": "LTV/CAC Ratio",
+    "paybackPeriod": "Payback Period",
+    "keyAssumptions": "Key Assumptions",
+    "detailedForecast": "Detailed Forecast",
+    "lineItemDetail": "Line Item Detail",
+    "differentProductOfferings": "different product offerings",
+    "customersPerYear": "Customers per Year",
+    "retention": "Customer Retention",
+    "prescriberCostsFormula": "Prescriber Costs Formula",
+    "directorCostsFormula": "Director Costs Formula", 
+    "structuralCostsFormula": "Structural Costs Formula"
   }
 }

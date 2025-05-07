@@ -1,3 +1,4 @@
+
 {
   "common": {
     "locale": "es-ES",
@@ -21,7 +22,10 @@
     "year": "Año",
     "yearForecast": "Años de Previsión",
     "months": "meses",
-    "notInForecast": "No en previsión"
+    "notInForecast": "No en previsión",
+    "yearly": "Anual",
+    "hideDetail": "Ocultar Detalles",
+    "showDetail": "Mostrar Detalles"
   },
   "nav": {
     "dashboard": "Tablero",
@@ -94,7 +98,12 @@
     "cash": "Flujo de Caja",
     "grossMargin": "Margen Bruto",
     "totalVariableCosts": "Costes Variables Totales",
-    "variable": "Variable"
+    "variable": "Variable",
+    "item": "Artículo",
+    "cashFlow": "Flujo de Caja",
+    "operatingCashFlow": "Flujo de Caja Operativo",
+    "netCashFlow": "Flujo de Caja Neto",
+    "cumulativeCashFlow": "Flujo de Caja Acumulativo"
   },
   "inputs": {
     "title": "Parámetros de Entrada",
@@ -168,7 +177,11 @@
     "breakEvenUnits": "Unidades Punto de Equilibrio",
     "breakEvenYear": "Año Punto de Equilibrio",
     "ebitda": "EBITDA",
-    "ebitdaMargin": "Margen EBITDA"
+    "ebitdaMargin": "Margen EBITDA",
+    "revenue": "Ingresos",
+    "grossMargin": "Margen Bruto",
+    "cacPayback": "Retorno CAC",
+    "breakeven": "Punto de Equilibrio"
   },
   "tooltips": {
     "product-units": "Número de unidades físicas disponibles para alquilar",
@@ -204,7 +217,6 @@
     "ltvCac": "Ratio de LTV a CAC - cuanto más alto mejor, >3 es bueno",
     "ebitda": "Beneficio Antes de Intereses, Impuestos, Depreciaciones y Amortizaciones",
     "ebitda-margin": "EBITDA como porcentaje de ingresos",
-    "churn": "Porcentaje anual de clientes que dejan de usar tu servicio",
     "max-rentals-per-unit": "Alquileres teóricos máximos por unidad por año",
     "potential-capacity": "Capacidad máxima teórica de alquiler basada en unidades",
     "demand-rentals": "Demanda total de alquileres de todos los clientes",
@@ -272,6 +284,7 @@
     "methodologyDesc": "Explicación de fórmulas y cálculos",
     "monteCarloSimulation": "Simulación Monte Carlo",
     "monteCarloDesc": "Distribución de posibles resultados tras 1.000 variaciones aleatorias",
+    "monteCarloExplanation": "La simulación Monte Carlo ayuda a entender el rango de posibles resultados mediante la ejecución de múltiples escenarios con variaciones aleatorias de parámetros clave.",
     "p5Desc": "Escenario pesimista",
     "p50Desc": "Escenario más probable",
     "p95Desc": "Escenario optimista",
@@ -279,8 +292,8 @@
     "ebitdaConfidence": "Intervalo de confianza del 90% para EBITDA: {p5} a {p95}",
     "riskAnalysisSummary": "Resumen de Análisis de Riesgos",
     "riskAnalysisDesc": "Riesgos clave que pueden impactar en los resultados del proyecto",
-    "sensititiveVariables": "Variables más Sensibles",
-    "sensititiveVariablesDesc": "Variables que tienen mayor impacto en el EBITDA",
+    "sensitiveVariables": "Variables más Sensibles",
+    "sensitiveVariablesDesc": "Variables que tienen mayor impacto en el EBITDA",
     "impactOnEbitda": "Impacto en EBITDA",
     "mitigationPriority": "Prioridad de Mitigación",
     "priorityHigh": "Alta",
@@ -289,18 +302,28 @@
     "recommendations": "Recomendaciones",
     "recommendation1": "Monitorizar y gestionar activamente las variables más sensibles",
     "recommendation2": "Desarrollar planes de contingencia para escenarios pesimistas",
-    "recommendation3": "Actualizar regularmente las previsiones a medida que se disponga de datos reales"
-  },
-  "kpis": {
-    "irr": "TIR",
-    "npv": "VAN",
-    "cac": "CAC",
-    "ltv": "LTV",
+    "recommendation3": "Actualizar regularmente las previsiones a medida que se disponga de datos reales",
+    "unitEconomics": "Economía Unitaria",
+    "cac": "Coste de Adquisición de Cliente",
+    "ltv": "Valor de Vida del Cliente",
     "ltvCacRatio": "Ratio LTV/CAC",
-    "paybackMonths": "Período de Recuperación",
-    "breakEvenUnits": "Unidades Punto de Equilibrio",
-    "breakEvenYear": "Año Punto de Equilibrio",
-    "ebitda": "EBITDA",
-    "ebitdaMargin": "Margen EBITDA"
+    "paybackPeriod": "Período de Recuperación",
+    "keyAssumptions": "Supuestos Clave",
+    "detailedForecast": "Previsión Detallada",
+    "lineItemDetail": "Detalle por Línea",
+    "differentProductOfferings": "diferentes productos ofrecidos",
+    "customersPerYear": "Clientes por Año",
+    "retention": "Retención de Clientes",
+    "prescriberCostsFormula": "Fórmula de Costes de Prescriptores",
+    "directorCostsFormula": "Fórmula de Costes de Director",
+    "structuralCostsFormula": "Fórmula de Costes Estructurales",
+    "customerRetention": "Modelo de Retención de Clientes",
+    "customerRetentionDesc": "Cómo evoluciona la base de clientes con el tiempo con nuevas adquisiciones y abandono",
+    "customerGrowthFormula": "Fórmula de Crecimiento de Clientes:",
+    "revenueCalculation": "Cálculo de Ingresos",
+    "revenueFormula": "Cómo se calculan los ingresos entre productos y modos de precios",
+    "formula": "Fórmula",
+    "interpretation": "Interpretación", 
+    "impact": "Impacto"
   }
 }
