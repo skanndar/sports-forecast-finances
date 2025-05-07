@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import React from 'react';
+import MissingTranslation from '@/components/ui/missing-translation';
 
 // Import translations
 import enTranslation from '../locales/en.json';
@@ -45,6 +46,10 @@ i18n
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage']
+    },
+    parseMissingKeyHandler: (key) => {
+      console.warn(`Missing translation key: ${key}`);
+      return key;
     }
   });
 

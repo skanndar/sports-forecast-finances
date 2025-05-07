@@ -1,5 +1,5 @@
 
-// This file can be executed to check for missing translations
+// This script validates that all translations exist in both language files
 import fs from 'fs';
 import path from 'path';
 

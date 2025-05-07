@@ -71,7 +71,8 @@
     "margins": "Márgenes",
     "revenueByProduct": "Ingresos por Producto",
     "finalYearRevenue": "Distribución de ingresos del último año",
-    "yearlyResults": "Resultados Anuales"
+    "yearlyResults": "Resultados Anuales",
+    "inputSummary": "Resumen de Parámetros"
   },
   "charts": {
     "revenue": "Ingresos",
@@ -103,7 +104,9 @@
     "cashFlow": "Flujo de Caja",
     "operatingCashFlow": "Flujo de Caja Operativo",
     "netCashFlow": "Flujo de Caja Neto",
-    "cumulativeCashFlow": "Flujo de Caja Acumulativo"
+    "cumulativeCashFlow": "Flujo de Caja Acumulativo",
+    "initialInvestment": "Inversión Inicial",
+    "totalRevenue": "Ingresos Totales"
   },
   "inputs": {
     "title": "Parámetros de Entrada",
@@ -155,7 +158,8 @@
     "potentialCapacity": "Capacidad Potencial",
     "demandRentals": "Demanda de Alquileres",
     "occupancyReal": "Ocupación Real",
-    "actualRentals": "Alquileres Efectivos"
+    "actualRentals": "Alquileres Efectivos",
+    "name": "Nombre"
   },
   "metrics": {
     "irrDesc": "Compara con WACC para determinar si el proyecto crea valor.",
@@ -240,7 +244,7 @@
     "negativeImpact": "Impacto Negativo",
     "positiveImpact": "Impacto Positivo"
   },
-  "scenarios": {
+  "scenarioLab": {
     "title": "Laboratorio de Escenarios",
     "createNew": "Crear Nuevo Escenario",
     "edit": "Editar Escenario",
@@ -260,7 +264,12 @@
     "clearCompare": "Limpiar Comparación",
     "maxCompare": "Puedes comparar hasta 3 escenarios",
     "noScenarios": "No hay escenarios guardados",
-    "addScenario": "Añade tu primer escenario"
+    "addScenario": "Añade tu primer escenario",
+    "loginForCloud": "Inicia sesión para Almacenamiento en la Nube",
+    "savedScenarios": "Escenarios Guardados",
+    "scenarioCollection": "Colección de Escenarios",
+    "noSavedScenarios": "No hay Escenarios Guardados",
+    "scenarioComparison": "Comparación de Escenarios"
   },
   "investorPacket": {
     "title": "Paquete para Inversores",
@@ -282,6 +291,14 @@
     "detailedFinancials": "Finanzas Detalladas",
     "methodology": "Metodología de Cálculo",
     "methodologyDesc": "Explicación de fórmulas y cálculos",
+    "formula": "Fórmula",
+    "interpretation": "Interpretación",
+    "impact": "Impacto",
+    "customerRetention": "Modelo de Retención de Clientes",
+    "customerRetentionDesc": "Cómo evoluciona la base de clientes con el tiempo con nuevas adquisiciones y abandono",
+    "customerGrowthFormula": "Fórmula de Crecimiento de Clientes:",
+    "revenueCalculation": "Cálculo de Ingresos",
+    "revenueFormula": "Cómo se calculan los ingresos entre productos y modos de precios",
     "monteCarloSimulation": "Simulación Monte Carlo",
     "monteCarloDesc": "Distribución de posibles resultados tras 1.000 variaciones aleatorias",
     "monteCarloExplanation": "La simulación Monte Carlo ayuda a entender el rango de posibles resultados mediante la ejecución de múltiples escenarios con variaciones aleatorias de parámetros clave.",
@@ -317,13 +334,18 @@
     "prescriberCostsFormula": "Fórmula de Costes de Prescriptores",
     "directorCostsFormula": "Fórmula de Costes de Director",
     "structuralCostsFormula": "Fórmula de Costes Estructurales",
-    "customerRetention": "Modelo de Retención de Clientes",
-    "customerRetentionDesc": "Cómo evoluciona la base de clientes con el tiempo con nuevas adquisiciones y abandono",
-    "customerGrowthFormula": "Fórmula de Crecimiento de Clientes:",
-    "revenueCalculation": "Cálculo de Ingresos",
-    "revenueFormula": "Cómo se calculan los ingresos entre productos y modos de precios",
-    "formula": "Fórmula",
-    "interpretation": "Interpretación", 
-    "impact": "Impacto"
+    "exampleCalc": "Cálculo de Ejemplo",
+    "daily": "Diario",
+    "monthly": "Mensual",
+    "capacity": "Capacidad",
+    "demand": "Demanda",
+    "actualRentals": "Alquileres Efectivos",
+    "growingCustomerBase": "Base de Clientes en Crecimiento",
+    "profitabilityCalculation": "Cálculo de Rentabilidad",
+    "grossMarginFormula": "Fórmula de Margen Bruto",
+    "ebitdaFormula": "Fórmula de EBITDA",
+    "cashFlowFormula": "Fórmula de Flujo de Caja",
+    "churnImpact": "Impacto de Abandono",
+    "rentalsImpact": "Impacto de Alquileres"
   }
 }

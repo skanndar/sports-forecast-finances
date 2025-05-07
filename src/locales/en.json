@@ -71,7 +71,8 @@
     "margins": "Margins",
     "revenueByProduct": "Revenue by Product",
     "finalYearRevenue": "Final year revenue distribution",
-    "yearlyResults": "Yearly Results"
+    "yearlyResults": "Yearly Results",
+    "inputSummary": "Input Summary"
   },
   "charts": {
     "revenue": "Revenue",
@@ -103,7 +104,9 @@
     "cashFlow": "Cash Flow",
     "operatingCashFlow": "Operating Cash Flow",
     "netCashFlow": "Net Cash Flow",
-    "cumulativeCashFlow": "Cumulative Cash Flow"
+    "cumulativeCashFlow": "Cumulative Cash Flow",
+    "initialInvestment": "Initial Investment",
+    "totalRevenue": "Total Revenue"
   },
   "inputs": {
     "title": "Input Parameters",
@@ -155,7 +158,8 @@
     "potentialCapacity": "Potential Capacity",
     "demandRentals": "Demand Rentals",
     "occupancyReal": "Real Occupancy",
-    "actualRentals": "Actual Rentals"
+    "actualRentals": "Actual Rentals",
+    "name": "Name"
   },
   "metrics": {
     "irrDesc": "Compare with WACC to determine if the project creates value.",
@@ -241,7 +245,7 @@
     "negativeImpact": "Negative Impact",
     "positiveImpact": "Positive Impact"
   },
-  "scenarios": {
+  "scenarioLab": {
     "title": "Scenario Lab",
     "createNew": "Create New Scenario",
     "edit": "Edit Scenario",
@@ -261,7 +265,12 @@
     "clearCompare": "Clear Comparison",
     "maxCompare": "You can compare up to 3 scenarios",
     "noScenarios": "No scenarios saved yet",
-    "addScenario": "Add your first scenario"
+    "addScenario": "Add your first scenario",
+    "loginForCloud": "Login for Cloud Saving",
+    "savedScenarios": "Saved Scenarios",
+    "scenarioCollection": "Scenario Collection",
+    "noSavedScenarios": "No Saved Scenarios",
+    "scenarioComparison": "Scenario Comparison"
   },
   "investorPacket": {
     "title": "Investor Packet",
@@ -325,6 +334,19 @@
     "retention": "Customer Retention",
     "prescriberCostsFormula": "Prescriber Costs Formula",
     "directorCostsFormula": "Director Costs Formula", 
-    "structuralCostsFormula": "Structural Costs Formula"
+    "structuralCostsFormula": "Structural Costs Formula",
+    "exampleCalc": "Example Calculation",
+    "daily": "Daily",
+    "monthly": "Monthly",
+    "capacity": "Capacity",
+    "demand": "Demand",
+    "actualRentals": "Actual Rentals",
+    "growingCustomerBase": "Growing Customer Base",
+    "profitabilityCalculation": "Profitability Calculation",
+    "grossMarginFormula": "Gross Margin Formula",
+    "ebitdaFormula": "EBITDA Formula",
+    "cashFlowFormula": "Cash Flow Formula",
+    "churnImpact": "Churn Impact",
+    "rentalsImpact": "Rentals Impact"
   }
 }

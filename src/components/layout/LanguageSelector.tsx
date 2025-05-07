@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 
 const LanguageSelector = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -25,10 +25,10 @@ const LanguageSelector = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => changeLanguage('es')}>
-          Español
+          {t('common.language', { lng: 'es' })}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => changeLanguage('en')}>
-          English
+          {t('common.language', { lng: 'en' })}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

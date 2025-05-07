@@ -35,8 +35,8 @@ const RiskAnalysis = ({ tornadoData }: RiskAnalysisProps) => {
       <CardContent>
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-medium mb-2">{t('investorPacket.sensititiveVariables')}</h3>
-            <p className="mb-3">{t('investorPacket.sensititiveVariablesDesc')}</p>
+            <h3 className="text-lg font-medium mb-2">{t('investorPacket.sensitiveVariables')}</h3>
+            <p className="mb-3">{t('investorPacket.sensitiveVariablesDesc')}</p>
             
             {tornadoData && (
               <Table>

@@ -17,7 +17,7 @@ const flattenTranslations = (obj: any, prefix = '') => {
 };
 
 describe('Translations', () => {
-  it('should have all keys in English translation', () => {
+  it('should have all keys in both languages', () => {
     const flattenedEn = flattenTranslations(enTranslation);
     const flattenedEs = flattenTranslations(esTranslation);
     

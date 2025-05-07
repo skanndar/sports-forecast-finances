@@ -18,12 +18,12 @@ const KeyPerformanceIndicators = ({ results, settings }: KeyPerformanceIndicator
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">{t('table.revenue')} ({t('common.year')} {settings.forecastYears})</p>
+          <p className="text-sm text-muted-foreground">{t('kpis.revenue')} ({t('common.year')} {settings.forecastYears})</p>
           <p className="text-2xl font-bold">{formatCurrency(lastYearResult.revenue)}</p>
         </div>
         
         <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">{t('table.ebitdaMargin')}</p>
+          <p className="text-sm text-muted-foreground">{t('kpis.ebitdaMargin')}</p>
           <p className="text-2xl font-bold">{formatPercentage(lastYearResult.ebitda / lastYearResult.revenue)}</p>
         </div>
         
