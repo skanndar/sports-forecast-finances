@@ -34,7 +34,7 @@ export const getSafeTranslation = (key: string, options?: any) => {
   // Handle missing translations
   if (translation === key && key.includes('.')) {
     console.warn(`Missing translation key: ${key}`);
-    return <MissingTranslation translationKey={key} />;
+    return React.createElement(MissingTranslation, { translationKey: key });
   }
   
   return translation;
