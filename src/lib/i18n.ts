@@ -27,6 +27,19 @@ export const createSafeTFunction = (t: typeof i18n.t) => {
   };
 };
 
+// Enhanced function to safely get translation
+export const getSafeTranslation = (key: string, options?: any) => {
+  const translation = i18n.t(key, options);
+  
+  // Handle missing translations
+  if (translation === key && key.includes('.')) {
+    console.warn(`Missing translation key: ${key}`);
+    return <MissingTranslation translationKey={key} />;
+  }
+  
+  return translation;
+};
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)

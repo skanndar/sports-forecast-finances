@@ -77,7 +77,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
             </pre>
             
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
-              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc', { defaultValue: "Example calculation" })}</h4>
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
               <p className="text-sm">
                 {t('common.year')} 1: {exampleNewCustomers} {t('inputs.newCustomers')} = {exampleCustomersY1} {t('investorPacket.customersPerYear')}
               </p>
@@ -94,15 +94,15 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
             <h3 className="text-lg font-medium mb-2">{t('investorPacket.demandVsCapacity')}</h3>
             <p className="mb-2">{t('investorPacket.demandVsCapacityDesc')}</p>
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
-              {t('investorPacket.maxRentalsFormula', { defaultValue: "MaxRentalsPerUnit = Daily ? (365/MinDays) : 12" })}
+              {t('investorPacket.maxRentalsFormula')}
               {"\n"}
-              {t('investorPacket.potentialCapacityFormula', { defaultValue: "PotentialCapacity = Units × MaxRentalsPerUnit" })}
+              {t('investorPacket.potentialCapacityFormula')}
               {"\n"}
-              {t('investorPacket.demandFormula', { defaultValue: "DemandRentals = CustomersPerYear × RentalsPerCustomer" })}
+              {t('investorPacket.demandFormula')}
               {"\n"}
-              {t('investorPacket.realOccupancyFormula', { defaultValue: "RealOccupancy = Min(1, DemandRentals/PotentialCapacity)" })}
+              {t('investorPacket.realOccupancyFormula')}
               {"\n"}
-              {t('investorPacket.actualRentalsFormula', { defaultValue: "ActualRentals = RealOccupancy × PotentialCapacity" })}
+              {t('investorPacket.actualRentalsFormula')}
             </pre>
             
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
@@ -141,40 +141,27 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
             <h3 className="text-lg font-medium mb-2">{t('investorPacket.revenueCalculation')}</h3>
             <p className="mb-2">{t('investorPacket.revenueFormula')}</p>
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
-              {t('investorPacket.rentalsPerYearDaily', { defaultValue: "Daily pricing: Rentals/Year = ActualRentals (from above)" })}
+              {t('investorPacket.rentalsPerYearDaily')}
               {'\n'}
-              {t('investorPacket.revenueDailyFormula', { defaultValue: "Daily pricing: Revenue = ActualRentals × Price per Day × Min Days × GrowthFactor" })}
+              {t('investorPacket.revenueDailyFormula')}
               {'\n'}
-              {t('investorPacket.rentalsPerYearMonthly', { defaultValue: "Monthly pricing: Rentals/Year = ActualRentals (from above)" })}
+              {t('investorPacket.rentalsPerYearMonthly')}
               {'\n'}
-              {t('investorPacket.revenueMonthlyFormula', { defaultValue: "Monthly pricing: Revenue = ActualRentals × Price per Month × GrowthFactor" })}
+              {t('investorPacket.revenueMonthlyFormula')}
               {'\n\n'}
               {t('inputs.shippingIncome')}: {t('inputs.shippingIncome')} = {t('investorPacket.actualRentals')} × {t('inputs.shippingIncome')} × GrowthFactor {t('common.byYear')}
             </pre>
             
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
-              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc', { defaultValue: "Example calculation" })}</h4>
+              <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
               <p className="text-sm">
-                {t('investorPacket.exampleDailyFormula', {
-                  defaultValue: "Daily: With {{units}} units, {{actualRentals}} actual rentals, {{daysMin}} min days, {{price}}€/day → Revenue = {{revenue}}€",
-                  units: exampleUnits,
-                  actualRentals: exampleActualRentalsY1.toFixed(1),
-                  daysMin: exampleMinDays,
-                  price: examplePricePerDay,
-                  revenue: Math.round(exampleActualRentalsY1 * examplePricePerDay * exampleMinDays).toLocaleString()
-                })}
+                {t('investorPacket.exampleDailyFormula')}
               </p>
               <p className="text-sm mt-1">
-                {t('investorPacket.exampleMonthlyFormula', {
-                  defaultValue: "Monthly: With {{units}} units, {{actualRentals}} actual rentals, {{price}}€/month → Revenue = {{revenue}}€",
-                  units: exampleUnits,
-                  actualRentals: examplePotentialCapacityMonthly * exampleRealOccupancyY1,
-                  price: examplePricePerMonth,
-                  revenue: Math.round(examplePotentialCapacityMonthly * exampleRealOccupancyY1 * examplePricePerMonth).toLocaleString()
-                })}
+                {t('investorPacket.exampleMonthlyFormula')}
               </p>
               <p className="text-sm mt-1">
-                {t('inputs.shippingIncome')}: {exampleActualRentalsY1.toFixed(1)} {t('investorPacket.actualRentals')} × {exampleShippingIncome}€ = {Math.round(exampleActualRentalsY1 * exampleShippingIncome)}€
+                {t('inputs.shippingIncome')}: {Math.round(exampleActualRentalsY1).toFixed(1)} {t('investorPacket.actualRentals')} × {exampleShippingIncome}€ = {Math.round(exampleActualRentalsY1 * exampleShippingIncome)}€
               </p>
             </div>
           </div>
@@ -182,7 +169,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
           <div>
             <h3 className="text-lg font-medium mb-2">{t('investorPacket.costsCalculation')}</h3>
             <pre className="bg-muted p-2 rounded-md text-sm overflow-x-auto">
-              {t('investorPacket.productCostsFormula', { defaultValue: "ProductCosts = ActualRentals × VariableCost × InflationFactor × GrowthFactor" })}
+              {t('investorPacket.productCostsFormula')}
               {'\n'}
               {t('inputs.shippingCost')}: {t('inputs.shippingCost')} = {t('investorPacket.actualRentals')} × {t('inputs.shippingCost')} × InflationFactor × GrowthFactor {t('common.byYear')}
               {'\n'}
@@ -196,10 +183,10 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
             <div className="mt-4 bg-muted/50 p-2 rounded-md">
               <h4 className="font-medium mb-1">{t('investorPacket.exampleCalc')}</h4>
               <p className="text-sm">
-                {t('table.productCosts')}: {exampleActualRentalsY1.toFixed(1)} {t('investorPacket.actualRentals')} × 10€ = {Math.round(exampleActualRentalsY1 * 10)}€
+                {t('table.productCosts')}: {Math.round(exampleActualRentalsY1).toFixed(1)} {t('investorPacket.actualRentals')} × 10€ = {Math.round(exampleActualRentalsY1 * 10)}€
               </p>
               <p className="text-sm mt-1">
-                {t('inputs.shippingCost')}: {exampleActualRentalsY1.toFixed(1)} {t('investorPacket.actualRentals')} × {exampleShippingCost}€ = {Math.round(exampleActualRentalsY1 * exampleShippingCost)}€
+                {t('inputs.shippingCost')}: {Math.round(exampleActualRentalsY1).toFixed(1)} {t('investorPacket.actualRentals')} × {exampleShippingCost}€ = {Math.round(exampleActualRentalsY1 * exampleShippingCost)}€
               </p>
             </div>
           </div>
@@ -222,7 +209,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                 <TableRow>
                   <TableHead>{t('table.metric')}</TableHead>
                   <TableHead>{t('investorPacket.formula')}</TableHead>
-                  <TableHead>{t('investorPacket.interpretation', { defaultValue: "Interpretación" })}</TableHead>
+                  <TableHead>{t('investorPacket.interpretation')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -232,7 +219,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                     <InfoTooltip id="irr" />
                   </TableCell>
                   <TableCell>{t('investorPacket.irrFormula')}</TableCell>
-                  <TableCell>{t('metrics.irrDesc', { defaultValue: "Compara con WACC para decidir si crea valor." })}</TableCell>
+                  <TableCell>{t('metrics.irrDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
@@ -240,23 +227,23 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                     <InfoTooltip id="npv" />
                   </TableCell>
                   <TableCell>{t('investorPacket.npvFormula')}</TableCell>
-                  <TableCell>{t('metrics.npvDesc', { defaultValue: "Valor presente neto de los flujos de caja futuros." })}</TableCell>
+                  <TableCell>{t('metrics.npvDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
                     {t('investorPacket.cac')}
                     <InfoTooltip id="cac" />
                   </TableCell>
-                  <TableCell>{t('investorPacket.cacFormula', { defaultValue: "CAC = (Marketing Spend + Prescriber Commissions for New Customers) / New Customers" })}</TableCell>
-                  <TableCell>{t('metrics.cacDesc', { defaultValue: "Coste promedio para adquirir un nuevo cliente." })}</TableCell>
+                  <TableCell>{t('investorPacket.cacFormula')}</TableCell>
+                  <TableCell>{t('metrics.cacDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
                     {t('investorPacket.ltv')}
                     <InfoTooltip id="ltv" />
                   </TableCell>
-                  <TableCell>{t('investorPacket.ltvFormula', { defaultValue: "LTV = (Revenue per Customer × Gross Margin %) × Rentals per Customer / Churn" })}</TableCell>
-                  <TableCell>{t('metrics.ltvDesc', { defaultValue: "Valor económico total que un cliente aporta durante su ciclo de vida." })}</TableCell>
+                  <TableCell>{t('investorPacket.ltvFormula')}</TableCell>
+                  <TableCell>{t('metrics.ltvDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
@@ -264,7 +251,7 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                     <InfoTooltip id="payback" />
                   </TableCell>
                   <TableCell>{t('investorPacket.paybackFormula')}</TableCell>
-                  <TableCell>{t('metrics.paybackDesc', { defaultValue: "Tiempo necesario para recuperar el coste de adquisición." })}</TableCell>
+                  <TableCell>{t('metrics.paybackDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
@@ -272,23 +259,23 @@ const MethodologySection = ({ settings, results, className = "", id }: Methodolo
                     <InfoTooltip id="ltvCac" />
                   </TableCell>
                   <TableCell>LTV / CAC</TableCell>
-                  <TableCell>{t('metrics.ltvCacDesc', { defaultValue: "Ratio > 3 indica un buen modelo de negocio." })}</TableCell>
+                  <TableCell>{t('metrics.ltvCacDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
                     {t('kpis.ebitda')}
                     <InfoTooltip id="ebitda" />
                   </TableCell>
-                  <TableCell>{t('investorPacket.ebitdaFormula', { defaultValue: "EBITDA = Revenue - Total Variable Costs - Structural Costs" })}</TableCell>
-                  <TableCell>{t('metrics.ebitdaDesc', { defaultValue: "Beneficio antes de intereses, impuestos, depreciaciones y amortizaciones." })}</TableCell>
+                  <TableCell>{t('investorPacket.ebitdaFormula')}</TableCell>
+                  <TableCell>{t('metrics.ebitdaDesc')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className="font-medium">
                     {t('table.ebitdaMargin')}
                     <InfoTooltip id="ebitda-margin" />
                   </TableCell>
-                  <TableCell>{t('investorPacket.ebitdaMarginFormula', { defaultValue: "EBITDA Margin = EBITDA / Revenue" })}</TableCell>
-                  <TableCell>{t('metrics.ebitdaMarginDesc', { defaultValue: "Rentabilidad operativa del negocio como porcentaje de los ingresos." })}</TableCell>
+                  <TableCell>{t('investorPacket.ebitdaMarginFormula')}</TableCell>
+                  <TableCell>{t('metrics.ebitdaMarginDesc')}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
