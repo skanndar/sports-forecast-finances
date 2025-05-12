@@ -28,16 +28,18 @@ const extractKeysFromCode = () => {
   
   tsFiles.forEach(file => {
     const content = fs.readFileSync(file, 'utf8');
-    // Match all t('key.subkey') or t("key.subkey") patterns
-    const matches = content.match(/t\(\s*['"`]([^'"`]+)['"`]\s*(?:,|\))/g) || [];
     
-    matches.forEach(match => {
-      // Extract the key from t('key')
-      const keyMatch = match.match(/t\(\s*['"`]([^'"`]+)['"`]/);
-      if (keyMatch && keyMatch[1]) {
-        result.push(keyMatch[1]);
+    // Fix: TypeScript was inferring 'never[]' for matches
+    // Match all t('key.subkey') or t("key.subkey") patterns
+    const tFunctionRegex = /t\(\s*['"`]([^'"`]+)['"`]\s*(?:,|\))/g;
+    
+    let match;
+    // Use a different approach to extract matches that TypeScript can type correctly
+    while ((match = tFunctionRegex.exec(content)) !== null) {
+      if (match[1]) {
+        result.push(match[1]);
       }
-    });
+    }
   });
   
   return [...new Set(result)]; // Remove duplicates
