@@ -33,6 +33,7 @@ const DemandCapacityTable = ({ results, settings }: DemandCapacityTableProps) =>
                 <TableHead>{t('inputs.potentialCapacity')}: {product.name}</TableHead>
                 <TableHead>{t('inputs.occupancyReal')}: {product.name}</TableHead>
                 <TableHead>{t('inputs.actualRentals')}: {product.name}</TableHead>
+                <TableHead>{t('dashboard.lostDemand')}: {product.name}</TableHead>
               </React.Fragment>
             ))}
           </TableRow>
@@ -55,6 +56,9 @@ const DemandCapacityTable = ({ results, settings }: DemandCapacityTableProps) =>
                   </TableCell>
                   <TableCell>
                     {yr.actualRentals && formatNumber(yr.actualRentals[product.name] || 0)}
+                  </TableCell>
+                  <TableCell>
+                    {yr.lostDemand && formatNumber(yr.lostDemand[product.name] || 0)}
                   </TableCell>
                 </React.Fragment>
               ))}

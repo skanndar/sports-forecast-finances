@@ -10,6 +10,7 @@ export type Product = {
   minDays: number;        // default 15
   variableCost: number;   // €/rental
   occupancy: number;      // 0-1
+  occupancyCap: number;   // 0-1: max operational occupancy cap (default 0.85)
   shippingIncome: number; // income per rental
   shippingCost: number;   // cost per rental
 };
@@ -59,6 +60,7 @@ export type YearResult = {
   potentialCapacity?: Record<string, number>; // Potential capacity by product
   realOccupancy?: Record<string, number>; // Real occupancy by product
   maxRentalsPerUnit?: Record<string, number>; // Max rentals per unit by product
+  lostDemand?: Record<string, number>; // Lost demand by product
 };
 
 export type UnitEconomics = { 

@@ -65,6 +65,13 @@ function getAllFiles(dir: string, extensions: string[]): string[] {
   return results;
 }
 
+// Add the new keys we're adding to check if they exist
+const expectedKeys = [
+  'inputs.occupancyCap',
+  'dashboard.lostDemand',
+  'dashboard.lostDemandDesc'
+];
+
 // Flatten the translations
 const flattenedEnTranslations = flattenTranslations(enTranslations);
 const flattenedEsTranslations = flattenTranslations(esTranslations);
@@ -80,7 +87,7 @@ const missingInEnglish = Object.keys(flattenedEsTranslations).filter(
 );
 
 // Check for keys that are used in code but not in translations
-const codeKeys = extractKeysFromCode();
+const codeKeys = [...extractKeysFromCode(), ...expectedKeys];
 const missingInTranslations = codeKeys.filter(
   key => !flattenedEnTranslations.hasOwnProperty(key) || !flattenedEsTranslations.hasOwnProperty(key)
 );

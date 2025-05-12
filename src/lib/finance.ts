@@ -44,10 +44,10 @@ export function calculateDemandRentals(customersCount: number, rentalsPerCustome
 }
 
 /**
- * Calculate real occupancy based on demand and potential capacity
+ * Calculate real occupancy based on demand, potential capacity, and occupancy cap
  */
-export function calculateRealOccupancy(demandRentals: number, potentialCapacity: number): number {
-  return Math.min(1, demandRentals / potentialCapacity);
+export function calculateRealOccupancy(demandRentals: number, potentialCapacity: number, occupancyCap: number): number {
+  return Math.min(occupancyCap, demandRentals / potentialCapacity);
 }
 
 /**
@@ -55,6 +55,13 @@ export function calculateRealOccupancy(demandRentals: number, potentialCapacity:
  */
 export function calculateActualRentals(realOccupancy: number, potentialCapacity: number): number {
   return realOccupancy * potentialCapacity;
+}
+
+/**
+ * Calculate lost demand (demand that couldn't be fulfilled due to capacity constraints)
+ */
+export function calculateLostDemand(demandRentals: number, actualRentals: number): number {
+  return Math.max(0, demandRentals - actualRentals);
 }
 
 /**
@@ -69,8 +76,8 @@ export function revenueForProduct(p: Product, year: number, s: Settings, custome
   // Calculate demand for rentals
   const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
   
-  // Calculate real occupancy
-  const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+  // Calculate real occupancy with occupancy cap
+  const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity, p.occupancyCap);
   
   // Calculate actual rentals based on real occupancy and potential capacity
   const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
@@ -103,8 +110,8 @@ export function variableCostsForProduct(p: Product, year: number, s: Settings, c
   // Calculate demand for rentals
   const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
   
-  // Calculate real occupancy
-  const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+  // Calculate real occupancy with occupancy cap
+  const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity, p.occupancyCap);
   
   // Calculate actual rentals based on real occupancy and potential capacity
   const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
@@ -161,15 +168,17 @@ export function calculateYearResult(year: number, s: Settings, customersPerYear:
   const potentialCapacityByProduct: Record<string, number> = {};
   const realOccupancyByProduct: Record<string, number> = {};
   const maxRentalsPerUnitByProduct: Record<string, number> = {};
+  const lostDemandByProduct: Record<string, number> = {};
 
   // Calculate revenue and variable costs for each product
   s.products.forEach((product, index) => {
     // Calculate key metrics
     const potentialCapacity = calculatePotentialCapacity(product);
     const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
-    const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+    const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity, product.occupancyCap);
     const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
     const maxRentalsPerUnit = calculateMaxRentalsPerUnit(product);
+    const lostDemand = calculateLostDemand(demandRentals, actualRentals);
     
     // Calculate financials
     const productRevenue = revenueForProduct(product, year, s, customersPerYear);
@@ -188,6 +197,7 @@ export function calculateYearResult(year: number, s: Settings, customersPerYear:
     potentialCapacityByProduct[productName] = potentialCapacity;
     realOccupancyByProduct[productName] = realOccupancy;
     maxRentalsPerUnitByProduct[productName] = maxRentalsPerUnit;
+    lostDemandByProduct[productName] = lostDemand;
   });
 
   // Calculate commission costs
@@ -220,7 +230,8 @@ export function calculateYearResult(year: number, s: Settings, customersPerYear:
     demandRentals: demandRentalsByProduct,
     potentialCapacity: potentialCapacityByProduct,
     realOccupancy: realOccupancyByProduct,
-    maxRentalsPerUnit: maxRentalsPerUnitByProduct
+    maxRentalsPerUnit: maxRentalsPerUnitByProduct,
+    lostDemand: lostDemandByProduct
   };
 }
 
@@ -649,6 +660,7 @@ export function getDefaultSettings(): Settings {
         minDays: 15,
         variableCost: 10,
         occupancy: 0.7,
+        occupancyCap: 0.85,
         shippingIncome: 0,
         shippingCost: 0
       }

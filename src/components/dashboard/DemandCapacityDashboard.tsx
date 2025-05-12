@@ -16,7 +16,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart, ComposedChart } from 'recharts';
 import { ProjectResult, Settings } from '@/lib/types';
 import { formatNumber, formatPercentage } from '@/lib/formatters';
 import KpiCard from './KpiCard';
@@ -34,6 +34,7 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
     let totalDemand = 0;
     let totalCapacity = 0;
     let totalActual = 0;
+    let totalLostDemand = 0;
 
     if (yr.demandRentals) {
       Object.values(yr.demandRentals).forEach(val => totalDemand += val);
@@ -47,11 +48,16 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
       Object.values(yr.actualRentals).forEach(val => totalActual += val);
     }
     
+    if (yr.lostDemand) {
+      Object.values(yr.lostDemand).forEach(val => totalLostDemand += val);
+    }
+    
     return {
       year: `${t('common.year')} ${index + 1}`,
       demand: Math.round(totalDemand),
       capacity: Math.round(totalCapacity),
-      actual: Math.round(totalActual)
+      actual: Math.round(totalActual),
+      lost: Math.round(totalLostDemand)
     };
   });
 
@@ -60,6 +66,7 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
   let totalDemand = 0;
   let totalCapacity = 0;
   let totalActual = 0;
+  let totalLostDemand = 0;
   let avgOccupancy = 0;
 
   if (latestYear) {
@@ -73,6 +80,10 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
 
     if (latestYear.actualRentals) {
       Object.values(latestYear.actualRentals).forEach(val => totalActual += val);
+    }
+    
+    if (latestYear.lostDemand) {
+      Object.values(latestYear.lostDemand).forEach(val => totalLostDemand += val);
     }
     
     avgOccupancy = totalCapacity > 0 ? totalActual / totalCapacity : 0;
@@ -97,9 +108,9 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
           description={t('investorPacket.actualRentals')}
         />
         <KpiCard
-          title={t('inputs.occupancyReal')}
-          value={formatPercentage(avgOccupancy)}
-          description={t('dashboard.occupancyRates')}
+          title={t('dashboard.lostDemand')}
+          value={formatNumber(totalLostDemand)}
+          description={t('dashboard.lostDemandDesc')}
         />
       </div>
 
@@ -111,7 +122,7 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
         <CardContent>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
+              <ComposedChart
                 data={chartData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
@@ -123,7 +134,8 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
                 <Line type="monotone" dataKey="demand" name={t('inputs.demandRentals')} stroke="#8884d8" activeDot={{ r: 8 }} />
                 <Line type="monotone" dataKey="capacity" name={t('inputs.potentialCapacity')} stroke="#82ca9d" />
                 <Line type="monotone" dataKey="actual" name={t('inputs.actualRentals')} stroke="#ff7300" />
-              </LineChart>
+                <Bar dataKey="lost" name={t('dashboard.lostDemand')} fill="#d95555" />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
@@ -142,8 +154,10 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
                 <TableHead>{t('inputs.maxRentalsPerUnit')}</TableHead>
                 <TableHead>{t('inputs.potentialCapacity')}</TableHead>
                 <TableHead>{t('inputs.demandRentals')}</TableHead>
+                <TableHead>{t('inputs.occupancyCap')}</TableHead>
                 <TableHead>{t('inputs.occupancyReal')}</TableHead>
                 <TableHead>{t('inputs.actualRentals')}</TableHead>
+                <TableHead>{t('dashboard.lostDemand')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -154,6 +168,7 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
                 const maxRentalsPerUnit = latestYear?.maxRentalsPerUnit?.[product.name] || 0;
                 const realOccupancy = latestYear?.realOccupancy?.[product.name] || 0;
                 const actualRental = latestYear?.actualRentals?.[product.name] || 0;
+                const lostDemand = latestYear?.lostDemand?.[product.name] || 0;
                 
                 return (
                   <TableRow key={idx}>
@@ -161,8 +176,10 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
                     <TableCell>{formatNumber(maxRentalsPerUnit)}</TableCell>
                     <TableCell>{formatNumber(potentialCapacity)}</TableCell>
                     <TableCell>{formatNumber(demandRental)}</TableCell>
+                    <TableCell>{formatPercentage(product.occupancyCap)}</TableCell>
                     <TableCell>{formatPercentage(realOccupancy)}</TableCell>
                     <TableCell>{formatNumber(actualRental)}</TableCell>
+                    <TableCell>{formatNumber(lostDemand)}</TableCell>
                   </TableRow>
                 );
               })}

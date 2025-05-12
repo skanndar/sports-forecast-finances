@@ -9,6 +9,31 @@ import MissingTranslation from '@/components/ui/missing-translation';
 import enTranslation from '../locales/en.json';
 import esTranslation from '../locales/es.json';
 
+// Add new translation entries
+const enAdditions = {
+  inputs: {
+    occupancyCap: "Max Operational Occupancy"
+  },
+  dashboard: {
+    lostDemand: "Lost Demand",
+    lostDemandDesc: "Demand that could not be fulfilled"
+  }
+};
+
+const esAdditions = {
+  inputs: {
+    occupancyCap: "Ocupación Operativa Máx."
+  },
+  dashboard: {
+    lostDemand: "Demanda Perdida",
+    lostDemandDesc: "Demanda que no pudo ser satisfecha"
+  }
+};
+
+// Merge translations with new additions
+const enhancedEnTranslation = { ...enTranslation, ...enAdditions };
+const enhancedEsTranslation = { ...esTranslation, ...esAdditions };
+
 // Create a wrapper function for the t function that shows missing translations visually
 export const createSafeTFunction = (t: typeof i18n.t) => {
   return (key: string, options?: any) => {
@@ -46,10 +71,10 @@ i18n
   .init({
     resources: {
       en: {
-        translation: enTranslation
+        translation: enhancedEnTranslation
       },
       es: {
-        translation: esTranslation
+        translation: enhancedEsTranslation
       }
     },
     fallbackLng: 'es',

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -258,18 +257,18 @@ const InputsPage = () => {
                       <div className="space-y-2 md:col-span-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <Label htmlFor={`product-occupancy-${index}`}>{t('inputs.occupancy')}</Label>
-                            <InfoTooltip id="product-occupancy" />
+                            <Label htmlFor={`product-occupancy-${index}`}>{t('inputs.occupancyCap')}</Label>
+                            <InfoTooltip id="product-occupancy-cap" />
                           </div>
-                          <span className="text-sm">{formatPercentage(product.occupancy)}</span>
+                          <span className="text-sm">{formatPercentage(product.occupancyCap || 0.85)}</span>
                         </div>
                         <Slider
-                          id={`product-occupancy-${index}`}
+                          id={`product-occupancy-cap-${index}`}
                           min={0}
                           max={1}
                           step={0.01}
-                          value={[product.occupancy]}
-                          onValueChange={([value]) => updateProductField(index, 'occupancy', value)}
+                          value={[product.occupancyCap || 0.85]}
+                          onValueChange={([value]) => updateProductField(index, 'occupancyCap', value)}
                         />
                       </div>
                     </div>

@@ -43,12 +43,13 @@ export const useAppStore = create<AppState>()(
       compareScenarios: [],
       theme: 'light',
       setSavedScenarios: (list: Scenario[]) => {
-        // Ensure all products in all scenarios have shippingIncome and shippingCost
+        // Ensure all products in all scenarios have shippingIncome, shippingCost, and occupancyCap
         const updatedList = list.map(scenario => {
           const updatedProducts = scenario.settings.products.map(product => ({
             ...product,
             shippingIncome: product.shippingIncome ?? 0,
-            shippingCost: product.shippingCost ?? 0
+            shippingCost: product.shippingCost ?? 0,
+            occupancyCap: product.occupancyCap ?? 0.85
           }));
           
           return {
@@ -63,11 +64,12 @@ export const useAppStore = create<AppState>()(
         set({ savedScenarios: updatedList });
       },
       setActiveScenario: (scenario: Scenario) => {
-        // Ensure all products have shippingIncome and shippingCost
+        // Ensure all products have shippingIncome, shippingCost, and occupancyCap
         const updatedProducts = scenario.settings.products.map(product => ({
           ...product,
           shippingIncome: product.shippingIncome ?? 0,
-          shippingCost: product.shippingCost ?? 0
+          shippingCost: product.shippingCost ?? 0,
+          occupancyCap: product.occupancyCap ?? 0.85
         }));
         
         const updatedScenario = {
@@ -176,6 +178,7 @@ export const useAppStore = create<AppState>()(
             minDays: 15,
             variableCost: 10,
             occupancy: 0.7,
+            occupancyCap: 0.85,
             shippingIncome: 0,
             shippingCost: 0
           };
