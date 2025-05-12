@@ -368,7 +368,7 @@ export function calculateCAC(s: Settings, year: number, customersPerYear: number
       const maxRentalsPerUnit = calculateMaxRentalsPerUnit(product);
       const potentialCapacity = product.units * maxRentalsPerUnit;
       const demandRentals = calculateDemandRentals(customersPerYear[year], s.rentalsPerCustomer);
-      const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+      const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity, product.occupancyCap);
       const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
       
       // Calculate price per rental based on pricing mode
@@ -488,7 +488,7 @@ export function calculateBreakEvenUnits(s: Settings, customersPerYear: number[])
     const maxRentalsPerUnit = calculateMaxRentalsPerUnit(product);
     const potentialCapacity = product.units * maxRentalsPerUnit;
     const demandRentals = calculateDemandRentals(customersPerYear[0], s.rentalsPerCustomer);
-    const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity);
+    const realOccupancy = calculateRealOccupancy(demandRentals, potentialCapacity, product.occupancyCap);
     const actualRentals = calculateActualRentals(realOccupancy, potentialCapacity);
     
     // Calculate revenue and costs for this product
