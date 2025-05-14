@@ -88,7 +88,10 @@ i18n
     parseMissingKeyHandler: (key) => {
       console.warn(`Missing translation key: ${key}`);
       return key;
-    }
+    },
+    // Add these configurations to ensure namespace resolution
+    defaultNS: 'common',
+    fallbackNS: ['dashboard', 'inputs', 'investorPacket', 'table', 'kpis'],
   });
 
 // Add this function to help detect missing translations

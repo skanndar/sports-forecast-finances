@@ -27,7 +27,8 @@ interface DemandCapacityDashboardProps {
 }
 
 const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardProps) => {
-  const { t } = useTranslation();
+  // Updated to use multiple namespaces
+  const { t } = useTranslation(['dashboard', 'inputs', 'investorPacket', 'common']);
 
   // Prepare data for the line chart
   const chartData = results.yearlyResults.map((yr, index) => {
@@ -53,7 +54,7 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
     }
     
     return {
-      year: `${t('common.year')} ${index + 1}`,
+      year: `${t('year', { ns: 'common' })} ${index + 1}`,
       demand: Math.round(totalDemand),
       capacity: Math.round(totalCapacity),
       actual: Math.round(totalActual),
@@ -93,31 +94,31 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
-          title={t('inputs.demandRentals')}
+          title={t('demandRentals', { ns: 'inputs' })}
           value={formatNumber(totalDemand)}
-          description={t('investorPacket.demand')}
+          description={t('demand', { ns: 'investorPacket' })}
         />
         <KpiCard
-          title={t('inputs.potentialCapacity')}
+          title={t('potentialCapacity', { ns: 'inputs' })}
           value={formatNumber(totalCapacity)}
-          description={t('investorPacket.capacity')}
+          description={t('capacity', { ns: 'investorPacket' })}
         />
         <KpiCard
-          title={t('inputs.actualRentals')}
+          title={t('actualRentals', { ns: 'inputs' })}
           value={formatNumber(totalActual)}
-          description={t('investorPacket.actualRentals')}
+          description={t('actualRentals', { ns: 'investorPacket' })}
         />
         <KpiCard
-          title={t('dashboard.lostDemand')}
+          title={t('lostDemand', { ns: 'dashboard' })}
           value={formatNumber(totalLostDemand)}
-          description={t('dashboard.lostDemandDesc')}
+          description={t('lostDemandDesc', { ns: 'dashboard' })}
         />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('dashboard.demandCapacity')}</CardTitle>
-          <CardDescription>{t('dashboard.demandCapacitySummary')}</CardDescription>
+          <CardTitle>{t('demandCapacity', { ns: 'dashboard' })}</CardTitle>
+          <CardDescription>{t('demandCapacitySummary', { ns: 'dashboard' })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-80">
@@ -131,10 +132,10 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="demand" name={t('inputs.demandRentals')} stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="capacity" name={t('inputs.potentialCapacity')} stroke="#82ca9d" />
-                <Line type="monotone" dataKey="actual" name={t('inputs.actualRentals')} stroke="#ff7300" />
-                <Bar dataKey="lost" name={t('dashboard.lostDemand')} fill="#d95555" />
+                <Line type="monotone" dataKey="demand" name={t('demandRentals', { ns: 'inputs' })} stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="capacity" name={t('potentialCapacity', { ns: 'inputs' })} stroke="#82ca9d" />
+                <Line type="monotone" dataKey="actual" name={t('actualRentals', { ns: 'inputs' })} stroke="#ff7300" />
+                <Bar dataKey="lost" name={t('lostDemand', { ns: 'dashboard' })} fill="#d95555" />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -143,21 +144,21 @@ const DemandCapacityDashboard = ({ results, settings }: DemandCapacityDashboardP
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('investorPacket.demandVsCapacity')}</CardTitle>
-          <CardDescription>{t('investorPacket.demandVsCapacityDesc')}</CardDescription>
+          <CardTitle>{t('demandVsCapacity', { ns: 'investorPacket' })}</CardTitle>
+          <CardDescription>{t('demandVsCapacityDesc', { ns: 'investorPacket' })}</CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('inputs.productName')}</TableHead>
-                <TableHead>{t('inputs.maxRentalsPerUnit')}</TableHead>
-                <TableHead>{t('inputs.potentialCapacity')}</TableHead>
-                <TableHead>{t('inputs.demandRentals')}</TableHead>
-                <TableHead>{t('inputs.occupancyCap')}</TableHead>
-                <TableHead>{t('inputs.occupancyReal')}</TableHead>
-                <TableHead>{t('inputs.actualRentals')}</TableHead>
-                <TableHead>{t('dashboard.lostDemand')}</TableHead>
+                <TableHead>{t('productName', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('maxRentalsPerUnit', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('potentialCapacity', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('demandRentals', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('occupancyCap', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('occupancyReal', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('actualRentals', { ns: 'inputs' })}</TableHead>
+                <TableHead>{t('lostDemand', { ns: 'dashboard' })}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -27,7 +27,7 @@ import SensitivityAnalysis from '@/components/investor/SensitivityAnalysis';
 const InvestorPacketPage = () => {
   const { activeScenario } = useAppStore();
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['investorPacket', 'common', 'dashboard']); 
   const [isGenerating, setIsGenerating] = useState(false);
   const [monteCarloResult, setMonteCarloResult] = useState(null);
   const [tornadoData, setTornadoData] = useState(null);
@@ -41,14 +41,14 @@ const InvestorPacketPage = () => {
       await generatePdf('investor-packet-content', `${activeScenario.name || 'investor-packet'}.pdf`);
       
       toast({
-        title: t('investorPacket.pdfGenerated'),
-        description: t('investorPacket.downloadReady'),
+        title: t('pdfGenerated', { ns: 'investorPacket' }),
+        description: t('downloadReady', { ns: 'investorPacket' }),
       });
     } catch (error) {
       console.error('PDF generation error:', error);
       toast({
-        title: t('common.error'),
-        description: t('investorPacket.generationFailed'),
+        title: t('error', { ns: 'common' }),
+        description: t('generationFailed', { ns: 'investorPacket' }),
         variant: 'destructive'
       });
     } finally {
@@ -60,8 +60,8 @@ const InvestorPacketPage = () => {
     try {
       if (!activeScenario.results || !activeScenario.results.yearlyResults.length) {
         toast({
-          title: t('dashboard.noData'),
-          description: t('dashboard.configureInputs'),
+          title: t('noData', { ns: 'dashboard' }),
+          description: t('configureInputs', { ns: 'dashboard' }),
           variant: 'destructive'
         });
         return;
@@ -97,13 +97,13 @@ const InvestorPacketPage = () => {
       document.body.removeChild(link);
       
       toast({
-        title: t('investorPacket.csvReady'),
-        description: t('investorPacket.downloadReady')
+        title: t('csvReady', { ns: 'investorPacket' }),
+        description: t('downloadReady', { ns: 'investorPacket' })
       });
     } catch (error) {
       toast({
-        title: t('common.error'),
-        description: t('investorPacket.downloadFailed'),
+        title: t('error', { ns: 'common' }),
+        description: t('downloadFailed', { ns: 'investorPacket' }),
         variant: 'destructive'
       });
     }
@@ -114,8 +114,8 @@ const InvestorPacketPage = () => {
       <div className="container mx-auto px-4 py-10 flex items-center justify-center">
         <Card className="w-full max-w-lg">
           <CardHeader>
-            <CardTitle>{t('dashboard.noData')}</CardTitle>
-            <CardDescription>{t('dashboard.configureInputs')}</CardDescription>
+            <CardTitle>{t('noData', { ns: 'dashboard' })}</CardTitle>
+            <CardDescription>{t('configureInputs', { ns: 'dashboard' })}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -126,7 +126,7 @@ const InvestorPacketPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">{t('investorPacket.title')}</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('title', { ns: 'investorPacket' })}</h1>
       
       {/* Run sensitivity analysis when component mounts */}
       <SensitivityAnalysis 
@@ -142,7 +142,7 @@ const InvestorPacketPage = () => {
           className="flex items-center gap-2"
         >
           <Download size={16} />
-          {isGenerating ? t('investorPacket.generatingPdf') : t('investorPacket.downloadInvestorPacket')}
+          {isGenerating ? t('generatingPdf', { ns: 'investorPacket' }) : t('downloadInvestorPacket', { ns: 'investorPacket' })}
         </Button>
         
         <Button 
@@ -150,7 +150,7 @@ const InvestorPacketPage = () => {
           onClick={handleDownloadCSV}
           className="flex items-center gap-2"
         >
-          <Download size={16} /> {t('investorPacket.downloadCsv')}
+          <Download size={16} /> {t('downloadCsv', { ns: 'investorPacket' })}
         </Button>
       </div>
       
@@ -159,8 +159,8 @@ const InvestorPacketPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" id="summary-section">
           <Card>
             <CardHeader>
-              <CardTitle>{t('investorPacket.executiveSummary')}</CardTitle>
-              <CardDescription>{t('investorPacket.financialHighlights')}</CardDescription>
+              <CardTitle>{t('executiveSummary', { ns: 'investorPacket' })}</CardTitle>
+              <CardDescription>{t('financialHighlights', { ns: 'investorPacket' })}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <FinancialHighlights results={results} settings={settings} />
@@ -169,8 +169,8 @@ const InvestorPacketPage = () => {
           
           <Card>
             <CardHeader>
-              <CardTitle>{t('investorPacket.keyPerformanceIndicators')}</CardTitle>
-              <CardDescription>{t('investorPacket.financialOperationalKpis')}</CardDescription>
+              <CardTitle>{t('keyPerformanceIndicators', { ns: 'investorPacket' })}</CardTitle>
+              <CardDescription>{t('financialOperationalKpis', { ns: 'investorPacket' })}</CardDescription>
             </CardHeader>
             <CardContent>
               <KeyPerformanceIndicators results={results} settings={settings} />
@@ -180,8 +180,8 @@ const InvestorPacketPage = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>{t('investorPacket.financialProjections')}</CardTitle>
-            <CardDescription>{settings.forecastYears}-{t('common.yearForecast')}</CardDescription>
+            <CardTitle>{t('financialProjections', { ns: 'investorPacket' })}</CardTitle>
+            <CardDescription>{settings.forecastYears}-{t('yearForecast', { ns: 'common' })}</CardDescription>
           </CardHeader>
           <CardContent>
             <FinancialProjectionsTable results={results} settings={settings} />
@@ -190,8 +190,8 @@ const InvestorPacketPage = () => {
         
         <Card id="demand-capacity-section">
           <CardHeader>
-            <CardTitle>{t('investorPacket.demandVsCapacity')}</CardTitle>
-            <CardDescription>{t('investorPacket.demandVsCapacityDesc')}</CardDescription>
+            <CardTitle>{t('demandVsCapacity', { ns: 'investorPacket' })}</CardTitle>
+            <CardDescription>{t('demandVsCapacityDesc', { ns: 'investorPacket' })}</CardDescription>
           </CardHeader>
           <CardContent>
             <DemandCapacityTable results={results} settings={settings} />
@@ -213,8 +213,8 @@ const InvestorPacketPage = () => {
         {tornadoData && (
           <Card className="mt-6" id="tornado-chart">
             <CardHeader>
-              <CardTitle>{t('sensitivity.tornadoChart')}</CardTitle>
-              <CardDescription>{t('sensitivity.tornadoDesc')}</CardDescription>
+              <CardTitle>{t('tornadoChart', { ns: 'sensitivity' })}</CardTitle>
+              <CardDescription>{t('tornadoDesc', { ns: 'sensitivity' })}</CardDescription>
             </CardHeader>
             <CardContent>
               <TornadoChart data={tornadoData} />

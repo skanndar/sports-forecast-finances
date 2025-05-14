@@ -11,25 +11,25 @@ interface KeyPerformanceIndicatorsProps {
 }
 
 const KeyPerformanceIndicators = ({ results, settings }: KeyPerformanceIndicatorsProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['kpis', 'common']);
   const lastYearResult = results.yearlyResults[results.yearlyResults.length - 1];
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">{t('kpis.revenue')} ({t('common.year')} {settings.forecastYears})</p>
+          <p className="text-sm text-muted-foreground">{t('revenue')} ({t('year', { ns: 'common' })} {settings.forecastYears})</p>
           <p className="text-2xl font-bold">{formatCurrency(lastYearResult.revenue)}</p>
         </div>
         
         <div className="p-4 bg-muted rounded-lg">
-          <p className="text-sm text-muted-foreground">{t('kpis.ebitdaMargin')}</p>
+          <p className="text-sm text-muted-foreground">{t('ebitdaMargin')}</p>
           <p className="text-2xl font-bold">{formatPercentage(lastYearResult.ebitda / lastYearResult.revenue)}</p>
         </div>
         
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t('kpis.irr')}
+            {t('irr')}
             <InfoTooltip id="irr" />
           </p>
           <p className="text-2xl font-bold">{formatPercentage(results.irr)}</p>
@@ -37,7 +37,7 @@ const KeyPerformanceIndicators = ({ results, settings }: KeyPerformanceIndicator
         
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t('kpis.npv')}
+            {t('npv')}
             <InfoTooltip id="npv" />
           </p>
           <p className="text-2xl font-bold">{formatCurrency(results.npv)}</p>
@@ -45,7 +45,7 @@ const KeyPerformanceIndicators = ({ results, settings }: KeyPerformanceIndicator
         
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t('kpis.ltvCacRatio')}
+            {t('ltvCacRatio')}
             <InfoTooltip id="ltvCac" />
           </p>
           <p className="text-2xl font-bold">
@@ -55,10 +55,10 @@ const KeyPerformanceIndicators = ({ results, settings }: KeyPerformanceIndicator
         
         <div className="p-4 bg-muted rounded-lg">
           <p className="text-sm text-muted-foreground">
-            {t('kpis.cacPayback')}
+            {t('cacPayback')}
             <InfoTooltip id="payback" />
           </p>
-          <p className="text-2xl font-bold">{formatNumber(results.unitEconomics.paybackMonths)} {t('common.months')}</p>
+          <p className="text-2xl font-bold">{formatNumber(results.unitEconomics.paybackMonths)} {t('months', { ns: 'common' })}</p>
         </div>
       </div>
     </div>

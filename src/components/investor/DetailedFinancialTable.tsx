@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -34,7 +35,7 @@ const DetailedFinancialTable = ({
   className = "",
   id
 }: DetailedFinancialTableProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['investorPacket', 'table', 'inputs', 'common']);
   // Changed to expanded by default
   const [isExpanded, setIsExpanded] = useState(true);
   
@@ -72,18 +73,18 @@ const DetailedFinancialTable = ({
     <Card className={`mt-6 ${className}`} id={id}>
       <CardHeader className="flex flex-row items-center justify-between py-4">
         <div>
-          <CardTitle>{t('investorPacket.detailedForecast')}</CardTitle>
-          <CardDescription>{t('investorPacket.lineItemDetail')}</CardDescription>
+          <CardTitle>{t('detailedForecast', { ns: 'investorPacket' })}</CardTitle>
+          <CardDescription>{t('lineItemDetail', { ns: 'investorPacket' })}</CardDescription>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
           className="ml-auto"
-          aria-label={isExpanded ? t('common.collapse') : t('common.expand')}
+          aria-label={isExpanded ? t('common.collapse', { ns: 'common' }) : t('common.expand', { ns: 'common' })}
         >
           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          {isExpanded ? t('common.hideDetail') : t('common.showDetail')}
+          {isExpanded ? t('hideDetail', { ns: 'common' }) : t('showDetail', { ns: 'common' })}
         </Button>
       </CardHeader>
       
@@ -93,10 +94,10 @@ const DetailedFinancialTable = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[180px]">{t('table.item')}</TableHead>
+                  <TableHead className="min-w-[180px]">{t('item', { ns: 'table' })}</TableHead>
                   {yearlyResults.map((_, index) => (
                     <TableHead key={index} className="text-right">
-                      {t('common.year')} {index + 1}
+                      {t('year', { ns: 'common' })} {index + 1}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -105,7 +106,7 @@ const DetailedFinancialTable = ({
                 {/* Revenue by product */}
                 <TableRow className="bg-muted">
                   <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('table.revenue')}
+                    {t('revenue', { ns: 'table' })}
                   </TableCell>
                 </TableRow>
                 
@@ -122,7 +123,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow className="border-t border-primary/10">
                   <TableCell className="font-medium">
-                    {t('table.totalRevenue')}
+                    {t('totalRevenue', { ns: 'table' })}
                     <InfoTooltip id="total-revenue" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -135,13 +136,13 @@ const DetailedFinancialTable = ({
                 {/* Variable Costs */}
                 <TableRow className="bg-muted">
                   <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('table.variableCosts')}
+                    {t('variableCosts', { ns: 'table' })}
                   </TableCell>
                 </TableRow>
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('table.productCosts')}
+                    {t('productCosts', { ns: 'table' })}
                     <InfoTooltip id="product-costs" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -153,7 +154,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('table.prescriberCommissions')}
+                    {t('prescriberCommissions', { ns: 'table' })}
                     <InfoTooltip id="prescriber-commissions" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -165,7 +166,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('table.directorCommission')}
+                    {t('directorCommission', { ns: 'table' })}
                     <InfoTooltip id="director-commission" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -177,7 +178,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow className="border-t border-primary/10">
                   <TableCell className="font-medium">
-                    {t('table.totalVariableCosts')}
+                    {t('totalVariableCosts', { ns: 'table' })}
                     <InfoTooltip id="total-variable-costs" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -190,7 +191,7 @@ const DetailedFinancialTable = ({
                 {/* Gross Margin */}
                 <TableRow>
                   <TableCell className="font-medium">
-                    {t('table.grossMargin')}
+                    {t('grossMargin', { ns: 'table' })}
                     <InfoTooltip id="gross-margin" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -204,13 +205,13 @@ const DetailedFinancialTable = ({
                 {/* Structural Costs */}
                 <TableRow className="bg-muted">
                   <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('table.structuralCosts')}
+                    {t('structuralCosts', { ns: 'table' })}
                   </TableCell>
                 </TableRow>
                 
                 <TableRow>
                   <TableCell className="font-medium">
-                    {t('table.structuralCosts')}
+                    {t('structuralCosts', { ns: 'table' })}
                     <InfoTooltip id="structural-costs" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -223,7 +224,7 @@ const DetailedFinancialTable = ({
                 {/* EBITDA */}
                 <TableRow className="border-t border-primary/10">
                   <TableCell className="font-medium">
-                    {t('table.ebitda')}
+                    {t('ebitda', { ns: 'table' })}
                     <InfoTooltip id="ebitda-detail" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -237,13 +238,13 @@ const DetailedFinancialTable = ({
                 {/* Retention Metrics */}
                 <TableRow className="bg-muted">
                   <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('investorPacket.retention')}
+                    {t('retention', { ns: 'investorPacket' })}
                   </TableCell>
                 </TableRow>
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('inputs.churn')}
+                    {t('churn', { ns: 'inputs' })}
                     <InfoTooltip id="churn" />
                   </TableCell>
                   {yearlyResults.map((_, index) => (
@@ -255,7 +256,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('inputs.rentalsPerCustomer')}
+                    {t('rentalsPerCustomer', { ns: 'inputs' })}
                     <InfoTooltip id="rentals-per-customer" />
                   </TableCell>
                   {yearlyResults.map((_, index) => (
@@ -268,14 +269,14 @@ const DetailedFinancialTable = ({
                 {/* Cash Flow */}
                 <TableRow className="bg-muted">
                   <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('table.cashFlow')}
+                    {t('cashFlow', { ns: 'table' })}
                   </TableCell>
                 </TableRow>
                 
                 {initialInvestment > 0 && (
                   <TableRow>
                     <TableCell className="pl-6">
-                      {t('table.initialInvestment')}
+                      {t('initialInvestment', { ns: 'table' })}
                       <InfoTooltip id="initial-investment" />
                     </TableCell>
                     <TableCell className="text-right text-danger">
@@ -291,7 +292,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow>
                   <TableCell className="pl-6">
-                    {t('table.operatingCashFlow')}
+                    {t('operatingCashFlow', { ns: 'table' })}
                     <InfoTooltip id="operating-cash-flow" />
                   </TableCell>
                   {yearlyResults.map((yr, index) => (
@@ -303,7 +304,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow className="border-t border-primary/10">
                   <TableCell className="font-medium">
-                    {t('table.netCashFlow')}
+                    {t('netCashFlow', { ns: 'table' })}
                     <InfoTooltip id="net-cash-flow" />
                   </TableCell>
                   <TableCell className="text-right font-medium">
@@ -318,7 +319,7 @@ const DetailedFinancialTable = ({
                 
                 <TableRow>
                   <TableCell className="font-medium">
-                    {t('table.cumulativeCashFlow')}
+                    {t('cumulativeCashFlow', { ns: 'table' })}
                     <InfoTooltip id="cumulative-cash-flow" />
                   </TableCell>
                   {yearlyResults.map((_, yearIndex) => {
