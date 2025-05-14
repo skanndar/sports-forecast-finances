@@ -11,16 +11,21 @@ import {
 import {
   Table,
   TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { ProjectResult, Settings, YearResult } from '@/lib/types';
-import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
-import InfoTooltip from "@/components/ui/info-tooltip";
+import { ProjectResult, Settings } from '@/lib/types';
+
+// Import components
+import TableHeaderComponent from './financial-table/TableHeader';
+import RevenueSection from './financial-table/RevenueSection';
+import VariableCostsSection from './financial-table/VariableCostsSection';
+import GrossMarginSection from './financial-table/GrossMarginSection';
+import StructuralCostsSection from './financial-table/StructuralCostsSection';
+import EbitdaSection from './financial-table/EbitdaSection';
+import RetentionSection from './financial-table/RetentionSection';
+import CashFlowSection from './financial-table/CashFlowSection';
+import { calculateGrossMargin, calculateGrossMarginPct } from './financial-table/CalculationHelpers';
 
 interface DetailedFinancialTableProps {
   results: ProjectResult;
@@ -58,17 +63,6 @@ const DetailedFinancialTable = ({
     }
   });
 
-  // Calculate gross margin for each year
-  const calculateGrossMargin = (year: YearResult) => {
-    return year.revenue - year.variableCosts;
-  };
-
-  // Calculate gross margin percentage for each year
-  const calculateGrossMarginPct = (year: YearResult) => {
-    if (year.revenue === 0) return 0;
-    return (calculateGrossMargin(year) / year.revenue) * 100;
-  };
-
   return (
     <Card className={`mt-6 ${className}`} id={id}>
       <CardHeader className="flex flex-row items-center justify-between py-4">
@@ -92,248 +86,41 @@ const DetailedFinancialTable = ({
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[180px]">{t('item', { ns: 'table' })}</TableHead>
-                  {yearlyResults.map((_, index) => (
-                    <TableHead key={index} className="text-right">
-                      {t('year', { ns: 'common' })} {index + 1}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
+              <TableHeaderComponent yearlyResults={yearlyResults} />
               <TableBody>
-                {/* Revenue by product */}
-                <TableRow className="bg-muted">
-                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('revenue', { ns: 'table' })}
-                  </TableCell>
-                </TableRow>
+                <RevenueSection 
+                  yearlyResults={yearlyResults} 
+                  productNames={productNames} 
+                />
                 
-                {productNames.map(productName => (
-                  <TableRow key={productName}>
-                    <TableCell className="pl-6">{productName}</TableCell>
-                    {yearlyResults.map((yr, index) => (
-                      <TableCell key={index} className="text-right">
-                        {formatCurrency(yr.revenueByProduct?.[productName] || 0)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                <VariableCostsSection 
+                  yearlyResults={yearlyResults}
+                />
                 
-                <TableRow className="border-t border-primary/10">
-                  <TableCell className="font-medium">
-                    {t('totalRevenue', { ns: 'table' })}
-                    <InfoTooltip id="total-revenue" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right font-medium">
-                      {formatCurrency(yr.revenue)}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <GrossMarginSection 
+                  yearlyResults={yearlyResults}
+                  calculateGrossMargin={calculateGrossMargin}
+                  calculateGrossMarginPct={calculateGrossMarginPct}
+                />
                 
-                {/* Variable Costs */}
-                <TableRow className="bg-muted">
-                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('variableCosts', { ns: 'table' })}
-                  </TableCell>
-                </TableRow>
+                <StructuralCostsSection 
+                  yearlyResults={yearlyResults}
+                />
                 
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('productCosts', { ns: 'table' })}
-                    <InfoTooltip id="product-costs" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatCurrency(yr.productCosts || 0)}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <EbitdaSection 
+                  yearlyResults={yearlyResults}
+                />
                 
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('prescriberCommissions', { ns: 'table' })}
-                    <InfoTooltip id="prescriber-commissions" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatCurrency(yr.prescriberCosts || 0)}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <RetentionSection 
+                  yearlyResults={yearlyResults}
+                  churn={churn}
+                  rentalsPerCustomer={rentalsPerCustomer}
+                />
                 
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('directorCommission', { ns: 'table' })}
-                    <InfoTooltip id="director-commission" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatCurrency(yr.directorCost || 0)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                <TableRow className="border-t border-primary/10">
-                  <TableCell className="font-medium">
-                    {t('totalVariableCosts', { ns: 'table' })}
-                    <InfoTooltip id="total-variable-costs" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right font-medium">
-                      {formatCurrency(yr.variableCosts)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                {/* Gross Margin */}
-                <TableRow>
-                  <TableCell className="font-medium">
-                    {t('grossMargin', { ns: 'table' })}
-                    <InfoTooltip id="gross-margin" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right font-medium">
-                      {formatCurrency(calculateGrossMargin(yr))} 
-                      ({formatPercentage(calculateGrossMarginPct(yr)/100)})
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                {/* Structural Costs */}
-                <TableRow className="bg-muted">
-                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('structuralCosts', { ns: 'table' })}
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow>
-                  <TableCell className="font-medium">
-                    {t('structuralCosts', { ns: 'table' })}
-                    <InfoTooltip id="structural-costs" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatCurrency(yr.structuralCosts)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                {/* EBITDA */}
-                <TableRow className="border-t border-primary/10">
-                  <TableCell className="font-medium">
-                    {t('ebitda', { ns: 'table' })}
-                    <InfoTooltip id="ebitda-detail" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right font-medium">
-                      {formatCurrency(yr.ebitda)}
-                      ({formatPercentage(yr.ebitda / yr.revenue)})
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                {/* Retention Metrics */}
-                <TableRow className="bg-muted">
-                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('retention', { ns: 'investorPacket' })}
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('churn', { ns: 'inputs' })}
-                    <InfoTooltip id="churn" />
-                  </TableCell>
-                  {yearlyResults.map((_, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatPercentage(churn)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('rentalsPerCustomer', { ns: 'inputs' })}
-                    <InfoTooltip id="rentals-per-customer" />
-                  </TableCell>
-                  {yearlyResults.map((_, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatNumber(rentalsPerCustomer)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                {/* Cash Flow */}
-                <TableRow className="bg-muted">
-                  <TableCell colSpan={yearlyResults.length + 1} className="font-bold">
-                    {t('cashFlow', { ns: 'table' })}
-                  </TableCell>
-                </TableRow>
-                
-                {initialInvestment > 0 && (
-                  <TableRow>
-                    <TableCell className="pl-6">
-                      {t('initialInvestment', { ns: 'table' })}
-                      <InfoTooltip id="initial-investment" />
-                    </TableCell>
-                    <TableCell className="text-right text-danger">
-                      {formatCurrency(-initialInvestment)}
-                    </TableCell>
-                    {yearlyResults.slice(1).map((_, index) => (
-                      <TableCell key={index} className="text-right">
-                        {formatCurrency(0)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                )}
-                
-                <TableRow>
-                  <TableCell className="pl-6">
-                    {t('operatingCashFlow', { ns: 'table' })}
-                    <InfoTooltip id="operating-cash-flow" />
-                  </TableCell>
-                  {yearlyResults.map((yr, index) => (
-                    <TableCell key={index} className="text-right">
-                      {formatCurrency(yr.cash)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                <TableRow className="border-t border-primary/10">
-                  <TableCell className="font-medium">
-                    {t('netCashFlow', { ns: 'table' })}
-                    <InfoTooltip id="net-cash-flow" />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    {formatCurrency(-initialInvestment + yearlyResults[0].cash)}
-                  </TableCell>
-                  {yearlyResults.slice(1).map((yr, index) => (
-                    <TableCell key={index + 1} className="text-right font-medium">
-                      {formatCurrency(yr.cash)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                
-                <TableRow>
-                  <TableCell className="font-medium">
-                    {t('cumulativeCashFlow', { ns: 'table' })}
-                    <InfoTooltip id="cumulative-cash-flow" />
-                  </TableCell>
-                  {yearlyResults.map((_, yearIndex) => {
-                    const cumulativeCashFlow = [-initialInvestment, ...yearlyResults.map(yr => yr.cash)]
-                      .slice(0, yearIndex + 2)
-                      .reduce((sum, cash) => sum + cash, 0);
-                    
-                    return (
-                      <TableCell key={yearIndex} className="text-right font-medium">
-                        {formatCurrency(cumulativeCashFlow)}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
+                <CashFlowSection 
+                  yearlyResults={yearlyResults}
+                  initialInvestment={initialInvestment}
+                />
               </TableBody>
             </Table>
           </div>
