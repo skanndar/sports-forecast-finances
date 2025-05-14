@@ -10,6 +10,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import KpiCard from '@/components/dashboard/KpiCard';
 import ProductInputSummary from '@/components/dashboard/ProductInputSummary';
+import DemandCapacityDashboard from '@/components/dashboard/DemandCapacityDashboard';
 import { useAppStore } from '@/lib/store';
 import { formatCurrency, formatPercentage, formatNumber } from '@/lib/formatters';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart, TooltipProps, Cell } from 'recharts';
@@ -369,6 +370,14 @@ const DashboardPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Add DemandCapacityDashboard component */}
+      {results.yearlyResults.length > 0 && (
+        <DemandCapacityDashboard 
+          results={results} 
+          settings={settings}
+        />
+      )}
       
       {/* Product Input Summary */}
       <ProductInputSummary products={settings.products} prescribers={settings.prescribers} />
